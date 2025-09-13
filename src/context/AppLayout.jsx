@@ -19,6 +19,7 @@ import {
 import { ThemeToggleButton } from '../components/ThemeButton';
 import { SlidingThemeToggle } from '../components/ThemeButton';
 import { useTheme } from './ThemeProvider';
+import Navbar from '../components/Navbar';
 const AppLayout = ({ children }) => {
   const { theme } = useTheme();
   console.log(theme)
@@ -41,8 +42,29 @@ const AppLayout = ({ children }) => {
     { icon: Info, label: 'Help & Support', href: '#' },
   ];
 
+  const [fontSize, setFontSize] = useState("text-base");
+const [highContrast, setHighContrast] = useState(false);
+
+const toggleContrast = () => setHighContrast(prev => !prev);
+const handleFontSize = (action) => {
+    setFontSize((prev) => {
+      if (action === "increase") {
+        if (prev === "text-base") return "text-lg";
+        if (prev === "text-lg") return "text-xl";
+        return "text-xl"; // max
+      } else if (action === "decrease") {
+        if (prev === "text-xl") return "text-lg";
+        if (prev === "text-lg") return "text-base";
+        if (prev === "text-base") return "text-sm";
+        return "text-sm"; // min
+      }
+      return prev;
+    });
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+      
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileSidebar}
@@ -218,21 +240,12 @@ const AppLayout = ({ children }) => {
       <div className="flex-1 flex flex-col">
         {/* Top Header */}
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="md:hidden w-8"></div> {/* Spacer for mobile */}
-              <div>
-                <h1 className="text-xl font-semibold text-gray-900 dark:text-white">Metro Transit System</h1>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Plan your journey • Check schedules • Buy tickets</p>
-              </div>
-            </div>
+          
+            <Navbar handleFontSize={handleFontSize} toggleContrast={toggleContrast} />
             
             {/* Theme Toggle in Header */}
-            <div className="flex items-center gap-3">
-              <ThemeToggleButton />
-              <SlidingThemeToggle />
-            </div>
-          </div>
+            
+          
         </header>
 
         {/* Main Content Area */}
