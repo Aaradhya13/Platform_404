@@ -1,1 +1,60 @@
 @import "tailwindcss";
+
+@theme {
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-poppins: 'Poppins', 'Roboto', sans-serif;
+  --font-roboto: 'Roboto', 'Poppins', sans-serif;
+}
+
+/* Ticker Animation */
+.ticker-wrapper {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ticker-content {
+  display: inline-block;
+  animation: scroll 40s linear infinite;
+  cursor: pointer;
+}
+
+.ticker-content:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Enhanced animations for better performance */
+* {
+  box-sizing: border-box;
+}
+
+.group:hover .group-hover\:opacity-100 {
+  opacity: 1;
+}
+
+.group:hover .group-hover\:text-\[\#2D6A4F\] {
+  color: #2D6A4F;
+}
+
+.group:hover .group-hover\:text-gray-700 {
+  color: #374151;
+}
+
+/* Ensure smooth transforms */
+[style*="transform"] {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* Custom clip path for diamond shapes */
+.diamond-clip {
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
