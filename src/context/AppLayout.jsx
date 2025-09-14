@@ -31,7 +31,7 @@ const AppLayout = ({ children }) => {
 
   const menuItems = [
     { icon: Home, label: 'Home', href: '#', active: true },
-    { icon: Route, label: 'Route Map', href: '#' },
+    { icon: Route, label: 'Route Map', href: '/map' },
     { icon: Clock, label: 'Schedules', href: '#' },
     { icon: Ticket, label: 'Tickets', href: '#' },
     { icon: CreditCard, label: 'Payments', href: '#' },
