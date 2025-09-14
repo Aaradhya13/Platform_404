@@ -1,13 +1,30 @@
-// src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { SlidingThemeToggle, ThemeToggleButton } from "./components/ThemeButton";
 import { useTheme } from "./context/ThemeProvider";
 import AppLayout from "./context/AppLayout";
 import Login from "./pages/Login";
 import ProtectedRoute from "./context/ProtectedRoute";
+import BrandingBar from './components/BrandingBar';
+import HeroSection from './components/HeroSection';
+import VideoSection from './components/VideoSection';
+import TravelGuide from './components/TravelGuide';
+import MetroAttractions from './components/MetroAttractions';
+import Footer from './components/Footer';
+
+const LandingPage = () => {
+  return (
+    <div>
+      <BrandingBar />
+      <HeroSection />
+      <VideoSection />
+      <TravelGuide />
+      <MetroAttractions />
+      <Footer />
+    </div>
+  );
+};
 
 const Dashboard = () => <h1 className="text-2xl p-4">Welcome to Dashboard 🎉</h1>;
-const LandingPage = () => <h1 className="text-2xl p-4">Welcome to Landing Page 🎉</h1>;
 
 function App() {
   const { theme } = useTheme();
@@ -16,18 +33,8 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route
-        path="/"
-        element={
-          <ProtectedRoute>
-            <LandingPage />
-          </ProtectedRoute>
-        }
-      />
-        {/* Public login route */}
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
-
-        {/* Protected route */}
         <Route
           path="/dashboard"
           element={
@@ -42,9 +49,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* Redirect root to login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );
