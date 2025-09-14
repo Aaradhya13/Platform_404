@@ -4,13 +4,13 @@ import { useTheme } from "./context/ThemeProvider";
 import AppLayout from "./context/AppLayout";
 import Login from "./pages/Login";
 import ProtectedRoute from "./context/ProtectedRoute";
-import Map from "./pages/Map";
 import BrandingBar from './components/BrandingBar';
 import HeroSection from './components/HeroSection';
 import VideoSection from './components/VideoSection';
 import TravelGuide from './components/TravelGuide';
 import MetroAttractions from './components/MetroAttractions';
 import Footer from './components/Footer';
+import Map from "./pages/Map";
 
 const LandingPage = () => {
   return (
@@ -36,6 +36,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/map" element={<Map />} />
+
 
         {/* Protected route */}
         <Route
