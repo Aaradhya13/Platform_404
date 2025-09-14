@@ -100,11 +100,6 @@ const TravelGuide = () => {
                   zIndex: 10
                 }}
                 whileTap={{ scale: 1.05 }}
-                transition={{ 
-                  type: "spring", 
-                  stiffness: 300, 
-                  damping: 20 
-                }}
                 className="bg-white rounded-xl shadow-lg p-6 cursor-pointer group relative overflow-hidden"
                 style={{ transformStyle: "preserve-3d" }}
               >
