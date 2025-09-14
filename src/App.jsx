@@ -4,6 +4,7 @@ import { useTheme } from "./context/ThemeProvider";
 import AppLayout from "./context/AppLayout";
 import Login from "./pages/Login";
 import ProtectedRoute from "./context/ProtectedRoute";
+import Map from "./pages/Map";
 import BrandingBar from './components/BrandingBar';
 import HeroSection from './components/HeroSection';
 import VideoSection from './components/VideoSection';
@@ -35,6 +36,8 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
+
+        {/* Protected route */}
         <Route
           path="/dashboard"
           element={
