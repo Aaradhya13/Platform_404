@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = "https://platform-404.onrender.com/users/"; 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const Login = () => {
   const navigate = useNavigate();
