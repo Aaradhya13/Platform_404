@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { SlidingThemeToggle, ThemeToggleButton } from "./components/ThemeButton";
 import { useTheme } from "./context/ThemeProvider";
-import AppLayout from "./context/AppLayout";
+import AppLayout, { TranslationProvider } from "./context/AppLayout";
 import Login from "./pages/Login";
 import ProtectedRoute from "./context/ProtectedRoute";
 import BrandingBar from './components/BrandingBar';
@@ -44,13 +44,15 @@ function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <AppLayout>
+              <TranslationProvider>
+                <AppLayout>
                 <Dashboard />
                 <div className="fixed bottom-4 right-4 flex gap-2">
                   <ThemeToggleButton />
                   <SlidingThemeToggle />
                 </div>
-              </AppLayout>
+                </AppLayout>
+              </TranslationProvider>
             </ProtectedRoute>
           }
         />

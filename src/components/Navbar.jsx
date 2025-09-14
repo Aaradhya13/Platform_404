@@ -1,61 +1,22 @@
 // Navbar.jsx
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Globe, PlusCircle, MinusCircle, MapPin, Network } from "lucide-react";
+import { useTranslation } from "../context/AppLayout";
 
 const Navbar = ({ handleFontSize, toggleContrast }) => {
-  const [language, setLanguage] = useState("en"); // track selected language
-
-  useEffect(() => {
-    // Load Google Translate script once
-    if (!document.querySelector("#google-translate-script")) {
-      const addScript = document.createElement("script");
-      addScript.id = "google-translate-script";
-      addScript.src =
-        "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-      document.body.appendChild(addScript);
-    }
-
-    // Init translate element (hidden)
-    window.googleTranslateElementInit = () => {
-      new window.google.translate.TranslateElement(
-        {
-          pageLanguage: "en",
-          includedLanguages: "en,ml",
-          layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-          autoDisplay: false,
-        },
-        "google_translate_element"
-      );
-    };
-  }, []);
-
-  // Function to manually change language using Google Translate's dropdown
-  const handleLanguageToggle = () => {
-    const newLang = language === "en" ? "ml" : "en";
-    setLanguage(newLang);
-
-    // Find Google Translate's hidden select dropdown
-    const selectEl = document.querySelector(".goog-te-combo");
-    if (selectEl) {
-      selectEl.value = newLang;
-      selectEl.dispatchEvent(new Event("change")); // trigger change
-    }
-  };
+  const { language, translate, toggleLanguage } = useTranslation();
 
   return (
     <nav className="flex justify-between items-center px-6 py-3 bg-white shadow-md">
       <div className="flex items-center gap-6">
         {/* Custom Language Toggle Button */}
         <button
-          onClick={handleLanguageToggle}
+          onClick={toggleLanguage}
           className="flex items-center gap-2 text-sm font-medium hover:text-purple-600"
         >
           <Globe size={18} />
           {language === "en" ? "English" : "മലയാളം"}
         </button>
-
-        {/* Hidden Google Translate Dropdown */}
-        <div id="google_translate_element" style={{ display: "none" }}></div>
 
         {/* Font Size Controls */}
         <div className="flex items-center gap-2">
@@ -63,7 +24,7 @@ const Navbar = ({ handleFontSize, toggleContrast }) => {
             onClick={() => handleFontSize("increase")}
             className="flex items-center gap-1 hover:text-purple-600"
           >
-            <PlusCircle size={18} /> Fontsize
+            <PlusCircle size={18} /> {translate("Fontsize")}
           </button>
           <button
             onClick={() => handleFontSize("decrease")}
@@ -84,10 +45,10 @@ const Navbar = ({ handleFontSize, toggleContrast }) => {
         </button>
 
         <button className="flex items-center gap-2 hover:text-purple-600">
-          <MapPin size={18} /> Route Map
+          <MapPin size={18} /> {translate("Route Map")}
         </button>
         <button className="flex items-center gap-2 hover:text-purple-600">
-          <Network size={18} /> Site Map
+          <Network size={18} /> {translate("Site Map")}
         </button>
       </div>
     </nav>

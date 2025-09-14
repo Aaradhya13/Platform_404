@@ -1,95 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
-
-// Translation context
-const TranslationContext = createContext();
-
-const translations = {
-  en: {
-    "Fontsize": "Fontsize",
-    "Metro Transit": "Metro Transit",
-    "City Transport": "City Transport",
-    "Home": "Home",
-    "Route Map": "Route Map",
-    "Schedules": "Schedules",
-    "Tickets": "Tickets",
-    "Payments": "Payments",
-    "Stations": "Stations",
-    "Service Alerts": "Service Alerts",
-    "My Account": "My Account",
-    "Settings": "Settings",
-    "Help & Support": "Help & Support",
-    "Guest User": "Guest User",
-    "Not signed in": "Not signed in",
-    "Service Status": "Service Status",
-    "All lines operational": "All lines operational",
-    "Next Train": "Next Train",
-    "Downtown Line": "Downtown Line",
-    "minutes": "minutes",
-    "Quick Buy": "Quick Buy",
-    "Single journey ticket": "Single journey ticket",
-    "Quick Actions": "Quick Actions",
-    "Plan Journey": "Plan Journey",
-    "Live Times": "Live Times",
-    "Buy Tickets": "Buy Tickets",
-    "Find Stations": "Find Stations",
-    "Service Announcements": "Service Announcements",
-    "Weekend Schedule Change": "Weekend Schedule Change",
-    "Modified service hours this weekend due to maintenance work.": "Modified service hours this weekend due to maintenance work.",
-    "New Mobile App": "New Mobile App",
-    "Download our new mobile app for easier journey planning.": "Download our new mobile app for easier journey planning.",
-    "Site Map": "Site Map"
-  },
-  ml: {
-    "Fontsize": "ഫോണ്ട് സൈസ്",
-    "Metro Transit": "മെട്രോ ട്രാൻസിറ്റ്",
-    "City Transport": "സിറ്റി ട്രാൻസ്പോർട്ട്",
-    "Home": "ഹോം",
-    "Route Map": "റൂട്ട് മാപ്പ്",
-    "Schedules": "ഷെഡ്യൂളുകൾ",
-    "Tickets": "ടിക്കറ്റുകൾ",
-    "Payments": "പേയ്മെന്റുകൾ",
-    "Stations": "സ്റ്റേഷനുകൾ",
-    "Service Alerts": "സേവന അലേർട്ടുകൾ",
-    "My Account": "എന്റെ അക്കൗണ്ട്",
-    "Settings": "സെറ്റിംഗുകൾ",
-    "Help & Support": "സഹായവും പിന്തുണയും",
-    "Guest User": "അതിഥി ഉപയോക്താവ്",
-    "Not signed in": "സൈൻ ഇൻ ചെയ്തിട്ടില്ല",
-    "Service Status": "സേവന നില",
-    "All lines operational": "എല്ലാ ലൈനുകളും പ്രവർത്തനക്ഷമം",
-    "Next Train": "അടുത്ത ട്രെയിൻ",
-    "Downtown Line": "ഡൗൺടൗൺ ലൈൻ",
-    "minutes": "മിനിറ്റ്",
-    "Quick Buy": "പെട്ടെന്ന് വാങ്ങുക",
-    "Single journey ticket": "സിംഗിൾ ജേർണി ടിക്കറ്റ്",
-    "Quick Actions": "പെട്ടെന്നുള്ള പ്രവർത്തനങ്ങൾ",
-    "Plan Journey": "യാത്ര ആസൂത്രണം ചെയ്യുക",
-    "Live Times": "തത്സമയ സമയം",
-    "Buy Tickets": "ടിക്കറ്റുകൾ വാങ്ങുക",
-    "Find Stations": "സ്റ്റേഷനുകൾ കണ്ടെത്തുക",
-    "Service Announcements": "സേവന അറിയിപ്പുകൾ",
-    "Weekend Schedule Change": "വാരാന്ത്യ ഷെഡ്യൂൾ മാറ്റം",
-    "Modified service hours this weekend due to maintenance work.": "മെയിന്റനൻസ് ജോലികൾ കാരണം ഈ വാരാന്ത്യത്തിൽ സേവന സമയം മാറ്റി.",
-    "New Mobile App": "പുതിയ മൊബൈൽ ആപ്പ്",
-    "Download our new mobile app for easier journey planning.": "എളുപ്പമുള്ള യാത്രാ ആസൂത്രണത്തിനായി ഞങ്ങളുടെ പുതിയ മൊബൈൽ ആപ്പ് ഡൗൺലോഡ് ചെയ്യുക.",
-    "Site Map": "സൈറ്റ് മാപ്പ്"
-  }
-};
-
-export const TranslationProvider = ({ children }) => {
-  const [language, setLanguage] = useState("en");
-  
-  const translate = (text) => translations[language][text] || text;
-  const toggleLanguage = () => setLanguage(prev => prev === "en" ? "ml" : "en");
-  
-  return (
-    <TranslationContext.Provider value={{ language, translate, toggleLanguage }}>
-      {children}
-    </TranslationContext.Provider>
-  );
-};
-
-export const useTranslation = () => useContext(TranslationContext);
+import React, { useState } from 'react';
 import { 
   Menu, 
   X, 
@@ -107,14 +16,13 @@ import {
   Ticket,
   AlertCircle
 } from 'lucide-react';
-import { ThemeToggleButton } from '../components/ThemeButton';
-import { SlidingThemeToggle } from '../components/ThemeButton';
 import { useTheme } from './ThemeProvider';
+import { useTranslation } from '../hooks/useTranslation';
 import Navbar from '../components/Navbar';
+
 const AppLayout = ({ children }) => {
   const { theme } = useTheme();
   const { translate } = useTranslation();
-  console.log(theme)
   const [isOpen, setIsOpen] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -135,27 +43,27 @@ const AppLayout = ({ children }) => {
   ];
 
   const [fontSize, setFontSize] = useState("text-base");
-const [highContrast, setHighContrast] = useState(false);
+  const [highContrast, setHighContrast] = useState(false);
 
-const toggleContrast = () => setHighContrast(prev => !prev);
-const handleFontSize = (action) => {
+  const toggleContrast = () => setHighContrast(prev => !prev);
+  const handleFontSize = (action) => {
     setFontSize((prev) => {
       if (action === "increase") {
         if (prev === "text-base") return "text-lg";
         if (prev === "text-lg") return "text-xl";
-        return "text-xl"; // max
+        return "text-xl";
       } else if (action === "decrease") {
         if (prev === "text-xl") return "text-lg";
         if (prev === "text-lg") return "text-base";
         if (prev === "text-base") return "text-sm";
-        return "text-sm"; // min
+        return "text-sm";
       }
       return prev;
     });
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className={`flex min-h-screen bg-gray-50 dark:bg-gray-900 ${fontSize} ${highContrast ? 'contrast-more' : ''}`}>
       
       {/* Mobile Menu Button */}
       <button
@@ -190,8 +98,8 @@ const handleFontSize = (action) => {
                   <Train size={18} className="text-white" />
                 </div>
                 <div>
-                  <span className="text-lg font-semibold text-gray-900 dark:text-white">Metro Transit</span>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">City Transport</p>
+                  <span className="text-lg font-semibold text-gray-900 dark:text-white">{translate('Metro Transit')}</span>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{translate('City Transport')}</p>
                 </div>
               </div>
             )}
@@ -249,8 +157,8 @@ const handleFontSize = (action) => {
                   <User size={16} className="text-gray-600 dark:text-gray-300" />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Guest User</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Not signed in</p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">{translate('Guest User')}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">{translate('Not signed in')}</p>
                 </div>
               </div>
             </div>
@@ -277,8 +185,8 @@ const handleFontSize = (action) => {
                 <Train size={18} className="text-white" />
               </div>
               <div>
-                <span className="text-lg font-semibold text-gray-900 dark:text-white">Metro Transit</span>
-                <p className="text-xs text-gray-500 dark:text-gray-400">City Transport</p>
+                <span className="text-lg font-semibold text-gray-900 dark:text-white">{translate('Metro Transit')}</span>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{translate('City Transport')}</p>
               </div>
             </div>
             <button
@@ -321,8 +229,8 @@ const handleFontSize = (action) => {
               <User size={16} className="text-gray-600 dark:text-gray-300" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">Guest User</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Not signed in</p>
+              <p className="text-sm font-medium text-gray-900 dark:text-white">{translate('Guest User')}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">{translate('Not signed in')}</p>
             </div>
           </div>
         </div>
@@ -332,12 +240,7 @@ const handleFontSize = (action) => {
       <div className="flex-1 flex flex-col">
         {/* Top Header */}
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-          
-            <Navbar handleFontSize={handleFontSize} toggleContrast={toggleContrast} />
-            
-            {/* Theme Toggle in Header */}
-            
-          
+          <Navbar handleFontSize={handleFontSize} toggleContrast={toggleContrast} />
         </header>
 
         {/* Main Content Area */}
@@ -352,8 +255,8 @@ const handleFontSize = (action) => {
                       <Train size={24} className="text-green-600 dark:text-green-400" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Service Status</h3>
-                      <p className="text-sm text-green-600 dark:text-green-400 font-medium">All lines operational</p>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{translate('Service Status')}</h3>
+                      <p className="text-sm text-green-600 dark:text-green-400 font-medium">{translate('All lines operational')}</p>
                     </div>
                   </div>
                 </div>
@@ -364,9 +267,9 @@ const handleFontSize = (action) => {
                       <Clock size={24} className="text-blue-600 dark:text-blue-400" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Next Train</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Downtown Line</p>
-                      <p className="text-lg font-semibold text-blue-600 dark:text-blue-400">3 minutes</p>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{translate('Next Train')}</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{translate('Downtown Line')}</p>
+                      <p className="text-lg font-semibold text-blue-600 dark:text-blue-400">3 {translate('minutes')}</p>
                     </div>
                   </div>
                 </div>
@@ -377,8 +280,8 @@ const handleFontSize = (action) => {
                       <Ticket size={24} className="text-purple-600 dark:text-purple-400" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Quick Buy</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Single journey ticket</p>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{translate('Quick Buy')}</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">{translate('Single journey ticket')}</p>
                       <p className="text-lg font-semibold text-purple-600 dark:text-purple-400">$2.50</p>
                     </div>
                   </div>
@@ -387,43 +290,43 @@ const handleFontSize = (action) => {
 
               {/* Quick Actions */}
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{translate('Quick Actions')}</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <button className="p-4 text-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <Route size={24} className="mx-auto mb-2 text-blue-600 dark:text-blue-400" />
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Plan Journey</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{translate('Plan Journey')}</p>
                   </button>
                   <button className="p-4 text-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <Clock size={24} className="mx-auto mb-2 text-green-600 dark:text-green-400" />
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Live Times</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{translate('Live Times')}</p>
                   </button>
                   <button className="p-4 text-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <Ticket size={24} className="mx-auto mb-2 text-purple-600 dark:text-purple-400" />
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Buy Tickets</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{translate('Buy Tickets')}</p>
                   </button>
                   <button className="p-4 text-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <MapPin size={24} className="mx-auto mb-2 text-red-600 dark:text-red-400" />
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Find Stations</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{translate('Find Stations')}</p>
                   </button>
                 </div>
               </div>
 
               {/* Recent Activity or Announcements */}
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Service Announcements</h2>
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{translate('Service Announcements')}</h2>
                 <div className="space-y-3">
                   <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <Info size={16} className="text-blue-600 dark:text-blue-400 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">Weekend Schedule Change</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">Modified service hours this weekend due to maintenance work.</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{translate('Weekend Schedule Change')}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">{translate('Modified service hours this weekend due to maintenance work.')}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                     <AlertCircle size={16} className="text-green-600 dark:text-green-400 mt-0.5" />
                     <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">New Mobile App</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">Download our new mobile app for easier journey planning.</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white">{translate('New Mobile App')}</p>
+                      <p className="text-xs text-gray-600 dark:text-gray-400">{translate('Download our new mobile app for easier journey planning.')}</p>
                     </div>
                   </div>
                 </div>
