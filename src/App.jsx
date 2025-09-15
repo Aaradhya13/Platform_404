@@ -11,6 +11,7 @@ import TravelGuide from './components/TravelGuide';
 import MetroAttractions from './components/MetroAttractions';
 import Footer from './components/Footer';
 import Map from "./pages/Map";
+import Cleaning from "./pages/Cleaning";
 
 const LandingPage = () => {
   return (
@@ -37,6 +38,15 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/map" element={<Map />} />
+        <Route path="/cleaning" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <Cleaning />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
 
 
         {/* Protected route */}
