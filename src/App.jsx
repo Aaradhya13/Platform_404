@@ -11,7 +11,7 @@ import TravelGuide from './components/TravelGuide';
 import MetroAttractions from './components/MetroAttractions';
 import Footer from './components/Footer';
 import Map from "./pages/Map";
-import Cleaning from "./pages/Cleaning1"
+import Cleaning from "./components/cleaning/Cleaning"
 import Inspection from "./components/inspection/Inspection";
 import Maintenance from "./components/mainnatence/Mainnantence";
 import Operations from "./components/operations/Operations";
