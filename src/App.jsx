@@ -1,3 +1,4 @@
+import OperationsDashboard from "./Operationdashboard";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { SlidingThemeToggle, ThemeToggleButton } from "./components/ThemeButton";
 import { useTheme } from "./context/ThemeProvider";
@@ -106,6 +107,17 @@ function App() {
             </TranslationProvider>
           </ProtectedRoute>
         } />
+        <Route path="/operationdashboard" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <OperationsDashboard />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
+        {/* Redirect any unknown routes to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
            </Routes>
 
     </Router>
