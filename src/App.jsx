@@ -11,7 +11,10 @@ import TravelGuide from './components/TravelGuide';
 import MetroAttractions from './components/MetroAttractions';
 import Footer from './components/Footer';
 import Map from "./pages/Map";
-import Cleaning from "./pages/Cleaning";
+import Cleaning from "./pages/Cleaning1"
+import Inspection from "./components/inspection/Inspection";
+import Maintenance from "./components/mainnatence/Mainnantence";
+import Operations from "./components/operations/Operations";
 
 const LandingPage = () => {
   return (
@@ -66,7 +69,34 @@ function App() {
             </ProtectedRoute>
           }
         />
-      </Routes>
+      <Route path="/inspection" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <Inspection />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
+        <Route path="/maintenance" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <Maintenance />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
+        <Route path="/operations" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <Operations />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
+           </Routes>
     </Router>
   );
 }
