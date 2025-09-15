@@ -37,10 +37,10 @@ const Login = () => {
       console.log("login",data);
       const routes = {
         admin: "/dashboard",
-        cleaning: "/cleaning",
-        inspection: "/inspection",
-        maintenance: "/maintenance",
-        operations: "/operations",
+        Cleaning: "/cleaning",
+        Inspection: "/inspection",
+        Maintainance: "/maintenance",
+        Operations: "/operations",
       };
 
       if (routes[data.department]) {
