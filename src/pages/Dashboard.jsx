@@ -206,6 +206,9 @@ const Dashboard = () => {
           </div>
         </motion.div>
       )}
+      <button onClick={navigate('/admin/usesr-management')} className="fixed bottom-8 right-8 bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-full shadow-lg hover:shadow-2xl transition-all">
+        <Users className="w-6 h-6" />
+      </button>
     </div>
   );
 };
