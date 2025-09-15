@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { User, Settings, Train, Calendar, Wrench, Eye, Trash2, Plus, Edit, Building, UserPlus, Save, X, Users, Briefcase } from 'lucide-react';
-
+import { adminService } from '../services/adminapi.js';
 // Import your adminService
 // import { adminService } from './adminapi.js';
 

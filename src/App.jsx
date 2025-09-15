@@ -16,7 +16,7 @@ import Inspection from "./components/inspection/Inspection";
 import Maintenance from "./components/mainnatence/Mainnantence";
 import Operations from "./components/operations/Operations";
 import Dashboard from "./pages/Dashboard";
-
+import AdminDashboard from "./components/AdminDashboard";
 const LandingPage = () => {
   return (
     <div>
@@ -70,6 +70,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/admin/usesr-management" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <AdminDashboard />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
       <Route path="/inspection" element={
           <ProtectedRoute>
             <TranslationProvider>
@@ -98,6 +107,7 @@ function App() {
           </ProtectedRoute>
         } />
            </Routes>
+
     </Router>
   );
 }
