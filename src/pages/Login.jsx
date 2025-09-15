@@ -38,7 +38,7 @@ const Login = () => {
       const routes = {
         admin: "/dashboard",
         Cleaning: "/cleaning",
-        Inspection: "/inspection",
+      inspection: "/inspection",
         Maintainance: "/maintenance",
         Operations: "/operations",
       };
