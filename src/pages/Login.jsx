@@ -13,50 +13,50 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    try {
-      const res = await fetch(`${BASE_URL}login/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
+  try {
+    const res = await fetch(`${BASE_URL}login/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
 
-      let data;
-      try {
-        data = await res.json();
-      } catch {
-        throw new Error("Server returned an invalid response (not JSON).");
-      }
+    const data = await res.json().catch(() => {
+      throw new Error("Server returned an invalid response (not JSON).");
+    });
 
-      if (
-        res.ok &&
-        data.token &&
-        data.username &&
-        data.role &&
-        data.department
-      ) {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("role", data.role);
-        localStorage.setItem("department", data.department);
+    if (res.ok && data.token && data.username && data.role && data.department) {
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("username", data.username);
+      localStorage.setItem("role", data.role);
+      localStorage.setItem("department", data.department);
+      console.log("login",data);
+      const routes = {
+        admin: "/dashboard",
+        cleaning: "/cleaning",
+        inspection: "/inspection",
+        maintenance: "/maintenance",
+        operations: "/operations",
+      };
 
-        navigate("/dashboard");
+      if (routes[data.department]) {
+        navigate(routes[data.department]);
       } else {
         throw new Error("Login unsuccessful. Please check your credentials.");
       }
-    } catch (err) {
-      setError(err.message || "Something went wrong. Try again.");
-    } finally {
-      setLoading(false);
+    } else {
+      throw new Error("Login unsuccessful. Please check your credentials.");
     }
-  };
-
+  } catch (err) {
+    setError(err.message || "Something went wrong. Try again.");
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="min-h-screen flex px-4 sm:px-6 lg:px-8 relative overflow-hidden" style={{ backgroundColor: '#FFFFFF' }}>
      
