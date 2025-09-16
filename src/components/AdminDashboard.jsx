@@ -1486,7 +1486,8 @@ import React, { useState, useEffect } from 'react';
 import { 
   User, Settings, Train, Calendar, Wrench, Eye, Trash2, Plus, Edit, 
   Building, Save, X, Users, Briefcase, Search, Filter, RefreshCw,
-  ChevronDown, Bell, LogOut, Menu, Home, AlertCircle, CheckCircle
+  ChevronDown, Bell, LogOut, Menu, Home, AlertCircle, CheckCircle, MapPin,
+  Download, Upload, MoreVertical, Archive
 } from 'lucide-react';
 import { adminService } from '../services/adminapi.js';
 
@@ -1653,14 +1654,14 @@ const Alert = ({ type, message, onClose }) => {
 };
 
 // Data Table Component
-const DataTable = ({ data, onEdit, onDelete, canDelete, loading }) => {
+const DataTable = ({ data, onEdit, onDelete, canDelete, loading, activeTab }) => {
   if (loading) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+      <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <RefreshCw className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-            <p className="text-gray-600">Loading data...</p>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading data...</p>
           </div>
         </div>
       </div>
@@ -1669,7 +1670,7 @@ const DataTable = ({ data, onEdit, onDelete, canDelete, loading }) => {
 
   if (!data || data.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
+      <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="text-center py-12">
           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Briefcase size={24} className="text-gray-400" />
@@ -1681,58 +1682,198 @@ const DataTable = ({ data, onEdit, onDelete, canDelete, loading }) => {
     );
   }
 
+  const formatDateTime = (dateString) => {
+    if (!dateString) return 'Not set';
+    return new Date(dateString).toLocaleString();
+  };
+
+  const getStatusColor = (status) => {
+    if (!status) return 'text-gray-600 bg-gray-100';
+    switch (status.toLowerCase()) {
+      case 'completed': case 'active': case 'online': return 'text-green-600 bg-green-100';
+      case 'in-progress': case 'pending': return 'text-blue-600 bg-blue-100';
+      case 'scheduled': case 'waiting': return 'text-yellow-600 bg-yellow-100';
+      case 'inactive': case 'offline': return 'text-red-600 bg-red-100';
+      default: return 'text-gray-600 bg-gray-100';
+    }
+  };
+
+  const renderCellContent = (item, column) => {
+    const value = item[column];
+    
+    // Handle datetime fields
+    if (column.includes('time') || column.includes('date') || column.includes('Start') || column.includes('End') || column.includes('created') || column.includes('updated') || column === 'scheduledStart' || column === 'scheduledEnd' || column === 'enterd' || column === 'exited') {
+      return (
+        <span className="text-sm font-bold text-gray-900">
+          {formatDateTime(value)}
+        </span>
+      );
+    }
+    
+    // Handle status fields
+    if (column.toLowerCase().includes('status') || column === 'active' || column === 'enabled') {
+      const statusText = value ? (typeof value === 'boolean' ? (value ? 'Active' : 'Inactive') : String(value)) : 'Unknown';
+      return (
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${getStatusColor(statusText)}`}>
+          {statusText}
+        </span>
+      );
+    }
+    
+    // Handle ID fields with icons
+    if (column.includes('id') || column.includes('Id') || column === 'train' || column === 'lane' || column === 'lane_number' || column === 'bay_number' || column === 'depot') {
+      const icon = column.includes('train') ? <Train className="h-4 w-4 text-gray-400 mr-1" /> : 
+                   (column.includes('lane') || column === 'lane_number' || column === 'bay_number') ? null :
+                   column === 'depot' ? <Train className="h-4 w-4 text-gray-400 mr-1" /> :
+                   <Briefcase className="h-4 w-4 text-gray-400 mr-1" />;
+      return (
+        <div className={icon ? "flex items-center" : ""}>
+          {icon}
+          <span className="text-sm font-bold text-gray-900">{value || '-'}</span>
+        </div>
+      );
+    }
+    
+    // Handle email fields
+    if (column === 'email' && value) {
+      return (
+        <a href={`mailto:${value}`} className="text-blue-600 hover:text-blue-800 text-sm">
+          {value}
+        </a>
+      );
+    }
+    
+    // Handle depot name specifically
+    if (column === 'depot_name') {
+      return (
+        <div className="flex items-center">
+          <Train className="h-4 w-4 text-gray-400 mr-2" />
+          <span className="text-sm font-bold text-gray-900">{value || '-'}</span>
+        </div>
+      );
+    }
+    
+    // Handle other name fields (but not depot_name)
+    if ((column.includes('name') || column === 'username' || column === 'first_name' || column === 'last_name') && column !== 'depot_name') {
+      return (
+        <div className="flex items-center">
+          <User className="h-4 w-4 text-gray-400 mr-2" />
+          <span className="text-sm font-bold text-gray-900">{value || '-'}</span>
+        </div>
+      );
+    }
+    
+    // Handle object data professionally
+    if (typeof value === 'object' && value !== null) {
+      // If it's an array, show count
+      if (Array.isArray(value)) {
+        return (
+          <div className="text-sm text-gray-900">
+            {value.length} items
+          </div>
+        );
+      }
+      // If it's an object with a name property, show the name
+      if (value.name) {
+        return (
+          <span className="text-sm font-bold text-gray-900">
+            {value.name}
+          </span>
+        );
+      }
+      // If it's an object with username property, show username
+      if (value.username) {
+        return (
+          <span className="text-sm font-bold text-gray-900">
+            {value.username}
+          </span>
+        );
+      }
+      // If it's an object with id and name, show formatted
+      if (value.id && value.name) {
+        return (
+          <span className="text-sm font-bold text-gray-900">
+            {value.name} <span className="text-gray-500">(#{value.id})</span>
+          </span>
+        );
+      }
+      // For other objects, show a generic representation
+      return (
+        <span className="text-sm font-bold text-gray-900">
+          Object data
+        </span>
+      );
+    }
+    
+    return (
+      <span className="text-sm font-bold text-gray-900">
+        {String(value || '-')}
+      </span>
+    );
+  };
+
   const columns = Object.keys(data[0]).filter(key => key !== 'id');
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
+    <div className="bg-white shadow rounded-lg overflow-hidden">
+      <div className="px-6 py-4 border-b border-gray-200">
+        <h2 className="text-lg font-medium text-gray-900">{activeTab?.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())} Entries</h2>
+      </div>
+      <div className="overflow-hidden">
+        <table className="w-full table-fixed divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               {columns.map((column) => (
                 <th 
                   key={column}
-                  className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider"
+                  className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider break-words"
                 >
-                  {column.replace(/_/g, ' ')}
+                  {column === 'enterd' ? 'entered' : 
+                   column === 'scheduledStart' ? 'scheduled start' :
+                   column === 'scheduledEnd' ? 'scheduled end' :
+                   column.replace(/_/g, ' ')}
                 </th>
               ))}
-              <th className="px-6 py-4 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              <th className="px-3 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider w-32">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-100">
+          <tbody className="bg-white divide-y divide-gray-200">
             {data.map((item, index) => (
-              <tr key={item.id || index} className="hover:bg-gray-50 transition-colors">
-                {columns.map((column) => (
-                  <td key={column} className="px-6 py-4 text-sm text-gray-900">
-                    <div className="max-w-xs truncate">
-                      {typeof item[column] === 'object' && item[column] !== null 
-                        ? JSON.stringify(item[column]) 
-                        : String(item[column] || '-')
-                      }
-                    </div>
-                  </td>
-                ))}
-                <td className="px-6 py-4 text-right">
-                  <div className="flex items-center justify-end space-x-2">
+              <tr key={item.id || index} className="hover:bg-gray-50">
+                {columns.map((column) => {
+                  const isDateField = column.includes('time') || column.includes('date') || column.includes('Start') || column.includes('End') || column === 'scheduledStart' || column === 'scheduledEnd' || column === 'enterd' || column === 'exited';
+                  return (
+                    <td key={column} className={`px-3 py-4 ${isDateField ? 'break-words' : 'truncate'}`}>
+                      {renderCellContent(item, column)}
+                    </td>
+                  );
+                })}
+                <td className="px-3 py-4 text-sm font-medium w-32">
+                  <div className="flex items-center space-x-2">
                     <button
                       onClick={() => onEdit(item)}
-                      className="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-50 rounded-lg transition-colors"
+                      className="text-blue-600 hover:text-blue-900 hover:bg-blue-50 p-2 rounded-lg transition-colors"
                       title="Edit"
                     >
-                      <Edit size={16} />
+                      <Edit className="h-4 w-4" />
                     </button>
                     {canDelete && (
                       <button
                         onClick={() => onDelete(item.id)}
-                        className="p-2 text-red-600 hover:text-red-800 hover:bg-red-50 rounded-lg transition-colors"
+                        className="text-red-600 hover:text-red-900 hover:bg-red-50 p-2 rounded-lg transition-colors"
                         title="Delete"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 className="h-4 w-4" />
                       </button>
                     )}
+                    <button
+                      className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                      title="More options"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -2342,6 +2483,7 @@ const AdminDashboard = () => {
             onDelete={handleDelete}
             canDelete={canDelete()}
             loading={loading}
+            activeTab={activeTab}
           />
 
           {/* Form Modal */}
