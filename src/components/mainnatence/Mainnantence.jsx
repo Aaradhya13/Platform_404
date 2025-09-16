@@ -17,6 +17,9 @@ export default function Mainnantence() {
       <div>
         <h1 className="text-2xl font-bold">Maintenance Management</h1>
         <p>Maintenance functionality coming soon...</p>
+        <button onClick={() => navigate('/maintenance/dashboard')} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+        Go to Maintenance Dashboard
+      </button>
       </div>
     </div>
   )

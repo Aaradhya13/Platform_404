@@ -16,8 +16,10 @@ import CleaningDashboard from "./components/cleaning/CleaningDashboard"
 import Inspection from "./components/inspection/Inspection";
 import Maintenance from "./components/mainnatence/Mainnantence";
 import Operations from "./components/operations/Operations";
-import Dashboard from "./pages/Dashboard";
+import {Dashboard} from "./pages/Dashboard";
 import AdminDashboard from "./components/AdminDashboard";
+import InspectionDashboard from "./components/Inspectiondashboard";
+import MaintenanceDashboard from "./components/mainnatence/Mainanetence";
 const LandingPage = () => {
   return (
     <div>
@@ -60,13 +62,7 @@ function App() {
           element={
             <ProtectedRoute>
               <TranslationProvider>
-                <AppLayout>
                 <Dashboard />
-                <div className="fixed bottom-4 right-4 flex gap-2">
-                  <ThemeToggleButton />
-                  <SlidingThemeToggle />
-                </div>
-                </AppLayout>
               </TranslationProvider>
             </ProtectedRoute>
           }
@@ -110,6 +106,24 @@ function App() {
             <TranslationProvider>
               <AppLayout>
                 <OperationsDashboard />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
+        <Route path="/inspectiondashboard" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <InspectionDashboard />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
+        <Route path="/maintenance/dashboard" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <MaintenanceDashboard />
               </AppLayout>
             </TranslationProvider>
           </ProtectedRoute>
