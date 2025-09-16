@@ -268,181 +268,72 @@ const CleaningAnalytics = ({ onNavigateToList }) => {
   }
 
   return (
-    <div className="space-y-6">
-     
-      <motion.div 
-        initial={{ opacity: 0, y: -50, scale: 0.9 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-        className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 rounded-xl p-8 text-white relative overflow-hidden"
-      >
-        {/* Floating particles */}
-        <div className="absolute inset-0">
-          {[...Array(6)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 bg-white/20 rounded-full"
-              animate={{
-                x: [0, 100, 0],
-                y: [0, -50, 0],
-                opacity: [0.3, 0.8, 0.3]
-              }}
-              transition={{
-                duration: 4 + i,
-                repeat: Infinity,
-                delay: i * 0.5
-              }}
-              style={{
-                left: `${10 + i * 15}%`,
-                top: `${20 + i * 10}%`
-              }}
-            />
-          ))}
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-blue-600 shadow-sm border-b">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold text-white">Cleaning Analytics</h1>
+              <p className="text-blue-100">Real-time analytics and performance metrics</p>
+            </div>
+          </div>
         </div>
-        
-        <motion.h1 
-          className="text-4xl font-bold mb-3 relative z-10"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-        >
-          🚇 Cleaning Operations Dashboard
-        </motion.h1>
-        <motion.p 
-          className="text-blue-100 text-lg relative z-10"
-          initial={{ opacity: 0, x: -30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.5, duration: 0.6 }}
-        >
-          Real-time analytics and performance metrics
-        </motion.p>
-        
-        {/* Animated pulse effect */}
-        <motion.div
-          className="absolute top-4 right-4 w-4 h-4 bg-green-400 rounded-full"
-          animate={{ scale: [1, 1.5, 1], opacity: [1, 0.5, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-        <span className="absolute top-3 right-10 text-sm text-green-200">Live</span>
-      </motion.div>
+      </header>
+
+      <div className="max-w-7xl mx-auto p-6 space-y-6">
 
     
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <motion.div
-          variants={cardVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.1 }}
-          whileHover={{ 
-            scale: 1.05, 
-            boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
-            y: -5
-          }}
-          className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 cursor-pointer group"
-        >
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
-              <motion.p 
-                className="text-sm text-gray-600"
-                initial={{ opacity: 0.7 }}
-                whileHover={{ opacity: 1 }}
-              >
-                Total Schedules
-              </motion.p>
-              <motion.p 
-                className="text-3xl font-bold text-gray-900"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-              >
-                {analytics.total}
-              </motion.p>
+              <p className="text-sm text-gray-600">Total Schedules</p>
+              <p className="text-3xl font-bold text-black">{analytics.total}</p>
             </div>
-            <motion.div 
-              className="bg-blue-100 p-3 rounded-full group-hover:bg-blue-200 transition-colors"
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.6 }}
-            >
+            <div className="bg-blue-100 p-3 rounded-full">
               <Train className="w-6 h-6 text-blue-600" />
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={cardVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.2 }}
-          whileHover={{ 
-            scale: 1.05, 
-            boxShadow: "0 20px 25px -5px rgba(16, 185, 129, 0.2)",
-            y: -5
-          }}
-          className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 cursor-pointer group"
-        >
+        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Completed</p>
-              <motion.p 
-                className="text-3xl font-bold text-green-600"
-                animate={{ scale: [1, 1.1, 1] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 1.2 }}
-              >
-                {analytics.completed}
-              </motion.p>
-              <motion.p 
-                className="text-xs text-gray-500"
-                animate={{ opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 3, repeat: Infinity }}
-              >
-                {completionRate}% completion rate
-              </motion.p>
+              <p className="text-3xl font-bold text-black">{analytics.completed}</p>
+              <p className="text-xs text-gray-500">{completionRate}% completion rate</p>
             </div>
-            <motion.div 
-              className="bg-green-100 p-3 rounded-full group-hover:bg-green-200 transition-colors"
-              whileHover={{ rotate: 360, scale: 1.1 }}
-              transition={{ duration: 0.6 }}
-            >
-              <CheckCircle className="w-6 h-6 text-green-600" />
-            </motion.div>
+            <div className="bg-blue-100 p-3 rounded-full">
+              <CheckCircle className="w-6 h-6 text-blue-600" />
+            </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={cardVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.3 }}
-          className="bg-white rounded-lg shadow-md border border-gray-200 p-6"
-        >
+        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">In Progress</p>
-              <p className="text-3xl font-bold text-yellow-600">{analytics.inProgress}</p>
+              <p className="text-3xl font-bold text-black">{analytics.inProgress}</p>
             </div>
-            <div className="bg-yellow-100 p-3 rounded-full">
-              <Clock className="w-6 h-6 text-yellow-600" />
+            <div className="bg-blue-100 p-3 rounded-full">
+              <Clock className="w-6 h-6 text-blue-600" />
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={cardVariants}
-          initial="hidden"
-          animate="visible"
-          transition={{ delay: 0.4 }}
-          className="bg-white rounded-lg shadow-md border border-gray-200 p-6"
-        >
+        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600">Pending</p>
-              <p className="text-3xl font-bold text-gray-600">{analytics.pending}</p>
-              <p className="text-xs text-red-500">Overdue: {analytics.overdue}</p>
+              <p className="text-3xl font-bold text-black">{analytics.pending}</p>
+              <p className="text-xs text-blue-500">Overdue: {analytics.overdue}</p>
             </div>
-            <div className="bg-gray-100 p-3 rounded-full">
-              <AlertCircle className="w-6 h-6 text-gray-600" />
+            <div className="bg-blue-100 p-3 rounded-full">
+              <AlertCircle className="w-6 h-6 text-blue-600" />
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
 
     
@@ -459,15 +350,15 @@ const CleaningAnalytics = ({ onNavigateToList }) => {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="text-center">
-            <p className="text-2xl font-bold text-blue-600">{analytics.todayScheduled}</p>
+            <p className="text-2xl font-bold text-black">{analytics.todayScheduled}</p>
             <p className="text-sm text-gray-600">Scheduled Today</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-green-600">{analytics.todayCompleted}</p>
+            <p className="text-2xl font-bold text-black">{analytics.todayCompleted}</p>
             <p className="text-sm text-gray-600">Completed Today</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-purple-600">{todayCompletionRate}%</p>
+            <p className="text-2xl font-bold text-black">{todayCompletionRate}%</p>
             <p className="text-sm text-gray-600">Completion Rate</p>
           </div>
         </div>
@@ -480,7 +371,7 @@ const CleaningAnalytics = ({ onNavigateToList }) => {
           </div>
           <div className="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
             <motion.div 
-              className="bg-gradient-to-r from-green-500 to-green-600 h-4 rounded-full relative"
+              className="bg-gradient-to-r from-blue-500 to-blue-600 h-4 rounded-full relative"
               initial={{ width: 0 }}
               animate={{ width: `${todayCompletionRate}%` }}
               transition={{ duration: 2, delay: 0.8, type: "spring" }}
@@ -520,202 +411,41 @@ const CleaningAnalytics = ({ onNavigateToList }) => {
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-green-50 rounded-lg">
-            <div className="text-2xl font-bold text-green-600">{analytics.completed}</div>
-            <div className="text-sm text-green-700">Completed</div>
+          <div className="text-center p-4 bg-blue-50 rounded-lg">
+            <div className="text-2xl font-bold text-black">{analytics.completed}</div>
+            <div className="text-sm text-blue-700">Completed</div>
           </div>
-          <div className="text-center p-4 bg-yellow-50 rounded-lg">
-            <div className="text-2xl font-bold text-yellow-600">{analytics.inProgress}</div>
-            <div className="text-sm text-yellow-700">In Progress</div>
+          <div className="text-center p-4 bg-blue-50 rounded-lg">
+            <div className="text-2xl font-bold text-black">{analytics.inProgress}</div>
+            <div className="text-sm text-blue-700">In Progress</div>
           </div>
-          <div className="text-center p-4 bg-gray-50 rounded-lg">
-            <div className="text-2xl font-bold text-gray-600">{analytics.pending}</div>
-            <div className="text-sm text-gray-700">Pending</div>
+          <div className="text-center p-4 bg-blue-50 rounded-lg">
+            <div className="text-2xl font-bold text-black">{analytics.pending}</div>
+            <div className="text-sm text-blue-700">Pending</div>
           </div>
-          <div className="text-center p-4 bg-red-50 rounded-lg">
-            <div className="text-2xl font-bold text-red-600">{analytics.overdue}</div>
-            <div className="text-sm text-red-700">Overdue</div>
+          <div className="text-center p-4 bg-blue-50 rounded-lg">
+            <div className="text-2xl font-bold text-black">{analytics.overdue}</div>
+            <div className="text-sm text-blue-700">Overdue</div>
           </div>
         </div>
       </motion.div>
 
-     
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.7 }}
-          className="bg-white rounded-lg shadow-md border border-gray-200 p-6"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Status Distribution</h2>
-            <PieChart className="w-6 h-6 text-blue-600" />
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <PieChartComponent 
-              data={{
-                Completed: analytics.completed,
-                'In Progress': analytics.inProgress,
-                Pending: analytics.pending,
-                Overdue: analytics.overdue
-              }}
-              colors={['#10B981', '#F59E0B', '#6B7280', '#EF4444']}
-            />
-            <div className="space-y-2">
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-sm text-gray-600">Completed ({analytics.completed})</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                <span className="text-sm text-gray-600">In Progress ({analytics.inProgress})</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-                <span className="text-sm text-gray-600">Pending ({analytics.pending})</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                <span className="text-sm text-gray-600">Overdue ({analytics.overdue})</span>
-              </div>
-            </div>
-          </div>
-        </motion.div>
 
-       
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.8 }}
-          className="bg-white rounded-lg shadow-md border border-gray-200 p-6"
-        >
-          <BarChartComponent 
-            data={analytics.weeklyData}
-            title="Weekly Schedule Distribution"
-            color="#8B5CF6"
-          />
-        </motion.div>
-      </div>
 
-      
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-       
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
-          className="bg-white rounded-lg shadow-md border border-gray-200 p-6"
-        >
-          <SimpleBarChart 
-            data={analytics.hourlyData}
-            title="Hourly Schedule Distribution"
-          />
-        </motion.div>
-
-      
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
-          className="bg-white rounded-lg shadow-md border border-gray-200 p-6"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Performance Metrics</h2>
-            <Activity className="w-6 h-6 text-blue-600" />
-          </div>
-          
-          <div className="space-y-4">
-            <div className="p-3 bg-blue-50 rounded-lg">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-blue-700">Avg Cleaning Time</span>
-                <span className="text-lg font-bold text-blue-900">{analytics.avgCleaningTime} min</span>
-              </div>
-              <p className="text-xs text-blue-600 mt-1">Based on completed entries with entry & exit times</p>
-            </div>
-            
-            <div className="p-3 bg-green-50 rounded-lg">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-green-700">Completion Rate</span>
-                <span className="text-lg font-bold text-green-900">{completionRate}%</span>
-              </div>
-              <p className="text-xs text-green-600 mt-1">{analytics.completed} of {analytics.total} schedules completed</p>
-            </div>
-            
-            <div className="p-3 bg-purple-50 rounded-lg">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-purple-700">Active Depots</span>
-                <span className="text-lg font-bold text-purple-900">{Object.keys(analytics.depotData).length}</span>
-              </div>
-              <p className="text-xs text-purple-600 mt-1">Depots with scheduled cleaning</p>
-            </div>
-            
-            <div className="mt-4">
-              <h4 className="font-semibold text-gray-700 mb-2">Depot Distribution</h4>
-              <div className="space-y-1">
-                {Object.entries(analytics.depotData).map(([depot, count]) => (
-                  <div key={depot} className="flex justify-between text-sm">
-                    <span className="text-gray-600">{depot}</span>
-                    <span className="font-semibold text-gray-800">{count}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-    
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8, y: 50 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ delay: 1.1, type: "spring", bounce: 0.6 }}
-        className="text-center"
-      >
+      {/* Manage Schedules Button - Bottom Right */}
+      <div className="fixed bottom-4 right-4 z-50">
         <motion.button
           onClick={onNavigateToList}
-          whileHover={{ 
-            scale: 1.08,
-            boxShadow: "0 25px 50px -12px rgba(59, 130, 246, 0.5)",
-            background: "linear-gradient(45deg, #3B82F6, #8B5CF6, #3B82F6)",
-            backgroundSize: "200% 200%"
-          }}
+          whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          animate={{
-            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"]
-          }}
-          transition={{
-            backgroundPosition: { duration: 3, repeat: Infinity },
-            default: { duration: 0.3 }
-          }}
-          className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 text-white px-10 py-5 rounded-2xl font-bold text-xl shadow-2xl flex items-center gap-4 mx-auto relative overflow-hidden group"
-          style={{ backgroundSize: "200% 200%" }}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
         >
-         
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-            animate={{ x: ["-100%", "100%"] }}
-            transition={{ duration: 2, repeat: Infinity, delay: 2 }}
-          />
-          
-          <motion.div
-            animate={{ rotate: [0, 360] }}
-            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-          >
-            <Train className="w-7 h-7" />
-          </motion.div>
-          
-          <span className="relative z-10">Manage Cleaning Schedules</span>
-          
-          <motion.div
-            animate={{ x: [0, 5, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <ArrowRight className="w-7 h-7" />
-          </motion.div>
+          <Train className="w-5 h-5" />
+          <span>Manage Schedules</span>
+          <ArrowRight className="w-4 h-4" />
         </motion.button>
-      </motion.div>
+      </div>
+      </div>
     </div>
   );
 };

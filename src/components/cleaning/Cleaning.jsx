@@ -64,10 +64,9 @@ const Cleaning = () => {
   const fetchCleaningLanes = async () => {
     try {
       const data = await cleaningService.getCleaningLanes();
-      console.log('Fetched lanes:', data);
       setLanes(data);
     } catch (err) {
-      console.error('Failed to fetch lanes:', err.message);
+      setError('Failed to fetch lanes: ' + err.message);
     }
   };
 
@@ -85,7 +84,6 @@ const Cleaning = () => {
 
   const handleSave = async () => {
     try {
-      console.log('Edit data before formatting:', editData);
       const apiData = {
         id: editData.id,
         lane: editData.lane,
@@ -94,9 +92,7 @@ const Cleaning = () => {
         enterd: formatForAPI(editData.enterd),
         exited: formatForAPI(editData.exited)
       };
-      console.log('Sending to backend:', apiData);
       const response = await cleaningService.updateCleaningEntry(apiData);
-      console.log('Backend response:', response);
       setEditingId(null);
       setSuccess(`${response.message} - Train ${response.updated_entry.train_id} updated`);
       setTimeout(() => setSuccess(''), 5000);
@@ -116,8 +112,8 @@ const Cleaning = () => {
   const handleCreate = async () => {
     try {
       const apiData = {
-        train: parseInt(createData.train),
-        lane: parseInt(createData.lane),
+        train: parseInt(createData.train, 10),
+        lane: parseInt(createData.lane, 10),
         scheduledStart: formatForAPI(createData.scheduledStart),
         scheduledEnd: formatForAPI(createData.scheduledEnd),
         enterd: formatForAPI(createData.enterd)
@@ -160,8 +156,8 @@ const Cleaning = () => {
   const handleCreateLane = async () => {
     try {
       const apiData = {
-        depot: parseInt(createLaneData.depot),
-        bay_number: parseInt(createLaneData.bay_number)
+        depot: parseInt(createLaneData.depot, 10),
+        bay_number: parseInt(createLaneData.bay_number, 10)
       };
       const response = await cleaningService.createCleaningLane(apiData);
       setShowCreateLaneForm(false);
@@ -308,493 +304,353 @@ const Cleaning = () => {
   }
 
   return (
-    <div className="space-y-8 min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Animated Success Message */}
-      {success && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -20, scale: 0.9 }}
-          className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 shadow-lg"
-        >
-          <div className="flex items-center gap-3">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 0.6 }}
-            >
-              <CheckCircle className="w-5 h-5 text-green-600" />
-            </motion.div>
-            <p className="text-green-700 font-medium">{success}</p>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Enhanced Header */}
-      <motion.div 
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden"
-      >
-        {/* Background decoration */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full -translate-y-16 translate-x-16 opacity-50" />
-        
-        <div className="flex justify-between items-center relative z-10">
-          <div>
-            <motion.h1 
-              className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
-              🚆 Cleaning Schedules
-            </motion.h1>
-            <motion.p 
-              className="text-gray-600"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              Manage and track train cleaning operations
-            </motion.p>
-          </div>
-          
-          <motion.div 
-            className="flex gap-3"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            {isAdmin && (
-              <>
-                <motion.button 
-                  onClick={() => setShowCreateForm(true)}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex items-center gap-2 font-medium"
-                >
-                  <Plus size={18} /> New Entry
-                </motion.button>
-                <motion.button 
-                  onClick={() => setShowCreateLaneForm(true)}
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex items-center gap-2 font-medium"
-                >
-                  <Plus size={18} /> New Lane
-                </motion.button>
-              </>
-            )}
-            <motion.button 
-              onClick={fetchCleaningSchedules}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex items-center gap-2 font-medium"
-            >
-              <motion.div
-                animate={{ rotate: loading ? 360 : 0 }}
-                transition={{ duration: 1, repeat: loading ? Infinity : 0 }}
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-blue-600 text-white">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold">Cleaning Schedules</h1>
+              <p className="text-blue-100 mt-1">Manage and track train cleaning operations</p>
+            </div>
+            
+            <div className="flex gap-3">
+              {isAdmin && (
+                <>
+                  <button 
+                    onClick={() => setShowCreateForm(true)}
+                    className="flex items-center space-x-2 bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium"
+                  >
+                    <Plus size={16} />
+                    <span>Add Entry</span>
+                  </button>
+                  <button 
+                    onClick={() => setShowCreateLaneForm(true)}
+                    className="flex items-center space-x-2 bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium"
+                  >
+                    <Plus size={16} />
+                    <span>Add Lane</span>
+                  </button>
+                </>
+              )}
+              <button 
+                onClick={fetchCleaningSchedules}
+                className="flex items-center space-x-2 bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium"
               >
-                🔄
-              </motion.div>
-              Refresh
-            </motion.button>
-          </motion.div>
+                <span>Refresh</span>
+              </button>
+            </div>
+          </div>
         </div>
-      </motion.div>
+      </header>
 
-      {/* Enhanced Create Form */}
-      {isAdmin && showCreateForm && (
-        <motion.div 
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -20, scale: 0.95 }}
-          className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full -translate-y-12 translate-x-12 opacity-60" />
-          
-          <motion.h2 
-            className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3 relative z-10"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className="p-2 bg-green-100 rounded-xl">
-              <Plus className="w-6 h-6 text-green-600" />
-            </div>
-            Create New Cleaning Entry
-          </motion.h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-            <motion.div 
-              className="space-y-2"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <label className="block text-sm font-semibold text-blue-700 mb-2">🚆 Train ID</label>
-              <input
-                type="text"
-                value={createData.train}
-                onChange={(e) => setCreateData({...createData, train: e.target.value})}
-                className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white shadow-sm"
-                required
-                placeholder="Enter train ID"
-              />
-            </motion.div>
-            
-            <motion.div 
-              className="space-y-2"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <label className="block text-sm font-semibold text-purple-700 mb-2">🛤️ Lane</label>
-              <select
-                value={createData.lane}
-                onChange={(e) => setCreateData({...createData, lane: e.target.value})}
-                className="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 bg-white shadow-sm"
-                required
-              >
-                <option value="">Select Lane</option>
-                {lanes.map((lane) => (
-                  <option key={lane.id} value={lane.bay_number}>
-                    Bay {lane.bay_number} - {lane.depot_name}
-                  </option>
-                ))}
-              </select>
-            </motion.div>
-            
-            <motion.div 
-              className="space-y-2"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <label className="block text-sm font-semibold text-green-700 mb-2">📅 Scheduled Start</label>
-              <input
-                type="datetime-local"
-                value={createData.scheduledStart}
-                onChange={(e) => setCreateData({...createData, scheduledStart: e.target.value})}
-                className="w-full px-4 py-3 border-2 border-green-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 bg-white shadow-sm"
-              />
-            </motion.div>
-            
-            <motion.div 
-              className="space-y-2"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <label className="block text-sm font-semibold text-orange-700 mb-2">🏁 Scheduled End</label>
-              <input
-                type="datetime-local"
-                value={createData.scheduledEnd}
-                onChange={(e) => setCreateData({...createData, scheduledEnd: e.target.value})}
-                className="w-full px-4 py-3 border-2 border-orange-200 rounded-xl focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-200 bg-white shadow-sm"
-              />
-            </motion.div>
-            
-            <motion.div 
-              className="space-y-2 md:col-span-2"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <label className="block text-sm font-semibold text-indigo-700 mb-2">🚪 Entry Time (Optional)</label>
-              <input
-                type="datetime-local"
-                value={createData.enterd}
-                onChange={(e) => setCreateData({...createData, enterd: e.target.value})}
-                className="w-full px-4 py-3 border-2 border-indigo-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-200 bg-white shadow-sm"
-              />
-            </motion.div>
+      <div className="max-w-7xl mx-auto p-6">
+        {/* Alerts */}
+        {error && (
+          <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+            {error}
           </div>
-          
-          <motion.div 
-            className="flex gap-4 mt-8 relative z-10"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-          >
-            <motion.button
-              onClick={handleCreate}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
-            >
-              <CheckCircle size={18} />
-              Create Entry
-            </motion.button>
-            <motion.button
-              onClick={handleCancelCreate}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
-            >
-              <X size={18} />
-              Cancel
-            </motion.button>
-          </motion.div>
-        </motion.div>
-      )}
+        )}
+        {success && (
+          <div className="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+            {success}
+          </div>
+        )}
 
-      {/* Enhanced Create Lane Form */}
-      {isAdmin && showCreateLaneForm && (
-        <motion.div 
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: -20, scale: 0.95 }}
-          className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-100 to-pink-100 rounded-full -translate-y-12 translate-x-12 opacity-60" />
-          
-          <motion.h2 
-            className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3 relative z-10"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className="p-2 bg-purple-100 rounded-xl">
-              <Plus className="w-6 h-6 text-purple-600" />
+        {/* Create Entry Modal */}
+        {isAdmin && showCreateForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <form onSubmit={(e) => { e.preventDefault(); handleCreate(); }}>
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-gray-900">Add New Cleaning Entry</h3>
+                    <button
+                      type="button"
+                      onClick={handleCancelCreate}
+                      className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="px-6 py-4 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Train ID <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={createData.train}
+                      onChange={(e) => setCreateData({...createData, train: e.target.value})}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      required
+                      placeholder="Enter train ID"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Lane <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      value={createData.lane}
+                      onChange={(e) => setCreateData({...createData, lane: e.target.value})}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      required
+                    >
+                      <option value="">Select Lane</option>
+                      {lanes.map((lane) => (
+                        <option key={lane.id} value={lane.bay_number}>
+                          Bay {lane.bay_number} - {lane.depot_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Scheduled Start
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={createData.scheduledStart}
+                      onChange={(e) => setCreateData({...createData, scheduledStart: e.target.value})}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Scheduled End
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={createData.scheduledEnd}
+                      onChange={(e) => setCreateData({...createData, scheduledEnd: e.target.value})}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Entry Time (Optional)
+                    </label>
+                    <input
+                      type="datetime-local"
+                      value={createData.enterd}
+                      onChange={(e) => setCreateData({...createData, enterd: e.target.value})}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-3 px-6 py-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={handleCancelCreate}
+                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  >
+                    <Save size={16} />
+                    <span>Create</span>
+                  </button>
+                </div>
+              </form>
             </div>
-            Create New Cleaning Lane
-          </motion.h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-            <motion.div 
-              className="space-y-2"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <label className="block text-sm font-semibold text-blue-700 mb-2">🏢 Depot ID</label>
-              <input
-                type="number"
-                value={createLaneData.depot}
-                onChange={(e) => setCreateLaneData({...createLaneData, depot: e.target.value})}
-                className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white shadow-sm"
-                required
-                placeholder="Enter depot ID"
-              />
-            </motion.div>
-            
-            <motion.div 
-              className="space-y-2"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <label className="block text-sm font-semibold text-purple-700 mb-2">🛤️ Bay Number</label>
-              <input
-                type="number"
-                value={createLaneData.bay_number}
-                onChange={(e) => setCreateLaneData({...createLaneData, bay_number: e.target.value})}
-                className="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 bg-white shadow-sm"
-                required
-                placeholder="Enter bay number"
-              />
-            </motion.div>
           </div>
-          
-          <motion.div 
-            className="flex gap-4 mt-8 relative z-10"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            <motion.button
-              onClick={handleCreateLane}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
-            >
-              <CheckCircle size={18} />
-              Create Lane
-            </motion.button>
-            <motion.button
-              onClick={handleCancelCreateLane}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
-            >
-              <X size={18} />
-              Cancel
-            </motion.button>
-          </motion.div>
-        </motion.div>
-      )}
+        )}
+
+        {/* Create Lane Modal */}
+        {isAdmin && showCreateLaneForm && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-2xl max-w-md w-full">
+              <form onSubmit={(e) => { e.preventDefault(); handleCreateLane(); }}>
+                <div className="px-6 py-4 border-b border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-gray-900">Add New Cleaning Lane</h3>
+                    <button
+                      type="button"
+                      onClick={handleCancelCreateLane}
+                      className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                    >
+                      <X size={20} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="px-6 py-4 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Depot ID <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      value={createLaneData.depot}
+                      onChange={(e) => setCreateLaneData({...createLaneData, depot: e.target.value})}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      required
+                      placeholder="Enter depot ID"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Bay Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      value={createLaneData.bay_number}
+                      onChange={(e) => setCreateLaneData({...createLaneData, bay_number: e.target.value})}
+                      className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                      required
+                      placeholder="Enter bay number"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-3 px-6 py-4 border-t border-gray-200">
+                  <button
+                    type="button"
+                    onClick={handleCancelCreateLane}
+                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  >
+                    <Save size={16} />
+                    <span>Create</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
       {/* Enhanced Lanes List */}
       {isAdmin && lanes.length > 0 && (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden"
-        >
-          <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-indigo-100 to-blue-100 rounded-full -translate-y-12 translate-x-12 opacity-60" />
-          
-          <motion.h2 
-            className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-3 relative z-10"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
-          >
-            <div className="p-2 bg-indigo-100 rounded-xl">
-              🛤️
-            </div>
+        <div className="bg-white rounded-lg shadow border border-gray-200 p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <MapPin size={20} className="text-blue-600" />
             Cleaning Lanes Management
-          </motion.h2>
+          </h2>
           
-          <div className="grid gap-4 relative z-10">
-            {lanes.map((lane, index) => (
-              <motion.div 
+          <div className="space-y-3">
+            {lanes.map((lane) => (
+              <div 
                 key={lane.id} 
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.02, y: -2 }}
-                className="flex items-center justify-between p-4 border-2 border-gray-100 rounded-xl bg-gradient-to-r from-gray-50 to-blue-50 hover:from-blue-50 hover:to-indigo-50 transition-all duration-200"
+                className="flex items-center justify-between p-4 border border-gray-200 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
               >
                 {editingLaneId === lane.id ? (
-                  <motion.div 
-                    className="flex items-center gap-4 flex-1"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                  >
-                    <div className="space-y-1">
-                      <label className="text-xs font-semibold text-blue-600">Depot</label>
+                  <div className="flex items-center gap-4 flex-1">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Depot</label>
                       <input
                         type="number"
                         value={editLaneData.depot}
-                        onChange={(e) => setEditLaneData({...editLaneData, depot: parseInt(e.target.value)})}
-                        className="w-24 px-3 py-2 border-2 border-blue-200 rounded-lg focus:border-blue-500 transition-colors"
+                        onChange={(e) => setEditLaneData({...editLaneData, depot: parseInt(e.target.value, 10)})}
+                        className="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Depot"
                       />
                     </div>
-                    <div className="space-y-1">
-                      <label className="text-xs font-semibold text-purple-600">Bay</label>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Bay</label>
                       <input
                         type="number"
                         value={editLaneData.lane_number}
-                        onChange={(e) => setEditLaneData({...editLaneData, lane_number: parseInt(e.target.value)})}
-                        className="w-24 px-3 py-2 border-2 border-purple-200 rounded-lg focus:border-purple-500 transition-colors"
+                        onChange={(e) => setEditLaneData({...editLaneData, lane_number: parseInt(e.target.value, 10)})}
+                        className="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                         placeholder="Bay"
                       />
                     </div>
-                  </motion.div>
+                  </div>
                 ) : (
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      🏢
-                    </div>
-                    <span className="font-semibold text-gray-800">Bay {lane.bay_number} - {lane.depot_name}</span>
+                  <div className="flex items-center gap-2">
+                    <MapPin size={16} className="text-blue-600" />
+                    <span className="font-medium text-gray-900">Bay {lane.bay_number} - {lane.depot_name}</span>
                   </div>
                 )}
                 
-                <div className="flex gap-3">
+                <div className="flex gap-2">
                   {editingLaneId === lane.id ? (
                     <>
-                      <motion.button
+                      <button
                         onClick={handleSaveLane}
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
+                        className="p-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
                         title="Save changes"
                       >
                         <Save size={16} />
-                      </motion.button>
-                      <motion.button
+                      </button>
+                      <button
                         onClick={handleCancelEditLane}
-                        whileHover={{ scale: 1.1, rotate: -5 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
+                        className="p-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
                         title="Cancel editing"
                       >
                         <X size={16} />
-                      </motion.button>
+                      </button>
                     </>
                   ) : (
                     <>
-                      <motion.button
+                      <button
                         onClick={() => handleEditLane(lane)}
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
+                        className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
                         title="Edit lane"
                       >
                         <Edit size={16} />
-                      </motion.button>
-                      <motion.button
+                      </button>
+                      <button
                         onClick={() => handleDeleteLane(lane.id)}
-                        whileHover={{ scale: 1.1, rotate: -5 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
+                        className="p-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
                         title="Delete lane"
                       >
                         <Trash2 size={16} />
-                      </motion.button>
+                      </button>
                     </>
                   )}
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       )}
 
-      <div className="grid gap-6">
-        {schedules.map((schedule, index) => {
+      <div className="space-y-4">
+        {schedules.map((schedule) => {
           const statusInfo = getScheduleStatus(schedule);
           return (
-            <motion.div 
+            <div 
               key={schedule.id} 
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ 
-                y: -5, 
-                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
-                scale: 1.02
-              }}
-              className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden group cursor-pointer"
+              className="bg-white rounded-lg shadow border border-gray-200 p-6"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               
-              <div className="flex items-start justify-between relative z-10">
+              <div className="flex items-start justify-between">
                 <div className="flex-1">
-                  <motion.div 
-                    className="flex items-center gap-6 mb-6"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 + 0.2 }}
-                  >
-                    <div className="flex items-center gap-3 bg-blue-50 px-4 py-2 rounded-xl">
-                      <motion.div
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.6 }}
-                      >
-                        <Train size={24} className="text-blue-600" />
-                      </motion.div>
-                      <span className="font-bold text-lg text-blue-900">Train {schedule.train_id}</span>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg">
+                      <Train size={20} className="text-blue-600" />
+                      <span className="font-semibold text-blue-900">Train {schedule.train_id}</span>
                     </div>
                     
-                    <div className="flex items-center gap-3 bg-green-50 px-4 py-2 rounded-xl">
-                      <MapPin size={20} className="text-green-600" />
-                      <span className="font-medium text-green-800">{schedule.depot_name}</span>
+                    <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg">
+                      <MapPin size={16} className="text-blue-600" />
+                      <span className="font-medium text-blue-700">{schedule.depot_name}</span>
                     </div>
                     
-                    <div className="px-4 py-2 bg-gradient-to-r from-purple-100 to-blue-100 text-purple-800 rounded-xl text-sm font-medium">
+                    <div className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
                       {getLaneInfo(schedule.lane)}
                     </div>
-                  </motion.div>
+                  </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                   <div>
@@ -807,70 +663,53 @@ const Cleaning = () => {
                   </div>
                   
                   {editingId === schedule.id ? (
-                    <motion.div 
-                      className="col-span-full bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl border-2 border-blue-200"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.3 }}
-                    >
+                    <div className="col-span-full bg-blue-50 p-4 rounded-lg border border-blue-200 mt-4">
                       <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
                         <Edit className="w-5 h-5 text-blue-600" />
                         Edit Schedule Times
                       </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <motion.div 
-                          className="space-y-2"
-                          whileHover={{ scale: 1.02 }}
-                        >
-                          <label className="block text-sm font-semibold text-blue-700 mb-2">📅 Scheduled Start</label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Scheduled Start</label>
                           <input
                             type="datetime-local"
                             value={editData.scheduledStart}
                             onChange={(e) => setEditData({...editData, scheduledStart: e.target.value})}
-                            className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white shadow-sm"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           />
-                        </motion.div>
+                        </div>
                         
-                        <motion.div 
-                          className="space-y-2"
-                          whileHover={{ scale: 1.02 }}
-                        >
-                          <label className="block text-sm font-semibold text-blue-700 mb-2">🏁 Scheduled End</label>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Scheduled End</label>
                           <input
                             type="datetime-local"
                             value={editData.scheduledEnd}
                             onChange={(e) => setEditData({...editData, scheduledEnd: e.target.value})}
-                            className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white shadow-sm"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           />
-                        </motion.div>
+                        </div>
                         
-                        <motion.div 
-                          className="space-y-2"
-                          whileHover={{ scale: 1.02 }}
-                        >
-                          <label className="block text-sm font-semibold text-green-700 mb-2">🚪 Entry Time</label>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Entry Time</label>
                           <input
                             type="datetime-local"
                             value={editData.enterd}
                             onChange={(e) => setEditData({...editData, enterd: e.target.value})}
-                            className="w-full px-4 py-3 border-2 border-green-200 rounded-xl focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 bg-white shadow-sm"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           />
-                        </motion.div>
+                        </div>
                         
-                        <motion.div 
-                          className="space-y-2"
-                          whileHover={{ scale: 1.02 }}
-                        >
-                          <label className="block text-sm font-semibold text-purple-700 mb-2">🚪 Exit Time</label>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Exit Time</label>
                           <input
                             type="datetime-local"
                             value={editData.exited}
                             onChange={(e) => setEditData({...editData, exited: e.target.value})}
-                            className="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200 bg-white shadow-sm"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                           />
-                        </motion.div>
+                        </div>
                       </div>
-                    </motion.div>
+                    </div>
                   ) : (
                     <>
                       <div>
@@ -886,79 +725,53 @@ const Cleaning = () => {
                 </div>
               </div>
 
-              <div className="ml-6 flex items-center gap-4">
-                <motion.div 
-                  className={`px-4 py-2 rounded-xl text-sm font-bold shadow-lg ${statusInfo.color}`}
-                  whileHover={{ scale: 1.05 }}
-                  animate={{ 
-                    boxShadow: statusInfo.status === 'In Progress' ? 
-                      ["0 0 0 0 rgba(251, 191, 36, 0.4)", "0 0 0 10px rgba(251, 191, 36, 0)"] : 
-                      "0 4px 15px 0 rgba(0, 0, 0, 0.1)"
-                  }}
-                  transition={{ 
-                    boxShadow: { duration: 1.5, repeat: statusInfo.status === 'In Progress' ? Infinity : 0 }
-                  }}
-                >
+              <div className="flex items-center justify-between mt-4">
+                <div className={`px-3 py-1 rounded-lg text-sm font-medium ${statusInfo.color}`}>
                   {statusInfo.status}
-                </motion.div>
+                </div>
 
-                {editingId === schedule.id ? (
-                  <motion.div 
-                    className="flex gap-3"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                  >
-                    <motion.button
-                      onClick={handleSave}
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
-                      title="Save changes"
-                    >
-                      <Save size={18} />
-                    </motion.button>
-                    <motion.button
-                      onClick={handleCancel}
-                      whileHover={{ scale: 1.1, rotate: -5 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
-                      title="Cancel editing"
-                    >
-                      <X size={18} />
-                    </motion.button>
-                  </motion.div>
-                ) : (
-                  <motion.div 
-                    className="flex gap-3"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 + 0.4 }}
-                  >
-                    <motion.button
-                      onClick={() => handleEdit(schedule)}
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
-                      title="Edit entry"
-                    >
-                      <Edit size={18} />
-                    </motion.button>
-                    {isAdmin && (
-                      <motion.button
-                        onClick={() => handleDelete(schedule.id)}
-                        whileHover={{ scale: 1.1, rotate: -5 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
-                        title="Delete entry"
+                <div className="ml-6">
+                  {editingId === schedule.id ? (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleSave}
+                        className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                        title="Save changes"
                       >
-                        <Trash2 size={18} />
-                      </motion.button>
-                    )}
-                  </motion.div>
-                )}
+                        <Save size={16} />
+                      </button>
+                      <button
+                        onClick={handleCancel}
+                        className="p-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+                        title="Cancel editing"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(schedule)}
+                        className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                        title="Edit entry"
+                      >
+                        <Edit size={16} />
+                      </button>
+                      {isAdmin && (
+                        <button
+                          onClick={() => handleDelete(schedule.id)}
+                          className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                          title="Delete entry"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </motion.div>
+          </div>
           );
         })}
       </div>
@@ -968,6 +781,7 @@ const Cleaning = () => {
           <p className="text-gray-500">No cleaning schedules found</p>
         </div>
       )}
+      </div>
     </div>
   );
 };
