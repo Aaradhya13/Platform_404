@@ -16,7 +16,7 @@ export default function Inspection() {
       <div>
         <h1 className="text-2xl font-bold">Inspection Management</h1>
         <p>Inspection functionality coming soon...</p>
-        <button onClick={() => nav('/inspectiondashboard')} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+        <button onClick={() => nav('/inspection/jobcard')} className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
         Go to Inspection Dashboard
       </button>
       </div>
