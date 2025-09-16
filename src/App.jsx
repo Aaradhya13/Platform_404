@@ -74,9 +74,7 @@ function App() {
         <Route path="/admin/usesr-management" element={
           <ProtectedRoute>
             <TranslationProvider>
-              <AppLayout>
                 <AdminDashboard />
-              </AppLayout>
             </TranslationProvider>
           </ProtectedRoute>
         } />
