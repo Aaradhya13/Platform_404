@@ -20,6 +20,7 @@ import {Dashboard} from "./pages/Dashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import InspectionDashboard from "./components/Inspectiondashboard";
 import MaintenanceDashboard from "./components/mainnatence/Mainanetence";
+import JobCard from "./components/inspection/JobCard"
 const LandingPage = () => {
   return (
     <div>
@@ -124,6 +125,15 @@ function App() {
             <TranslationProvider>
               <AppLayout>
                 <MaintenanceDashboard />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
+        <Route path="/inspection/jobcard" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <JobCard />
               </AppLayout>
             </TranslationProvider>
           </ProtectedRoute>
