@@ -14,7 +14,8 @@ import {
   Clock,
   Train,
   AlertCircle,
-  ImageIcon
+  ImageIcon,
+  RefreshCw
 } from 'lucide-react';
 
 const JobCards = () => {
@@ -248,7 +249,17 @@ const JobCards = () => {
   }
 
   return (
-    <div className="space-y-8 min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gray-50">
+      <div className="p-6">
+        <button
+          onClick={() => window.location.href = '/inspection'}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 font-medium mb-6"
+        >
+          ← Back to Analytics
+        </button>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 space-y-6">
       {/* Success Message */}
       {success && (
         <motion.div 
@@ -269,36 +280,34 @@ const JobCards = () => {
         </motion.div>
       )}
 
-      {/* Header */}
-      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full -translate-y-16 translate-x-16 opacity-50" />
-        
-        <div className="flex justify-between items-center relative z-10">
-          <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              📋 Job Cards
-            </h1>
-            <p className="text-gray-600">
-              Manage inspection job cards and track issues
-            </p>
+        {/* Header */}
+        <header className="bg-blue-600 shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="flex justify-between items-center">
+              <div>
+                <h1 className="text-2xl font-bold text-white">Job Cards</h1>
+                <p className="text-blue-100">Create and manage inspection job cards</p>
+              </div>
+              
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setShowCreateForm(true)}
+                  className="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2 font-medium border border-white/20"
+                >
+                  <Plus size={16} /> New Job Card
+                </button>
+                <button 
+                  onClick={fetchJobCards}
+                  className="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-gray-100 transition-colors flex items-center gap-2 font-medium border border-white/20"
+                >
+                  <RefreshCw size={16} /> Refresh
+                </button>
+              </div>
+            </div>
           </div>
-          
-          <div className="flex gap-3">
-            <button 
-              onClick={() => setShowCreateForm(true)}
-              className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex items-center gap-2 font-medium"
-            >
-              <Plus size={18} /> New Job Card
-            </button>
-            <button 
-              onClick={fetchJobCards}
-              className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex items-center gap-2 font-medium"
-            >
-              🔄 Refresh
-            </button>
-          </div>
-        </div>
-      </div>
+        </header>
+
+        <div className="max-w-7xl mx-auto p-6 space-y-6">
 
       {/* Create Form */}
       {showCreateForm && (
@@ -612,6 +621,8 @@ const JobCards = () => {
           </div>
         </motion.div>
       )}
+        </div>
+      </div>
     </div>
   );
 };
