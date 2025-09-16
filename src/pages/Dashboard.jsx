@@ -467,11 +467,11 @@ export const Dashboard = () => {
                   onClick={module.action}
                   className="group cursor-pointer transform hover:scale-105 transition-all duration-300"
                 >
-                  <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-500 overflow-hidden relative">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-8 shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-500 overflow-hidden relative h-64 flex flex-col">
                     {/* Gradient overlay */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${module.color} opacity-0 group-hover:opacity-5 transition-opacity duration-300`}></div>
                     
-                    <div className="relative z-10">
+                    <div className="relative z-10 flex flex-col h-full">
                       <div className="flex items-center justify-between mb-6">
                         <div className={`p-4 ${module.bgColor} rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
                           <IconComponent className={`w-8 h-8 ${module.iconColor} group-hover:scale-110 transition-transform duration-300`} />
@@ -482,11 +482,11 @@ export const Dashboard = () => {
                       <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
                         {module.title}
                       </h3>
-                      <p className="text-gray-600 mb-4 leading-relaxed">
+                      <p className="text-gray-600 mb-4 leading-relaxed flex-grow">
                         {module.description}
                       </p>
                       
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mt-auto">
                         <span className="text-sm font-semibold text-gray-500">{module.stats}</span>
                         <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <span className="text-blue-600 font-semibold text-sm">Access →</span>
