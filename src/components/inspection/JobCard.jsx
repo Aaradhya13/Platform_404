@@ -105,7 +105,7 @@ const JobCards = () => {
     
     const apiData = {
       train: trainNumber,
-      photo: photoUrl, // Will be null if no image uploaded
+      photo: photoUrl || 'http://example.com/photo.png', // Use placeholder if no photo
       description: createData.description.trim()
     };
     
@@ -182,6 +182,25 @@ const JobCards = () => {
     setEditData({});
   };
 
+  const handleMarkAsFixed = async (jobCardId) => {
+    try {
+      const response = await jobCardService.updateJobCard({
+        id: jobCardId,
+        closed_at: new Date().toISOString()
+      });
+      setSuccess('Job card marked as fixed successfully');
+      setTimeout(() => setSuccess(''), 5000);
+      
+      setJobCards(prevJobCards => 
+        prevJobCards.map(jobCard => 
+          jobCard.id === response.id ? response : jobCard
+        )
+      );
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const handleCancelCreate = () => {
     setShowCreateForm(false);
     setCreateData({ train: '', description: '', photo: null });
@@ -200,7 +219,7 @@ const JobCards = () => {
     return { status: 'Open', color: 'bg-red-100 text-red-800' };
   }
   // If closed_at has any value (timestamp), show as Closed
-  return { status: 'Closed', color: 'bg-gray-100 text-gray-800' };
+  return { status: 'Closed', color: 'bg-green-100 text-green-800' };
 };
 
   if (loading) {
@@ -251,65 +270,35 @@ const JobCards = () => {
       )}
 
       {/* Header */}
-      <motion.div 
-        initial={{ opacity: 0, y: -30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden"
-      >
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full -translate-y-16 translate-x-16 opacity-50" />
         
         <div className="flex justify-between items-center relative z-10">
           <div>
-            <motion.h1 
-              className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2 }}
-            >
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
               📋 Job Cards
-            </motion.h1>
-            <motion.p 
-              className="text-gray-600"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.4 }}
-            >
+            </h1>
+            <p className="text-gray-600">
               Manage inspection job cards and track issues
-            </motion.p>
+            </p>
           </div>
           
-          <motion.div 
-            className="flex gap-3"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            <motion.button 
+          <div className="flex gap-3">
+            <button 
               onClick={() => setShowCreateForm(true)}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
               className="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex items-center gap-2 font-medium"
             >
               <Plus size={18} /> New Job Card
-            </motion.button>
-            <motion.button 
+            </button>
+            <button 
               onClick={fetchJobCards}
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
               className="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 flex items-center gap-2 font-medium"
             >
-              <motion.div
-                animate={{ rotate: loading ? 360 : 0 }}
-                transition={{ duration: 1, repeat: loading ? Infinity : 0 }}
-              >
-                🔄
-              </motion.div>
-              Refresh
-            </motion.button>
-          </motion.div>
+              🔄 Refresh
+            </button>
+          </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Create Form */}
       {showCreateForm && (
@@ -456,169 +445,146 @@ const JobCards = () => {
         </motion.div>
       )}
 
-      {/* Job Cards List */}
-      <div className="grid gap-6">
+      {/* Job Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {jobCards.map((jobCard, index) => {
           const statusInfo = getCardStatus(jobCard);
           return (
-            <motion.div 
+            <div 
               key={jobCard.id} 
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-              whileHover={{ 
-                y: -5, 
-                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
-                scale: 1.02
-              }}
-              className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 relative overflow-hidden group cursor-pointer"
+              className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden cursor-pointer"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 via-transparent to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
-              <div className="flex items-start justify-between relative z-10">
-                <div className="flex-1">
-                  <motion.div 
-                    className="flex items-center gap-6 mb-6"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 + 0.2 }}
-                  >
-                    <div className="flex items-center gap-3 bg-blue-50 px-4 py-2 rounded-xl">
-                      <motion.div
-                        whileHover={{ rotate: 360 }}
-                        transition={{ duration: 0.6 }}
-                      >
-                        <Train size={24} className="text-blue-600" />
-                      </motion.div>
-                      <span className="font-bold text-lg text-blue-900">Train {jobCard.train}</span>
+              {/* Photo Section */}
+              <div className="relative h-48 bg-gradient-to-br from-blue-100 to-purple-100">
+                {jobCard.photo && jobCard.photo !== 'http://example.com/photo.png' && jobCard.photo !== null && jobCard.photo.trim() !== '' ? (
+                  <img 
+                    src={jobCard.photo} 
+                    alt="Job card photo" 
+                    className="w-full h-full object-cover"
+                    onClick={() => window.open(jobCard.photo, '_blank')}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="text-center">
+                      <Camera size={48} className="text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-500 text-sm">No photo available</p>
                     </div>
-                    
-                    <div className="flex items-center gap-3 bg-purple-50 px-4 py-2 rounded-xl">
-                      <FileText size={20} className="text-purple-600" />
-                      <span className="font-medium text-purple-800">Job #{jobCard.id}</span>
-                    </div>
-                    
-                    <div className={`px-4 py-2 rounded-xl text-sm font-bold shadow-lg ${statusInfo.color}`}>
-                      {statusInfo.status}
-                    </div>
-                  </motion.div>
-
-                  {/* Photo */}
-                  {jobCard.photo && jobCard.photo !== 'http://example.com/photo.png' && (
-                    <div className="mb-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <ImageIcon size={16} className="text-gray-600" />
-                        <span className="text-sm text-gray-600">Inspection Photo</span>
-                      </div>
-                      <img 
-                        src={jobCard.photo} 
-                        alt="Job card photo" 
-                        className="w-48 h-32 object-cover rounded-lg border-2 border-gray-200 hover:scale-105 transition-transform cursor-pointer"
-                        onClick={() => window.open(jobCard.photo, '_blank')}
-                      />
-                    </div>
-                  )}
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <p className="text-sm text-gray-600 flex items-center gap-2">
-                        <Clock size={16} />
-                        Created
-                      </p>
-                      <p className="font-medium">{formatDateTime(jobCard.created_at)}</p>
-                    </div>
-                    
-                    {jobCard.closed_at && (
-                      <div>
-                        <p className="text-sm text-gray-600 flex items-center gap-2">
-                          <CheckCircle size={16} />
-                          Closed
-                        </p>
-                        <p className="font-medium">{formatDateTime(jobCard.closed_at)}</p>
-                      </div>
-                    )}
                   </div>
+                )}
+                
+                {/* Status Badge */}
+                <div className="absolute top-3 right-3">
+                  <div className={`px-3 py-1 rounded-full text-xs font-bold shadow-lg ${statusInfo.color}`}>
+                    {statusInfo.status}
+                  </div>
+                </div>
+              </div>
 
-                  {/* Description */}
-                  <div className="mb-6">
-                    <p className="text-sm text-gray-600 mb-2">Description</p>
-                    {editingId === jobCard.id ? (
-                      <motion.textarea
-                        value={editData.description}
-                        onChange={(e) => setEditData({...editData, description: e.target.value})}
-                        className="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200 bg-white shadow-sm resize-none"
-                        rows="3"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                      />
-                    ) : (
-                      <p className="text-gray-800 bg-gray-50 p-4 rounded-xl">{jobCard.description}</p>
-                    )}
+              {/* Content Section */}
+              <div className="p-6">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2 bg-blue-50 px-3 py-1 rounded-lg">
+                    <Train size={16} className="text-blue-600" />
+                    <span className="font-bold text-blue-900">Train {jobCard.train}</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-purple-50 px-3 py-1 rounded-lg">
+                    <FileText size={14} className="text-purple-600" />
+                    <span className="font-medium text-purple-800 text-sm">#{jobCard.id}</span>
                   </div>
                 </div>
 
+                {/* Description */}
+                <div className="mb-4">
+                  {editingId === jobCard.id ? (
+                    <motion.textarea
+                      value={editData.description}
+                      onChange={(e) => setEditData({...editData, description: e.target.value})}
+                      className="w-full px-3 py-2 border-2 border-blue-200 rounded-lg focus:border-blue-500 transition-all duration-200 text-sm resize-none"
+                      rows="3"
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                    />
+                  ) : (
+                    <p className="text-gray-700 text-sm overflow-hidden" style={{display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical'}}>{jobCard.description}</p>
+                  )}
+                </div>
+
+                {/* Timestamps */}
+                <div className="space-y-2 mb-4">
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <Clock size={12} />
+                    <span>Created: {formatDateTime(jobCard.created_at)}</span>
+                  </div>
+                  {jobCard.closed_at && (
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <CheckCircle size={12} />
+                      <span>Closed: {formatDateTime(jobCard.closed_at)}</span>
+                    </div>
+                  )}
+                </div>
+
                 {/* Actions */}
-                <div className="ml-6 flex items-center gap-3">
+                <div className="flex justify-end gap-2">
                   {editingId === jobCard.id ? (
                     <motion.div 
-                      className="flex gap-3"
+                      className="flex gap-2"
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                     >
                       <motion.button
                         onClick={handleSave}
-                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="p-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
+                        className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
                         title="Save changes"
                       >
-                        <Save size={18} />
+                        <Save size={14} />
                       </motion.button>
                       <motion.button
                         onClick={handleCancel}
-                        whileHover={{ scale: 1.1, rotate: -5 }}
+                        whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="p-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
+                        className="p-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
                         title="Cancel editing"
                       >
-                        <X size={18} />
+                        <X size={14} />
                       </motion.button>
                     </motion.div>
                   ) : (
                     <motion.div 
-                      className="flex gap-3"
+                      className="flex gap-2"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 + 0.4 }}
                     >
                       <motion.button
                         onClick={() => handleEdit(jobCard)}
-                        whileHover={{ scale: 1.1, rotate: 5 }}
+                        whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="p-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
+                        className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                         title="Edit description"
                       >
-                        <Edit size={18} />
+                        <Edit size={14} />
                       </motion.button>
-                      
                       
                       
                       {isAdmin && (
                         <motion.button
                           onClick={() => handleDelete(jobCard.id)}
-                          whileHover={{ scale: 1.1, rotate: -5 }}
+                          whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          className="p-3 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-xl hover:shadow-lg transition-all duration-200"
+                          className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                           title="Delete job card"
                         >
-                          <Trash2 size={18} />
+                          <Trash2 size={14} />
                         </motion.button>
                       )}
                     </motion.div>
                   )}
                 </div>
               </div>
-            </motion.div>
+            </div>
           );
         })}
       </div>

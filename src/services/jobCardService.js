@@ -108,7 +108,7 @@ export const jobCardService = {
       console.warn('No file provided for upload');
       return null;
     }
-    const PINATA_JWT = `${import.meta.env.REACT_APP_PINATA_JWT}`;
+    const PINATA_JWT = `${import.meta.env.VITE_PINATA_JWT}`;
     console.log('Using Pinata JWT:', PINATA_JWT);
     const formData = new FormData();
     formData.append('file', file);
