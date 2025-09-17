@@ -42,138 +42,142 @@ export default function Mainnantence() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <div className="flex justify-center items-center h-screen bg-slate-50">
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-[#24B6C9]"></div>
       </div>
     );
   }
   
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <header className="bg-blue-600 text-white">
-        <div className="max-w-7xl mx-auto px-6 py-6">
+      <header className="bg-gradient-to-r from-[#24B6C9] to-[#1e9aaa] text-white shadow-lg">
+        <div className="max-w-7xl mx-auto px-8 py-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold">Maintenance Analytics</h1>
-              <p className="text-blue-100 mt-1">Real-time analytics and performance metrics</p>
+              <h1 className="text-3xl font-bold tracking-tight">Maintenance Analytics</h1>
+              <p className="text-cyan-100 mt-2 text-lg font-medium">Real-time analytics and performance metrics</p>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto p-8">
         {/* Analytics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+          <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-8 hover:shadow-xl transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Entries</p>
-                <p className="text-3xl font-bold text-gray-900">{maintenanceEntries.length}</p>
+                <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Total Entries</p>
+                <p className="text-4xl font-bold text-slate-800 mt-2">{maintenanceEntries.length}</p>
               </div>
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <FileText className="h-6 w-6 text-blue-600" />
+              <div className="p-4 bg-[#24B6C9]/10 rounded-xl">
+                <FileText className="h-8 w-8 text-[#24B6C9]" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-8 hover:shadow-xl transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Completed</p>
-                <p className="text-3xl font-bold text-gray-900">{maintenanceEntries.filter(entry => entry.exited).length}</p>
-                <p className="text-xs text-gray-500">{maintenanceEntries.length > 0 ? Math.round((maintenanceEntries.filter(entry => entry.exited).length / maintenanceEntries.length) * 100) : 0}% completion rate</p>
+                <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Completed</p>
+                <p className="text-4xl font-bold text-slate-800 mt-2">{maintenanceEntries.filter(entry => entry.exited).length}</p>
+                <p className="text-sm text-emerald-600 font-medium mt-1">{maintenanceEntries.length > 0 ? Math.round((maintenanceEntries.filter(entry => entry.exited).length / maintenanceEntries.length) * 100) : 0}% completion rate</p>
               </div>
-              <div className="p-3 bg-green-100 rounded-lg">
-                <CheckCircle className="h-6 w-6 text-green-600" />
+              <div className="p-4 bg-emerald-50 rounded-xl">
+                <CheckCircle className="h-8 w-8 text-emerald-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-8 hover:shadow-xl transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">In Progress</p>
-                <p className="text-3xl font-bold text-gray-900">{maintenanceEntries.filter(entry => entry.enterd && !entry.exited).length}</p>
+                <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">In Progress</p>
+                <p className="text-4xl font-bold text-slate-800 mt-2">{maintenanceEntries.filter(entry => entry.enterd && !entry.exited).length}</p>
               </div>
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <AlertCircle className="h-6 w-6 text-blue-600" />
+              <div className="p-4 bg-amber-50 rounded-xl">
+                <AlertCircle className="h-8 w-8 text-amber-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow border border-gray-200 p-6">
+          <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-8 hover:shadow-xl transition-shadow duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Available Lanes</p>
-                <p className="text-3xl font-bold text-gray-900">{maintenanceLanes.length}</p>
+                <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Available Lanes</p>
+                <p className="text-4xl font-bold text-slate-800 mt-2">{maintenanceLanes.length}</p>
               </div>
-              <div className="p-3 bg-purple-100 rounded-lg">
-                <Clock className="h-6 w-6 text-purple-600" />
+              <div className="p-4 bg-purple-50 rounded-xl">
+                <Clock className="h-8 w-8 text-purple-600" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Today's Performance */}
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-6 mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Today's Performance</h2>
-            <Calendar className="h-5 w-5 text-blue-600" />
+        <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-8 mb-10">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-slate-800">Today's Performance</h2>
+            <div className="p-3 bg-[#24B6C9]/10 rounded-lg">
+              <Calendar className="h-6 w-6 text-[#24B6C9]" />
+            </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-6">
-            <div className="text-center">
-              <p className="text-3xl font-bold text-gray-900">{todayEntries.length}</p>
-              <p className="text-sm text-gray-600">Created Today</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+            <div className="text-center p-6 bg-slate-50 rounded-xl">
+              <p className="text-4xl font-bold text-slate-800 mb-2">{todayEntries.length}</p>
+              <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Created Today</p>
             </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-gray-900">{todayCompleted}</p>
-              <p className="text-sm text-gray-600">Completed Today</p>
+            <div className="text-center p-6 bg-slate-50 rounded-xl">
+              <p className="text-4xl font-bold text-slate-800 mb-2">{todayCompleted}</p>
+              <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Completed Today</p>
             </div>
-            <div className="text-center">
-              <p className="text-3xl font-bold text-gray-900">{todayCompletionRate}%</p>
-              <p className="text-sm text-gray-600">Completion Rate</p>
+            <div className="text-center p-6 bg-slate-50 rounded-xl">
+              <p className="text-4xl font-bold text-slate-800 mb-2">{todayCompletionRate}%</p>
+              <p className="text-sm font-semibold text-slate-600 uppercase tracking-wide">Completion Rate</p>
             </div>
           </div>
 
-          <div className="mb-4">
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
+          <div className="bg-slate-50 p-6 rounded-xl">
+            <div className="flex justify-between text-sm font-semibold text-slate-600 mb-3">
               <span>Today's Progress</span>
               <span>{todayCompleted}/{todayEntries.length}</span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2">
-              <div className="bg-blue-600 h-2 rounded-full" style={{width: `${todayCompletionRate}%`}}></div>
+            <div className="w-full bg-slate-200 rounded-full h-3">
+              <div className="bg-gradient-to-r from-[#24B6C9] to-[#1e9aaa] h-3 rounded-full transition-all duration-500" style={{width: `${todayCompletionRate}%`}}></div>
             </div>
           </div>
         </div>
 
         {/* Status Distribution */}
-        <div className="bg-white rounded-lg shadow border border-gray-200 p-6 mb-8">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Status Distribution</h2>
-            <BarChart3 className="h-5 w-5 text-blue-600" />
+        <div className="bg-white rounded-xl shadow-lg border border-slate-200 p-8 mb-10">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-slate-800">Status Distribution</h2>
+            <div className="p-3 bg-[#24B6C9]/10 rounded-lg">
+              <BarChart3 className="h-6 w-6 text-[#24B6C9]" />
+            </div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="text-center p-8 bg-green-50 rounded-lg">
-              <p className="text-4xl font-bold text-green-600">{maintenanceEntries.filter(entry => entry.exited).length}</p>
-              <p className="text-sm text-green-700">Completed</p>
+            <div className="text-center p-10 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl border border-emerald-200">
+              <p className="text-5xl font-bold text-emerald-700 mb-3">{maintenanceEntries.filter(entry => entry.exited).length}</p>
+              <p className="text-lg font-semibold text-emerald-800">Completed</p>
             </div>
-            <div className="text-center p-8 bg-blue-50 rounded-lg">
-              <p className="text-4xl font-bold text-blue-600">{maintenanceEntries.filter(entry => entry.enterd && !entry.exited).length}</p>
-              <p className="text-sm text-blue-700">In Progress</p>
+            <div className="text-center p-10 bg-gradient-to-br from-[#24B6C9]/10 to-[#24B6C9]/20 rounded-xl border border-[#24B6C9]/30">
+              <p className="text-5xl font-bold text-[#24B6C9] mb-3">{maintenanceEntries.filter(entry => entry.enterd && !entry.exited).length}</p>
+              <p className="text-lg font-semibold text-[#1e9aaa]">In Progress</p>
             </div>
           </div>
         </div>
 
         {/* Bottom Right Action Buttons */}
-        <div className="fixed bottom-4 right-4 z-50 flex gap-3">
+        <div className="fixed bottom-6 right-6 z-50 flex gap-4">
           <motion.button
             onClick={() => navigate('/maintenance/dashboard')}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+            className="bg-gradient-to-r from-[#24B6C9] to-[#1e9aaa] text-white px-6 py-4 rounded-xl shadow-xl flex items-center gap-3 hover:shadow-2xl transition-all duration-300 font-semibold"
           >
             <Train className="w-5 h-5" />
             <span>Manage Schedules</span>
@@ -183,7 +187,7 @@ export default function Mainnantence() {
             onClick={() => navigate('/maintenance/jobcards')}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+            className="bg-gradient-to-r from-[#24B6C9] to-[#1e9aaa] text-white px-6 py-4 rounded-xl shadow-xl flex items-center gap-3 hover:shadow-2xl transition-all duration-300 font-semibold"
           >
             <FileText className="w-5 h-5" />
             <span>Manage Job Cards</span>
@@ -193,4 +197,4 @@ export default function Mainnantence() {
       </div>
     </div>
   )
-}
+} 
