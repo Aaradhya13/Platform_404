@@ -89,13 +89,37 @@ const MaintenanceDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Maintenance Dashboard</h1>
-          <p className="text-gray-600">Manage train maintenance operations and schedules</p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="p-6">
+        <button
+          onClick={() => window.location.href = '/maintenance'}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2 font-medium mb-6"
+        >
+          ← Back to Analytics
+        </button>
+      </div>
+
+      <header className="bg-blue-600 text-white">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold">Maintenance Schedules</h1>
+              <p className="text-blue-100 mt-1">Manage and track train maintenance operations</p>
+            </div>
+            
+            <div className="flex gap-3">
+              <button 
+                onClick={loadData}
+                className="flex items-center space-x-2 bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors font-medium"
+              >
+                <span>Refresh</span>
+              </button>
+            </div>
+          </div>
         </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto p-6">
 
         {/* Error Message */}
         {error && (
@@ -104,178 +128,78 @@ const MaintenanceDashboard = () => {
           </div>
         )}
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Train className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Total Entries</p>
-                <p className="text-2xl font-bold text-gray-900">{maintenanceEntries.length}</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <Clock className="h-6 w-6 text-yellow-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">In Progress</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {maintenanceEntries.filter(entry => entry.enterd && !entry.exited).length}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Calendar className="h-6 w-6 text-green-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Completed</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {maintenanceEntries.filter(entry => entry.exited).length}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border p-6">
-            <div className="flex items-center">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <MapPin className="h-6 w-6 text-purple-600" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-gray-600">Available Lanes</p>
-                <p className="text-2xl font-bold text-gray-900">{maintenanceLanes.length}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Maintenance Entries Table */}
-        <div className="bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Maintenance Entries</h2>
-          </div>
-          
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Train ID
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Lane
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Depot
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Scheduled Start
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Scheduled End
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Entered
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Exited
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {maintenanceEntries.map((entry) => (
-                  <tr key={entry.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {entry.train_id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        {/* Maintenance Entries */}
+        <div className="space-y-4">
+          {maintenanceEntries.map((entry) => (
+            <div 
+              key={entry.id} 
+              className="bg-white rounded-lg shadow border border-gray-200 p-6"
+            >
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg">
+                      <Train size={20} className="text-blue-600" />
+                      <span className="font-semibold text-blue-900">Train {entry.train_id}</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 bg-blue-50 px-3 py-2 rounded-lg">
+                      <MapPin size={16} className="text-blue-600" />
+                      <span className="font-medium text-blue-700">{entry.depot_name}</span>
+                    </div>
+                    
+                    <div className="px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium">
                       Lane {entry.lane}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {entry.depot_name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDateTime(entry.scheduledStart)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDateTime(entry.scheduledEnd)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDateTime(entry.enterd)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {formatDateTime(entry.exited)}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(entry)}`}>
-                        {getStatus(entry)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button
-                        onClick={() => handleEditEntry(entry)}
-                        className="text-blue-600 hover:text-blue-900 mr-3"
-                      >
-                        <Edit className="h-4 w-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {maintenanceEntries.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-500">No maintenance entries found.</p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Maintenance Lanes Section */}
-        <div className="mt-8 bg-white rounded-lg shadow-sm border">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Maintenance Lanes</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
-            {maintenanceLanes.map((lane) => (
-              <div key={lane.id} className="bg-gray-50 rounded-lg p-4 border">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Lane {lane.bay_number}</h3>
-                    <p className="text-sm text-gray-600">{lane.depot_name}</p>
+                    </div>
                   </div>
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <MapPin className="h-5 w-5 text-blue-600" />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Scheduled Start</p>
+                      <p className="font-medium">{formatDateTime(entry.scheduledStart)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Scheduled End</p>
+                      <p className="font-medium">{formatDateTime(entry.scheduledEnd)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Entered</p>
+                      <p className="font-medium">{formatDateTime(entry.enterd)}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Exited</p>
+                      <p className="font-medium">{formatDateTime(entry.exited)}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mt-4">
+                  <div className={`px-3 py-1 rounded-lg text-sm font-medium ${getStatusColor(entry)}`}>
+                    {getStatus(entry)}
+                  </div>
+
+                  <div className="ml-6">
+                    <button
+                      onClick={() => handleEditEntry(entry)}
+                      className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                      title="Edit entry"
+                    >
+                      <Edit size={16} />
+                    </button>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {maintenanceLanes.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">No maintenance lanes found.</p>
             </div>
-          )}
+          ))}
         </div>
+
+        {maintenanceEntries.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500">No maintenance entries found</p>
+          </div>
+        )}
+
+
       </div>
 
       {/* Edit Modal */}
