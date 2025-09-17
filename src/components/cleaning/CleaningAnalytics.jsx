@@ -177,7 +177,7 @@ const CleaningAnalytics = ({ onNavigateToList }) => {
   };
 
   // Bar Chart Component
-  const BarChartComponent = ({ data, title, color = "#3B82F6" }) => {
+  const BarChartComponent = ({ data, title, color = "#24B6C9" }) => {
     const maxValue = Math.max(...Object.values(data));
     
     return (
@@ -233,7 +233,8 @@ const CleaningAnalytics = ({ onNavigateToList }) => {
               <span className="text-sm font-medium text-gray-600 w-12">{hour}:00</span>
               <div className="flex-1 bg-gray-200 rounded h-8 relative overflow-hidden">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-blue-400 to-blue-600 rounded flex items-center justify-end pr-2"
+                  className="h-full rounded flex items-center justify-end pr-2"
+                  style={{ background: 'linear-gradient(to right, #24B6C9, #1da4b5)' }}
                   initial={{ width: 0, x: -20 }}
                   animate={{ width: `${(value / maxValue) * 100}%`, x: 0 }}
                   transition={{ 
@@ -262,189 +263,229 @@ const CleaningAnalytics = ({ onNavigateToList }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2" style={{ borderColor: '#24B6C9' }}></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
       {/* Header */}
-      <header className="bg-blue-600 shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <header className="shadow-md border-b border-gray-200" style={{ background: 'linear-gradient(135deg, #24B6C9 0%, #1da4b5 100%)' }}>
+        <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold text-white">Cleaning Analytics</h1>
-              <p className="text-blue-100">Real-time analytics and performance metrics</p>
+              <h1 className="text-3xl font-bold text-white tracking-tight">Cleaning Analytics Dashboard</h1>
+              <p className="text-cyan-100 mt-2 font-medium">Advanced performance monitoring & insights</p>
+            </div>
+            <div className="hidden md:flex items-center space-x-4">
+              <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/30">
+                <span className="text-white/90 text-sm font-medium">Live Data</span>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto p-6 space-y-6">
+      <div className="max-w-7xl mx-auto p-8 space-y-8">
 
-    
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Total Schedules</p>
-              <p className="text-3xl font-bold text-black">{analytics.total}</p>
+        {/* KPI Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <motion.div 
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5 }}
+            className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Total Schedules</p>
+                <p className="text-4xl font-bold text-gray-800 mt-2">{analytics.total}</p>
+              </div>
+              <div className="p-4 rounded-2xl" style={{ backgroundColor: '#24B6C9' }}>
+                <Train className="w-8 h-8 text-white" />
+              </div>
             </div>
-            <div className="bg-blue-100 p-3 rounded-full">
-              <Train className="w-6 h-6 text-blue-600" />
+          </motion.div>
+
+          <motion.div 
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Completed</p>
+                <p className="text-4xl font-bold text-gray-800 mt-2">{analytics.completed}</p>
+                <p className="text-sm text-gray-600 mt-1 font-medium">{completionRate}% completion rate</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-green-500">
+                <CheckCircle className="w-8 h-8 text-white" />
+              </div>
             </div>
-          </div>
+          </motion.div>
+
+          <motion.div 
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">In Progress</p>
+                <p className="text-4xl font-bold text-gray-800 mt-2">{analytics.inProgress}</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-orange-500">
+                <Clock className="w-8 h-8 text-white" />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            variants={cardVariants}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 hover:shadow-2xl transition-all duration-300"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Pending</p>
+                <p className="text-4xl font-bold text-gray-800 mt-2">{analytics.pending}</p>
+                <p className="text-sm mt-1 font-medium" style={{ color: '#24B6C9' }}>Overdue: {analytics.overdue}</p>
+              </div>
+              <div className="p-4 rounded-2xl bg-red-500">
+                <AlertCircle className="w-8 h-8 text-white" />
+              </div>
+            </div>
+          </motion.div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Completed</p>
-              <p className="text-3xl font-bold text-black">{analytics.completed}</p>
-              <p className="text-xs text-gray-500">{completionRate}% completion rate</p>
-            </div>
-            <div className="bg-blue-100 p-3 rounded-full">
-              <CheckCircle className="w-6 h-6 text-blue-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">In Progress</p>
-              <p className="text-3xl font-bold text-black">{analytics.inProgress}</p>
-            </div>
-            <div className="bg-blue-100 p-3 rounded-full">
-              <Clock className="w-6 h-6 text-blue-600" />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Pending</p>
-              <p className="text-3xl font-bold text-black">{analytics.pending}</p>
-              <p className="text-xs text-blue-500">Overdue: {analytics.overdue}</p>
-            </div>
-            <div className="bg-blue-100 p-3 rounded-full">
-              <AlertCircle className="w-6 h-6 text-blue-600" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-    
-      <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.5 }}
-        className="bg-white rounded-lg shadow-md border border-gray-200 p-6"
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold text-gray-900">Today's Performance</h2>
-          <Calendar className="w-6 h-6 text-blue-600" />
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="text-center">
-            <p className="text-2xl font-bold text-black">{analytics.todayScheduled}</p>
-            <p className="text-sm text-gray-600">Scheduled Today</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-black">{analytics.todayCompleted}</p>
-            <p className="text-sm text-gray-600">Completed Today</p>
-          </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-black">{todayCompletionRate}%</p>
-            <p className="text-sm text-gray-600">Completion Rate</p>
-          </div>
-        </div>
-
-       
-        <div className="mt-6">
-          <div className="flex justify-between text-sm text-gray-600 mb-2">
-            <span className="font-medium">Today's Progress</span>
-            <span className="font-bold">{analytics.todayCompleted}/{analytics.todayScheduled}</span>
-          </div>
-          <div className="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
-            <motion.div 
-              className="bg-gradient-to-r from-blue-500 to-blue-600 h-4 rounded-full relative"
-              initial={{ width: 0 }}
-              animate={{ width: `${todayCompletionRate}%` }}
-              transition={{ duration: 2, delay: 0.8, type: "spring" }}
-            >
-            
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                animate={{ x: ["-100%", "100%"] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
-              />
-            </motion.div>
-            
-           
-            <div className="absolute inset-0 flex items-center justify-center">
-              <motion.span 
-                className="text-xs font-bold text-white drop-shadow"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 }}
-              >
-                {todayCompletionRate}%
-              </motion.span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="bg-white rounded-lg shadow-md border border-gray-200 p-6"
-      >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">Status Distribution</h2>
-          <BarChart3 className="w-6 h-6 text-blue-600" />
-        </div>
-        
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-black">{analytics.completed}</div>
-            <div className="text-sm text-blue-700">Completed</div>
-          </div>
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-black">{analytics.inProgress}</div>
-            <div className="text-sm text-blue-700">In Progress</div>
-          </div>
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-black">{analytics.pending}</div>
-            <div className="text-sm text-blue-700">Pending</div>
-          </div>
-          <div className="text-center p-4 bg-blue-50 rounded-lg">
-            <div className="text-2xl font-bold text-black">{analytics.overdue}</div>
-            <div className="text-sm text-blue-700">Overdue</div>
-          </div>
-        </div>
-      </motion.div>
-
-
-
-      {/* Manage Schedules Button - Bottom Right */}
-      <div className="fixed bottom-4 right-4 z-50">
-        <motion.button
-          onClick={onNavigateToList}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+        {/* Today's Performance */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.5 }}
+          className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8"
         >
-          <Train className="w-5 h-5" />
-          <span>Manage Schedules</span>
-          <ArrowRight className="w-4 h-4" />
-        </motion.button>
-      </div>
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800">Today's Performance</h2>
+              <p className="text-gray-600 mt-1">Real-time daily metrics and progress tracking</p>
+            </div>
+            <div className="p-3 rounded-xl" style={{ backgroundColor: '#24B6C9' }}>
+              <Calendar className="w-7 h-7 text-white" />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="text-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+              <p className="text-3xl font-bold text-gray-800">{analytics.todayScheduled}</p>
+              <p className="text-sm font-semibold text-gray-600 mt-2 uppercase tracking-wide">Scheduled Today</p>
+            </div>
+            <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl border border-green-200">
+              <p className="text-3xl font-bold text-gray-800">{analytics.todayCompleted}</p>
+              <p className="text-sm font-semibold text-gray-600 mt-2 uppercase tracking-wide">Completed Today</p>
+            </div>
+            <div className="text-center p-6 rounded-xl border border-cyan-200" style={{ background: 'linear-gradient(to br, #f0fdff, #e6fcff)' }}>
+              <p className="text-3xl font-bold text-gray-800">{todayCompletionRate}%</p>
+              <p className="text-sm font-semibold text-gray-600 mt-2 uppercase tracking-wide">Completion Rate</p>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <div className="flex justify-between text-sm text-gray-600 mb-4">
+              <span className="font-semibold">Today's Progress</span>
+              <span className="font-bold">{analytics.todayCompleted}/{analytics.todayScheduled}</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-6 relative overflow-hidden shadow-inner">
+              <motion.div 
+                className="h-6 rounded-full relative"
+                style={{ background: 'linear-gradient(to right, #24B6C9, #1da4b5)' }}
+                initial={{ width: 0 }}
+                animate={{ width: `${todayCompletionRate}%` }}
+                transition={{ duration: 2, delay: 0.8, type: "spring" }}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                  animate={{ x: ["-100%", "100%"] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: 1.5 }}
+                />
+              </motion.div>
+              
+              <div className="absolute inset-0 flex items-center justify-center">
+                <motion.span 
+                  className="text-sm font-bold text-white drop-shadow"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.5 }}
+                >
+                  {todayCompletionRate}%
+                </motion.span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Status Distribution */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8"
+        >
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800">Status Distribution</h2>
+              <p className="text-gray-600 mt-1">Overview of cleaning schedule statuses</p>
+            </div>
+            <div className="p-3 rounded-xl" style={{ backgroundColor: '#24B6C9' }}>
+              <BarChart3 className="w-7 h-7 text-white" />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center p-6 bg-gradient-to-br from-green-50 to-green-100 rounded-xl border border-green-200 hover:shadow-lg transition-shadow">
+              <div className="text-3xl font-bold text-gray-800">{analytics.completed}</div>
+              <div className="text-sm font-semibold text-green-700 mt-2 uppercase tracking-wide">Completed</div>
+            </div>
+            <div className="text-center p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border border-orange-200 hover:shadow-lg transition-shadow">
+              <div className="text-3xl font-bold text-gray-800">{analytics.inProgress}</div>
+              <div className="text-sm font-semibold text-orange-700 mt-2 uppercase tracking-wide">In Progress</div>
+            </div>
+            <div className="text-center p-6 rounded-xl border border-cyan-200 hover:shadow-lg transition-shadow" style={{ background: 'linear-gradient(to br, #f0fdff, #e6fcff)' }}>
+              <div className="text-3xl font-bold text-gray-800">{analytics.pending}</div>
+              <div className="text-sm font-semibold mt-2 uppercase tracking-wide" style={{ color: '#24B6C9' }}>Pending</div>
+            </div>
+            <div className="text-center p-6 bg-gradient-to-br from-red-50 to-red-100 rounded-xl border border-red-200 hover:shadow-lg transition-shadow">
+              <div className="text-3xl font-bold text-gray-800">{analytics.overdue}</div>
+              <div className="text-sm font-semibold text-red-700 mt-2 uppercase tracking-wide">Overdue</div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Manage Schedules Button */}
+        <div className="fixed bottom-8 right-8 z-50">
+          <motion.button
+            onClick={onNavigateToList}
+            whileHover={{ scale: 1.05, y: -2 }}
+            whileTap={{ scale: 0.95 }}
+            className="text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 hover:shadow-3xl transition-all duration-300 font-semibold"
+            style={{ 
+              background: 'linear-gradient(135deg, #24B6C9 0%, #1da4b5 100%)',
+              boxShadow: '0 20px 40px rgba(36, 182, 201, 0.3)'
+            }}
+          >
+            <Train className="w-6 h-6" />
+            <span>Manage Schedules</span>
+            <ArrowRight className="w-5 h-5" />
+          </motion.button>
+        </div>
       </div>
     </div>
   );

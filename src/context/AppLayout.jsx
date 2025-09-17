@@ -6,74 +6,12 @@ const TranslationContext = createContext();
 const translations = {
   en: {
     "Fontsize": "Fontsize",
-    "Metro Transit": "Metro Transit",
-    "City Transport": "City Transport",
+    
     "Home": "Home",
     "Route Map": "Route Map",
-    "Schedules": "Schedules",
-    "Tickets": "Tickets",
-    "Payments": "Payments",
-    "Stations": "Stations",
-    "Service Alerts": "Service Alerts",
-    "My Account": "My Account",
-    "Settings": "Settings",
-    "Help & Support": "Help & Support",
-    "Guest User": "Guest User",
-    "Not signed in": "Not signed in",
-    "Service Status": "Service Status",
-    "All lines operational": "All lines operational",
-    "Next Train": "Next Train",
-    "Downtown Line": "Downtown Line",
-    "minutes": "minutes",
-    "Quick Buy": "Quick Buy",
-    "Single journey ticket": "Single journey ticket",
-    "Quick Actions": "Quick Actions",
-    "Plan Journey": "Plan Journey",
-    "Live Times": "Live Times",
-    "Buy Tickets": "Buy Tickets",
-    "Find Stations": "Find Stations",
-    "Service Announcements": "Service Announcements",
-    "Weekend Schedule Change": "Weekend Schedule Change",
-    "Modified service hours this weekend due to maintenance work.": "Modified service hours this weekend due to maintenance work.",
-    "New Mobile App": "New Mobile App",
-    "Download our new mobile app for easier journey planning.": "Download our new mobile app for easier journey planning.",
-    "Site Map": "Site Map"
+   
   },
-  ml: {
-    "Fontsize": "ഫോണ്ട് സൈസ്",
-    "Metro Transit": "മെട്രോ ട്രാൻസിറ്റ്",
-    "City Transport": "സിറ്റി ട്രാൻസ്പോർട്ട്",
-    "Home": "ഹോം",
-    "Route Map": "റൂട്ട് മാപ്പ്",
-    "Schedules": "ഷെഡ്യൂളുകൾ",
-    "Tickets": "ടിക്കറ്റുകൾ",
-    "Payments": "പേയ്മെന്റുകൾ",
-    "Stations": "സ്റ്റേഷനുകൾ",
-    "Service Alerts": "സേവന അലേർട്ടുകൾ",
-    "My Account": "എന്റെ അക്കൗണ്ട്",
-    "Settings": "സെറ്റിംഗുകൾ",
-    "Help & Support": "സഹായവും പിന്തുണയും",
-    "Guest User": "അതിഥി ഉപയോക്താവ്",
-    "Not signed in": "സൈൻ ഇൻ ചെയ്തിട്ടില്ല",
-    "Service Status": "സേവന നില",
-    "All lines operational": "എല്ലാ ലൈനുകളും പ്രവർത്തനക്ഷമം",
-    "Next Train": "അടുത്ത ട്രെയിൻ",
-    "Downtown Line": "ഡൗൺടൗൺ ലൈൻ",
-    "minutes": "മിനിറ്റ്",
-    "Quick Buy": "പെട്ടെന്ന് വാങ്ങുക",
-    "Single journey ticket": "സിംഗിൾ ജേർണി ടിക്കറ്റ്",
-    "Quick Actions": "പെട്ടെന്നുള്ള പ്രവർത്തനങ്ങൾ",
-    "Plan Journey": "യാത്ര ആസൂത്രണം ചെയ്യുക",
-    "Live Times": "തത്സമയ സമയം",
-    "Buy Tickets": "ടിക്കറ്റുകൾ വാങ്ങുക",
-    "Find Stations": "സ്റ്റേഷനുകൾ കണ്ടെത്തുക",
-    "Service Announcements": "സേവന അറിയിപ്പുകൾ",
-    "Weekend Schedule Change": "വാരാന്ത്യ ഷെഡ്യൂൾ മാറ്റം",
-    "Modified service hours this weekend due to maintenance work.": "മെയിന്റനൻസ് ജോലികൾ കാരണം ഈ വാരാന്ത്യത്തിൽ സേവന സമയം മാറ്റി.",
-    "New Mobile App": "പുതിയ മൊബൈൽ ആപ്പ്",
-    "Download our new mobile app for easier journey planning.": "എളുപ്പമുള്ള യാത്രാ ആസൂത്രണത്തിനായി ഞങ്ങളുടെ പുതിയ മൊബൈൽ ആപ്പ് ഡൗൺലോഡ് ചെയ്യുക.",
-    "Site Map": "സൈറ്റ് മാപ്പ്"
-  }
+ 
 };
 
 export const TranslationProvider = ({ children }) => {
@@ -90,31 +28,21 @@ export const TranslationProvider = ({ children }) => {
 };
 
 export const useTranslation = () => useContext(TranslationContext);
+
 import { 
   Menu, 
   X, 
   Home, 
   MapPin, 
   Clock, 
-  CreditCard, 
-  User, 
-  Settings, 
-  Info, 
-  ChevronLeft,
-  ChevronRight,
   Train,
   Route,
   Ticket,
   AlertCircle
 } from 'lucide-react';
-import { ThemeToggleButton } from '../components/ThemeButton';
-import { SlidingThemeToggle } from '../components/ThemeButton';
-import { useTheme } from './ThemeProvider';
-import Navbar from '../components/Navbar';
+
 const AppLayout = ({ children }) => {
-  const { theme } = useTheme();
   const { translate } = useTranslation();
-  console.log(theme)
   const [isOpen, setIsOpen] = useState(true);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
@@ -124,14 +52,7 @@ const AppLayout = ({ children }) => {
   const menuItems = [
     { icon: Home, label: translate('Home'), href: '#', active: true },
     { icon: Route, label: translate('Route Map'), href: '/map' },
-    { icon: Clock, label: translate('Schedules'), href: '#' },
-    { icon: Ticket, label: translate('Tickets'), href: '#' },
-    { icon: CreditCard, label: translate('Payments'), href: '#' },
-    { icon: MapPin, label: translate('Stations'), href: '#' },
-    { icon: AlertCircle, label: translate('Service Alerts'), href: '#' },
-    { icon: User, label: translate('My Account'), href: '#' },
-    { icon: Settings, label: translate('Settings'), href: '#' },
-    { icon: Info, label: translate('Help & Support'), href: '#' },
+   
   ];
 
   const [fontSize, setFontSize] = useState("text-base");
@@ -155,62 +76,63 @@ const handleFontSize = (action) => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
       
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileSidebar}
-        className="fixed top-4 left-4 z-50 md:hidden p-2 rounded-lg bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow"
+        className="fixed top-10 left-6 z-50 md:hidden p-3 rounded-xl bg-white shadow-2xl border border-gray-100 hover:shadow-xl transition-all duration-200 hover:scale-105"
+        style={{ boxShadow: '0 8px 32px rgba(36, 182, 201, 0.15)' }}
       >
         {isMobileOpen ? 
-          <X size={20} className="text-gray-700 dark:text-gray-300" /> : 
-          <Menu size={20} className="text-gray-700 dark:text-gray-300" />
+          <X size={22} className="text-gray-700" /> : 
+          <Menu size={22} className="text-gray-700" />
         }
       </button>
 
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <div 
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 md:hidden"
+          className="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm md:hidden"
           onClick={toggleMobileSidebar}
         />
       )}
 
       {/* Desktop Sidebar */}
       <div className={`
-        hidden md:flex flex-col bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300
-        ${isOpen ? 'w-64' : 'w-16'}
-      `}>
+        hidden md:flex flex-col bg-white shadow-2xl transition-all duration-300 relative
+        ${isOpen ? 'w-80' : 'w-20'}
+      `}
+      style={{ boxShadow: '8px 0 32px rgba(36, 182, 201, 0.08)' }}
+      >
+        {/* Accent Strip */}
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#24B6C9] to-[#1ea8bb]"></div>
+
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-[#24B6C9] to-[#1ea8bb] text-white">
           <div className="flex items-center justify-between">
             {isOpen && (
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-blue-600 dark:bg-blue-500 rounded-lg flex items-center justify-center">
-                  <Train size={18} className="text-white" />
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
+                  <Train size={24} className="text-white" />
                 </div>
                 <div>
-                  <span className="text-lg font-semibold text-gray-900 dark:text-white">Metro Transit</span>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">City Transport</p>
+                  <span className="text-xl font-bold text-white tracking-tight">Metro Transit</span>
+                  <p className="text-sm text-white text-opacity-80 font-medium">City Transport</p>
                 </div>
               </div>
             )}
             {!isOpen && (
-              <div className="w-8 h-8 bg-blue-600 dark:bg-blue-500 rounded-lg flex items-center justify-center mx-auto">
-                <Train size={18} className="text-white" />
+              <div className="w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto shadow-lg">
+                <Train size={24} className="text-white" />
               </div>
             )}
-            <button
-              onClick={toggleSidebar}
-              className="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
-            >
-              {isOpen ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
-            </button>
+           
           </div>
         </div>
 
         {/* Navigation Menu */}
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-4 space-y-2 bg-white">
           {menuItems.map((item, index) => {
             const IconComponent = item.icon;
             return (
@@ -218,80 +140,59 @@ const handleFontSize = (action) => {
                 key={index}
                 href={item.href}
                 className={`
-                  flex items-center gap-3 p-3 rounded-lg transition-colors group relative text-sm font-medium
+                  flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 group relative font-medium border
                   ${item.active 
-                    ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border-l-4 border-blue-600' 
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
+                    ? 'bg-gradient-to-r from-[#24B6C9] to-[#1ea8bb] text-white shadow-xl border-transparent transform scale-[1.02]' 
+                    : 'text-gray-600 hover:bg-gradient-to-r hover:from-[#24B6C9] hover:from-10% hover:to-[#1ea8bb] hover:text-white border-gray-100 hover:border-transparent hover:shadow-lg hover:scale-[1.01]'
                   }
                   ${!isOpen ? 'justify-center' : ''}
                 `}
+                style={item.active ? { boxShadow: '0 8px 32px rgba(36, 182, 201, 0.3)' } : {}}
               >
-                <IconComponent size={18} />
-                {isOpen && <span>{item.label}</span>}
+                <IconComponent size={20} className={item.active ? 'text-white' : ''} />
+                {isOpen && <span className="text-sm tracking-wide">{item.label}</span>}
                 
                 {/* Tooltip for collapsed state */}
                 {!isOpen && (
-                  <div className="absolute left-full ml-2 px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-lg">
+                  <div className="absolute left-full ml-4 px-4 py-3 bg-gray-800 text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-2xl">
                     {item.label}
+                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45"></div>
                   </div>
                 )}
               </a>
             );
           })}
         </nav>
-
-        {/* Sidebar Footer */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          {isOpen ? (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
-                  <User size={16} className="text-gray-600 dark:text-gray-300" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">Guest User</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Not signed in</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex justify-center">
-              <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
-                <User size={16} className="text-gray-600 dark:text-gray-300" />
-              </div>
-            </div>
-          )}
-        </div>
       </div>
 
       {/* Mobile Sidebar */}
       <div className={`
-        fixed top-0 left-0 z-50 w-64 h-full bg-white dark:bg-gray-800 transform transition-transform duration-300 ease-in-out md:hidden border-r border-gray-200 dark:border-gray-700
+        fixed top-0 left-0 z-50 w-80 h-full bg-white transform transition-transform duration-300 ease-in-out md:hidden shadow-2xl
         ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         {/* Mobile Header */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="p-6 bg-gradient-to-r from-[#24B6C9] to-[#1ea8bb] text-white">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-blue-600 dark:bg-blue-500 rounded-lg flex items-center justify-center">
-                <Train size={18} className="text-white" />
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
+                <Train size={24} className="text-white" />
               </div>
               <div>
-                <span className="text-lg font-semibold text-gray-900 dark:text-white">Metro Transit</span>
-                <p className="text-xs text-gray-500 dark:text-gray-400">City Transport</p>
+                <span className="text-xl font-bold text-white tracking-tight">Metro Transit</span>
+                <p className="text-sm text-white text-opacity-80 font-medium">City Transport</p>
               </div>
             </div>
             <button
               onClick={toggleMobileSidebar}
-              className="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="p-2 rounded-xl text-white hover:bg-white hover:bg-opacity-20 transition-all duration-200"
             >
-              <X size={16} />
+              <X size={20} />
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
-        <nav className="flex-1 p-4 space-y-1">
+        <nav className="flex-1 p-4 space-y-2 bg-white">
           {menuItems.map((item, index) => {
             const IconComponent = item.icon;
             return (
@@ -299,134 +200,106 @@ const handleFontSize = (action) => {
                 key={index}
                 href={item.href}
                 className={`
-                  flex items-center gap-3 p-3 rounded-lg transition-colors text-sm font-medium
+                  flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 font-medium border
                   ${item.active 
-                    ? 'bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 border-l-4 border-blue-600' 
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    ? 'bg-gradient-to-r from-[#24B6C9] to-[#1ea8bb] text-white shadow-xl border-transparent transform scale-[1.02]' 
+                    : 'text-gray-600 hover:bg-gradient-to-r hover:from-[#24B6C9] hover:from-10% hover:to-[#1ea8bb] hover:text-white border-gray-100 hover:border-transparent hover:shadow-lg hover:scale-[1.01]'
                   }
                 `}
+                style={item.active ? { boxShadow: '0 8px 32px rgba(36, 182, 201, 0.3)' } : {}}
                 onClick={toggleMobileSidebar}
               >
-                <IconComponent size={18} />
-                <span>{item.label}</span>
+                <IconComponent size={20} />
+                <span className="text-sm tracking-wide">{item.label}</span>
               </a>
             );
           })}
         </nav>
-
-        {/* Mobile Footer */}
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gray-300 dark:bg-gray-600 rounded-full flex items-center justify-center">
-              <User size={16} className="text-gray-600 dark:text-gray-300" />
-            </div>
-            <div>
-              <p className="text-sm font-medium text-gray-900 dark:text-white">Guest User</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Not signed in</p>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Top Header */}
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-          
-            <Navbar handleFontSize={handleFontSize} toggleContrast={toggleContrast} />
-            
-            {/* Theme Toggle in Header */}
-            
-          
-        </header>
+    
 
         {/* Main Content Area */}
-        <main className="flex-1 p-6 overflow-auto">
+        <main className="flex-1 p-0 overflow-auto">
           {children || (
-            <div className="max-w-6xl mx-auto space-y-6">
-              {/* Service Status Cards */}
+            <div className="max-w-7xl mx-auto space-y-8">
+              {/* Welcome Card */}
+              <div className="bg-gradient-to-r from-[#24B6C9] to-[#1ea8bb] rounded-3xl p-8 text-white shadow-2xl" 
+                   style={{ boxShadow: '0 16px 48px rgba(36, 182, 201, 0.25)' }}>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold mb-2">Welcome to Metro Transit</h2>
+                    <p className="text-white text-opacity-90">Your journey starts here. Plan, book, and travel with confidence.</p>
+                  </div>
+                  <div className="w-20 h-20 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
+                    <Train size={32} className="text-white" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Stats */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100" 
+                     style={{ boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)' }}>
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                      <Train size={24} className="text-green-600 dark:text-green-400" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center">
+                      <AlertCircle size={24} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Service Status</h3>
-                      <p className="text-sm text-green-600 dark:text-green-400 font-medium">All lines operational</p>
+                      <h3 className="font-semibold text-gray-800">Service Status</h3>
+                      <p className="text-emerald-600 font-medium">All Lines Operational</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100" 
+                     style={{ boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)' }}>
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                      <Clock size={24} className="text-blue-600 dark:text-blue-400" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-[#24B6C9] to-[#1ea8bb] rounded-2xl flex items-center justify-center">
+                      <Clock size={24} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Next Train</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Downtown Line</p>
-                      <p className="text-lg font-semibold text-blue-600 dark:text-blue-400">3 minutes</p>
+                      <h3 className="font-semibold text-gray-800">Next Train</h3>
+                      <p className="text-[#24B6C9] font-medium">Downtown - 3 min</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100" 
+                     style={{ boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)' }}>
                   <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
-                      <Ticket size={24} className="text-purple-600 dark:text-purple-400" />
+                    <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center">
+                      <Ticket size={24} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Quick Buy</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">Single journey ticket</p>
-                      <p className="text-lg font-semibold text-purple-600 dark:text-purple-400">$2.50</p>
+                      <h3 className="font-semibold text-gray-800">Quick Buy</h3>
+                      <p className="text-purple-600 font-medium">Single Journey</p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Quick Actions */}
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <button className="p-4 text-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                    <Route size={24} className="mx-auto mb-2 text-blue-600 dark:text-blue-400" />
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Plan Journey</p>
-                  </button>
-                  <button className="p-4 text-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                    <Clock size={24} className="mx-auto mb-2 text-green-600 dark:text-green-400" />
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Live Times</p>
-                  </button>
-                  <button className="p-4 text-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                    <Ticket size={24} className="mx-auto mb-2 text-purple-600 dark:text-purple-400" />
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Buy Tickets</p>
-                  </button>
-                  <button className="p-4 text-center rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                    <MapPin size={24} className="mx-auto mb-2 text-red-600 dark:text-red-400" />
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">Find Stations</p>
-                  </button>
-                </div>
-              </div>
-
-              {/* Recent Activity or Announcements */}
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Service Announcements</h2>
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                    <Info size={16} className="text-blue-600 dark:text-blue-400 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">Weekend Schedule Change</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">Modified service hours this weekend due to maintenance work.</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                    <AlertCircle size={16} className="text-green-600 dark:text-green-400 mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">New Mobile App</p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">Download our new mobile app for easier journey planning.</p>
-                    </div>
-                  </div>
-                </div>
+              {/* Action Buttons */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[
+                  { icon: MapPin, label: 'Plan Journey', color: 'from-blue-500 to-blue-600' },
+                  { icon: Clock, label: 'Live Times', color: 'from-green-500 to-green-600' },
+                  { icon: Ticket, label: 'Buy Tickets', color: 'from-[#24B6C9] to-[#1ea8bb]' },
+                  { icon: MapPin, label: 'Find Stations', color: 'from-purple-500 to-purple-600' }
+                ].map((action, index) => {
+                  const IconComponent = action.icon;
+                  return (
+                    <button
+                      key={index}
+                      className={`bg-gradient-to-r ${action.color} text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-105 border-0`}
+                    >
+                      <IconComponent size={28} className="mx-auto mb-3" />
+                      <p className="font-semibold text-sm">{action.label}</p>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
