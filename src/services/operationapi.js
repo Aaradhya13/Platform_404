@@ -1,16 +1,20 @@
+const BASE_URL = import.meta.env.VITE_BASE_URL; // from .env
+
 export const operationsService = {
-  // Parking Operations
+
+  // 🚗 Parking Operations
   // Get all parking operations
   getParkingOperations: async () => {
-    const token = localStorage.getItem('token');
-    
-    const url = 'https://platform-404.onrender.com/operations/';
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
+    const url = `${BASE_URL}operations/`;
+
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -23,52 +27,44 @@ export const operationsService = {
 
   // Create new parking operation
   createParkingOperation: async (operationData) => {
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
-      throw new Error('No authentication token found');
-    }
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
     if (!operationData.train || !operationData.lane) {
-      throw new Error('Missing required fields: train and lane');
+      throw new Error("Missing required fields: train and lane");
     }
-    
-    const url = 'https://platform-404.onrender.com/operations/';
-    
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': `token ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(operationData),
-      });
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Backend error:', errorData);
-        throw new Error(`Failed to create parking operation: ${response.status} - ${errorData}`);
-      }
+    const url = `${BASE_URL}operations/`;
 
-      return response.json();
-    } catch (error) {
-      console.error('Create parking operation error:', error);
-      throw error;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(operationData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      throw new Error(`Failed to create parking operation: ${response.status} - ${errorData}`);
     }
+
+    return response.json();
   },
 
   // Update parking operation
   updateParkingOperation: async (updateData) => {
-    const token = localStorage.getItem('token');
-    
-    const url = 'https://platform-404.onrender.com/operations/';
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
+    const url = `${BASE_URL}operations/`;
+
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(updateData),
     });
@@ -82,15 +78,16 @@ export const operationsService = {
 
   // Delete parking operation
   deleteParkingOperation: async (operationId) => {
-    const token = localStorage.getItem('token');
-    
-    const url = 'https://platform-404.onrender.com/operations/';
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
+    const url = `${BASE_URL}operations/`;
+
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ id: operationId }),
     });
@@ -102,18 +99,22 @@ export const operationsService = {
     return response.json();
   },
 
-  // Timetable Operations
+  // ======================
+  // 📅 Timetable Operations
+  // ======================
+
   // Get timetables
   getTimetables: async () => {
-    const token = localStorage.getItem('token');
-    
-    const url = 'https://platform-404.onrender.com/operations/timetable/';
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
+    const url = `${BASE_URL}operations/timetable/`;
+
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -126,52 +127,44 @@ export const operationsService = {
 
   // Create new timetable
   createTimetable: async (timetableData) => {
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
-      throw new Error('No authentication token found');
-    }
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
     if (!timetableData.timetable || !timetableData.train_schedule) {
-      throw new Error('Missing required fields: timetable and train_schedule');
+      throw new Error("Missing required fields: timetable and train_schedule");
     }
-    
-    const url = 'https://platform-404.onrender.com/operations/timetable/';
-    
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': `token ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(timetableData),
-      });
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Backend error:', errorData);
-        throw new Error(`Failed to create timetable: ${response.status} - ${errorData}`);
-      }
+    const url = `${BASE_URL}operations/timetable/`;
 
-      return response.json();
-    } catch (error) {
-      console.error('Create timetable error:', error);
-      throw error;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(timetableData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      throw new Error(`Failed to create timetable: ${response.status} - ${errorData}`);
     }
+
+    return response.json();
   },
 
   // Update timetable
   updateTimetable: async (updateData) => {
-    const token = localStorage.getItem('token');
-    
-    const url = 'https://platform-404.onrender.com/operations/timetable/';
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
+    const url = `${BASE_URL}operations/timetable/`;
+
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(updateData),
     });
@@ -185,15 +178,16 @@ export const operationsService = {
 
   // Delete timetable
   deleteTimetable: async (timetableId) => {
-    const token = localStorage.getItem('token');
-    
-    const url = 'https://platform-404.onrender.com/operations/timetable/';
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
+    const url = `${BASE_URL}operations/timetable/`;
+
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ id: timetableId }),
     });
@@ -205,18 +199,22 @@ export const operationsService = {
     return response.json();
   },
 
-  // Lane Operations
+  // ======================
+  // 🛤️ Lane Operations
+  // ======================
+
   // Get all lanes
   getLanes: async () => {
-    const token = localStorage.getItem('token');
-    
-    const url = 'https://platform-404.onrender.com/operations/lanes/';
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
+    const url = `${BASE_URL}operations/lanes/`;
+
     const response = await fetch(url, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
       },
     });
 
@@ -229,52 +227,44 @@ export const operationsService = {
 
   // Create new lane
   createLane: async (laneData) => {
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
-      throw new Error('No authentication token found');
-    }
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
     if (!laneData.lane_number || !laneData.depot) {
-      throw new Error('Missing required fields: lane_number and depot');
+      throw new Error("Missing required fields: lane_number and depot");
     }
-    
-    const url = 'https://platform-404.onrender.com/operations/lanes/';
-    
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Authorization': `token ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(laneData),
-      });
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        console.error('Backend error:', errorData);
-        throw new Error(`Failed to create lane: ${response.status} - ${errorData}`);
-      }
+    const url = `${BASE_URL}operations/lanes/`;
 
-      return response.json();
-    } catch (error) {
-      console.error('Create lane error:', error);
-      throw error;
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(laneData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.text();
+      throw new Error(`Failed to create lane: ${response.status} - ${errorData}`);
     }
+
+    return response.json();
   },
 
   // Update lane
   updateLane: async (updateData) => {
-    const token = localStorage.getItem('token');
-    
-    const url = 'https://platform-404.onrender.com/operations/lanes/';
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
+    const url = `${BASE_URL}operations/lanes/`;
+
     const response = await fetch(url, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(updateData),
     });
@@ -288,15 +278,16 @@ export const operationsService = {
 
   // Delete lane
   deleteLane: async (laneId) => {
-    const token = localStorage.getItem('token');
-    
-    const url = 'https://platform-404.onrender.com/operations/lanes/';
-    
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No authentication token found");
+
+    const url = `${BASE_URL}operations/lanes/`;
+
     const response = await fetch(url, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `token ${token}`,
-        'Content-Type': 'application/json',
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ id: laneId }),
     });
