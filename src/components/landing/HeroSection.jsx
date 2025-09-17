@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTheme } from '../context/ThemeProvider';
+import { useTheme } from '../../context/ThemeProvider';
 import { CreditCard, Download } from 'lucide-react';
 
 const HeroSection = () => {

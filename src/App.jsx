@@ -5,12 +5,12 @@ import { useTheme } from "./context/ThemeProvider";
 import AppLayout, { TranslationProvider } from "./context/AppLayout";
 import Login from "./pages/Login";
 import ProtectedRoute from "./context/ProtectedRoute";
-import BrandingBar from './components/BrandingBar';
-import HeroSection from './components/HeroSection';
-import VideoSection from './components/VideoSection';
-import TravelGuide from './components/TravelGuide';
-import MetroAttractions from './components/MetroAttractions';
-import Footer from './components/Footer';
+import BrandingBar from './components/landing/BrandingBar';
+import HeroSection from './components/landing/HeroSection';
+import VideoSection from './components/landing/VideoSection';
+import TravelGuide from './components/landing/TravelGuide';
+import MetroAttractions from './components/landing/MetroAttractions';
+import Footer from './components/landing/Footer';
 import Map from "./pages/Map";
 import CleaningDashboard from "./components/cleaning/CleaningDashboard"
 import Inspection from "./components/inspection/Inspection";
