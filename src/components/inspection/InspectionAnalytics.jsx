@@ -281,8 +281,18 @@ const InspectionAnalytics = ({ onNavigateToJobCards }) => {
 
 
 
-        {/* Go to Job Cards Button - Bottom Right */}
-        <div className="fixed bottom-4 right-4 z-50">
+        {/* Bottom Right Action Buttons */}
+        <div className="fixed bottom-4 right-4 z-50 flex gap-3">
+          <motion.button
+            onClick={() => window.location.href = '/inspection/lanes'}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center gap-2 hover:bg-blue-700 transition-colors"
+          >
+            <Train className="w-5 h-5" />
+            <span>Manage Schedules</span>
+            <ArrowRight className="w-4 h-4" />
+          </motion.button>
           <motion.button
             onClick={onNavigateToJobCards}
             whileHover={{ scale: 1.05 }}
