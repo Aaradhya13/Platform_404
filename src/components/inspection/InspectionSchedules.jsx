@@ -30,7 +30,7 @@ const InspectionSchedules = () => {
   const fetchSchedules = async () => {
     try {
       setLoading(true);
-      const data = await inspectionService.getInspectionSchedules();
+      const data = await inspectionService.getInspections();
       setSchedules(data.sort((a, b) => new Date(a.scheduledStart) - new Date(b.scheduledStart)));
     } catch (err) {
       setError(err.message);

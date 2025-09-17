@@ -30,7 +30,7 @@ const InspectionLanes = () => {
   const fetchSchedules = async () => {
     try {
       setLoading(true);
-      const data = await inspectionService.getInspectionSchedules();
+      const data = await inspectionService.getInspections();
       
       const sortedData = data.sort((a, b) => {
         const today = new Date().toDateString();
