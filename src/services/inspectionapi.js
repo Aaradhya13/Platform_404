@@ -1,19 +1,14 @@
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
 export const inspectionService = {
-
-  // 🛠 Inspection Entries
-  
+  // Get all inspection entries
   getInspections: async () => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
 
-    const url = `${BASE_URL}inspection/`;
-    const response = await fetch(url, {
-      method: "GET",
+    const response = await fetch('https://platform-404.onrender.com/inspection/', {
+      method: 'GET',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
@@ -21,17 +16,18 @@ export const inspectionService = {
     return response.json();
   },
 
+  // Create new inspection entry
   createInspection: async (inspectionData) => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
-    if (!inspectionData.lane || !inspectionData.train) throw new Error("Missing required fields: lane and train");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
+    if (!inspectionData.lane || !inspectionData.train)
+      throw new Error('Missing required fields: lane and train');
 
-    const url = `${BASE_URL}inspection/`;
-    const response = await fetch(url, {
-      method: "POST",
+    const response = await fetch('https://platform-404.onrender.com/inspection/', {
+      method: 'POST',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(inspectionData),
     });
@@ -44,16 +40,16 @@ export const inspectionService = {
     return response.json();
   },
 
+  // Update inspection entry
   updateInspection: async (updateData) => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
 
-    const url = `${BASE_URL}inspection/`;
-    const response = await fetch(url, {
-      method: "PUT",
+    const response = await fetch('https://platform-404.onrender.com/inspection/', {
+      method: 'PUT',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(updateData),
     });
@@ -62,16 +58,16 @@ export const inspectionService = {
     return response.json();
   },
 
+  // Delete inspection entry
   deleteInspection: async (inspectionId) => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
 
-    const url = `${BASE_URL}inspection/`;
-    const response = await fetch(url, {
-      method: "DELETE",
+    const response = await fetch('https://platform-404.onrender.com/inspection/', {
+      method: 'DELETE',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ id: inspectionId }),
     });
@@ -79,18 +75,17 @@ export const inspectionService = {
     if (!response.ok) throw new Error(`Failed to delete inspection: ${response.status}`);
     return response.json();
   },
-  // 🛤 Inspection Lanes
 
+  // --- Inspection Lanes ---
   getInspectionLanes: async () => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
 
-    const url = `${BASE_URL}inspection/lanes/`;
-    const response = await fetch(url, {
-      method: "GET",
+    const response = await fetch('https://platform-404.onrender.com/inspection/lanes/', {
+      method: 'GET',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
@@ -99,16 +94,16 @@ export const inspectionService = {
   },
 
   createInspectionLane: async (laneData) => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
-    if (!laneData.lane_number || !laneData.depot) throw new Error("Missing required fields: lane_number and depot");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
+    if (!laneData.lane_number || !laneData.depot)
+      throw new Error('Missing required fields: lane_number and depot');
 
-    const url = `${BASE_URL}inspection/lanes/`;
-    const response = await fetch(url, {
-      method: "POST",
+    const response = await fetch('https://platform-404.onrender.com/inspection/lanes/', {
+      method: 'POST',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(laneData),
     });
@@ -122,15 +117,14 @@ export const inspectionService = {
   },
 
   updateInspectionLane: async (updateData) => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
 
-    const url = `${BASE_URL}inspection/lanes/`;
-    const response = await fetch(url, {
-      method: "PUT",
+    const response = await fetch('https://platform-404.onrender.com/inspection/lanes/', {
+      method: 'PUT',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(updateData),
     });
@@ -140,15 +134,14 @@ export const inspectionService = {
   },
 
   deleteInspectionLane: async (laneId) => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
 
-    const url = `${BASE_URL}inspection/lanes/`;
-    const response = await fetch(url, {
-      method: "DELETE",
+    const response = await fetch('https://platform-404.onrender.com/inspection/lanes/', {
+      method: 'DELETE',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ id: laneId }),
     });
@@ -157,20 +150,16 @@ export const inspectionService = {
     return response.json();
   },
 
-  // =========================
-  // 📝 Job Cards
-  // =========================
-  
+  // --- Job Cards ---
   getJobCards: async () => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
 
-    const url = `${BASE_URL}inspection/jobcards/`;
-    const response = await fetch(url, {
-      method: "GET",
+    const response = await fetch('https://platform-404.onrender.com/inspection/jobcards/', {
+      method: 'GET',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
     });
 
@@ -179,16 +168,16 @@ export const inspectionService = {
   },
 
   createJobCard: async (jobCardData) => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
-    if (!jobCardData.train || !jobCardData.description) throw new Error("Missing required fields: train and description");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
+    if (!jobCardData.train || !jobCardData.description)
+      throw new Error('Missing required fields: train and description');
 
-    const url = `${BASE_URL}inspection/jobcards/`;
-    const response = await fetch(url, {
-      method: "POST",
+    const response = await fetch('https://platform-404.onrender.com/inspection/jobcards/', {
+      method: 'POST',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(jobCardData),
     });
@@ -202,15 +191,14 @@ export const inspectionService = {
   },
 
   updateJobCard: async (updateData) => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
 
-    const url = `${BASE_URL}inspection/jobcards/`;
-    const response = await fetch(url, {
-      method: "PUT",
+    const response = await fetch('https://platform-404.onrender.com/inspection/jobcards/', {
+      method: 'PUT',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(updateData),
     });
@@ -220,15 +208,14 @@ export const inspectionService = {
   },
 
   deleteJobCard: async (jobCardId) => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
 
-    const url = `${BASE_URL}inspection/jobcards/`;
-    const response = await fetch(url, {
-      method: "DELETE",
+    const response = await fetch('https://platform-404.onrender.com/inspection/jobcards/', {
+      method: 'DELETE',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ id: jobCardId }),
     });
@@ -238,15 +225,14 @@ export const inspectionService = {
   },
 
   closeJobCard: async (jobCardId) => {
-    const token = localStorage.getItem("token");
-    if (!token) throw new Error("No authentication token found");
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
 
-    const url = `${BASE_URL}inspection/jobcards/`;
-    const response = await fetch(url, {
-      method: "PUT",
+    const response = await fetch('https://platform-404.onrender.com/inspection/jobcards/', {
+      method: 'PUT',
       headers: {
-        Authorization: `token ${token}`,
-        "Content-Type": "application/json",
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ id: jobCardId, closed_at: new Date().toISOString() }),
     });

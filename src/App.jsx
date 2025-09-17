@@ -21,6 +21,8 @@ import AdminDashboard from "./components/AdminDashboard";
 import InspectionDashboard from "./components/Inspectiondashboard";
 import MaintenanceDashboard from "./components/mainnatence/Mainanetence";
 import JobCard from "./components/inspection/JobCard"
+import InspectionLanes from "./components/inspection/InspectionLanes"
+import InspectionSchedules from "./components/inspection/InspectionSchedules"
 const LandingPage = () => {
   return (
     <div>
@@ -134,6 +136,24 @@ function App() {
             <TranslationProvider>
               <AppLayout>
                 <JobCard />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
+        <Route path="/inspection/lanes" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <InspectionLanes />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
+        <Route path="/inspection/schedules" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <InspectionSchedules />
               </AppLayout>
             </TranslationProvider>
           </ProtectedRoute>
