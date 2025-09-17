@@ -58,6 +58,24 @@ export const inspectionService = {
     return response.json();
   },
 
+  // Update inspection entry (alias for InspectionLanes compatibility)
+  updateInspectionEntry: async (updateData) => {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No authentication token found');
+
+    const response = await fetch('https://platform-404.onrender.com/inspection/', {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateData),
+    });
+
+    if (!response.ok) throw new Error(`Failed to update inspection: ${response.status}`);
+    return response.json();
+  },
+
   // Delete inspection entry
   deleteInspection: async (inspectionId) => {
     const token = localStorage.getItem('token');
