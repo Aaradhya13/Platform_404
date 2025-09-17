@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Train, MapPin, AlertCircle, CheckCircle, Edit3, Search, Filter } from 'lucide-react';
-import { inspectionService } from "../services/inspectionapi";
+import { inspectionService } from "../../services/inspectionapi";
 
 const InspectionDashboard = () => {
   const [inspections, setInspections] = useState([]);

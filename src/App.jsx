@@ -1,4 +1,4 @@
-import OperationsDashboard from "./Operationdashboard";
+import OperationsDashboard from "./components/operations/Operationdashboard";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { SlidingThemeToggle, ThemeToggleButton } from "./components/ThemeButton";
 import { useTheme } from "./context/ThemeProvider";
@@ -17,8 +17,8 @@ import Inspection from "./components/inspection/Inspection";
 import Maintenance from "./components/mainnatence/Mainnantence";
 import Operations from "./components/operations/Operations";
 import {Dashboard} from "./pages/Dashboard";
-import AdminDashboard from "./components/AdminDashboard";
-import InspectionDashboard from "./components/Inspectiondashboard";
+import AdminDashboard from "./components/admin/AdminDashboard";
+import InspectionDashboard from "./components/inspection/Inspectiondashboard";
 import MaintenanceDashboard from "./components/mainnatence/Mainanetence";
 import JobCard from "./components/inspection/JobCard"
 import InspectionLanes from "./components/inspection/InspectionLanes"
@@ -72,11 +72,11 @@ function App() {
           }
         />
         <Route path="/admin/usesr-management" element={
-          <ProtectedRoute>
+          
             <TranslationProvider>
                 <AdminDashboard />
             </TranslationProvider>
-          </ProtectedRoute>
+         
         } />
       <Route path="/inspection" element={
           <ProtectedRoute>
