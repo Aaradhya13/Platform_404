@@ -1,14 +1,15 @@
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export const inspectionService = {
-
+  // =========================
   // 🛠 Inspection Entries
+  // =========================
   
   getInspections: async () => {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No authentication token found");
 
-    const url = `${BASE_URL}inspection/`;
+    const url = `${BASE_URL}/inspection/`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -26,7 +27,7 @@ export const inspectionService = {
     if (!token) throw new Error("No authentication token found");
     if (!inspectionData.lane || !inspectionData.train) throw new Error("Missing required fields: lane and train");
 
-    const url = `${BASE_URL}inspection/`;
+    const url = `${BASE_URL}/inspection/`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -48,7 +49,7 @@ export const inspectionService = {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No authentication token found");
 
-    const url = `${BASE_URL}inspection/`;
+    const url = `${BASE_URL}/inspection/`;
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -66,7 +67,7 @@ export const inspectionService = {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No authentication token found");
 
-    const url = `${BASE_URL}inspection/`;
+    const url = `${BASE_URL}/inspection/`;
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
@@ -79,13 +80,16 @@ export const inspectionService = {
     if (!response.ok) throw new Error(`Failed to delete inspection: ${response.status}`);
     return response.json();
   },
-  // 🛤 Inspection Lanes
 
+  // =========================
+  // 🛤 Inspection Lanes
+  // =========================
+  
   getInspectionLanes: async () => {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No authentication token found");
 
-    const url = `${BASE_URL}inspection/lanes/`;
+    const url = `${BASE_URL}/inspection/lanes/`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -103,7 +107,7 @@ export const inspectionService = {
     if (!token) throw new Error("No authentication token found");
     if (!laneData.lane_number || !laneData.depot) throw new Error("Missing required fields: lane_number and depot");
 
-    const url = `${BASE_URL}inspection/lanes/`;
+    const url = `${BASE_URL}/inspection/lanes/`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -125,7 +129,7 @@ export const inspectionService = {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No authentication token found");
 
-    const url = `${BASE_URL}inspection/lanes/`;
+    const url = `${BASE_URL}/inspection/lanes/`;
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -143,7 +147,7 @@ export const inspectionService = {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No authentication token found");
 
-    const url = `${BASE_URL}inspection/lanes/`;
+    const url = `${BASE_URL}/inspection/lanes/`;
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
@@ -165,7 +169,7 @@ export const inspectionService = {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No authentication token found");
 
-    const url = `${BASE_URL}inspection/jobcards/`;
+    const url = `${BASE_URL}/inspection/jobcards/`;
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -183,7 +187,7 @@ export const inspectionService = {
     if (!token) throw new Error("No authentication token found");
     if (!jobCardData.train || !jobCardData.description) throw new Error("Missing required fields: train and description");
 
-    const url = `${BASE_URL}inspection/jobcards/`;
+    const url = `${BASE_URL}/inspection/jobcards/`;
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -205,7 +209,7 @@ export const inspectionService = {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No authentication token found");
 
-    const url = `${BASE_URL}inspection/jobcards/`;
+    const url = `${BASE_URL}/inspection/jobcards/`;
     const response = await fetch(url, {
       method: "PUT",
       headers: {
@@ -223,7 +227,7 @@ export const inspectionService = {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No authentication token found");
 
-    const url = `${BASE_URL}inspection/jobcards/`;
+    const url = `${BASE_URL}/inspection/jobcards/`;
     const response = await fetch(url, {
       method: "DELETE",
       headers: {
@@ -241,7 +245,7 @@ export const inspectionService = {
     const token = localStorage.getItem("token");
     if (!token) throw new Error("No authentication token found");
 
-    const url = `${BASE_URL}inspection/jobcards/`;
+    const url = `${BASE_URL}/inspection/jobcards/`;
     const response = await fetch(url, {
       method: "PUT",
       headers: {
