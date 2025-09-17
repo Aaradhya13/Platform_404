@@ -21,6 +21,49 @@ export const inspectionService = {
     return response.json();
   },
 
+  // Get all inspection schedules (alias for getInspections)
+  getInspectionSchedules: async () => {
+    const token = localStorage.getItem('token');
+    
+    const url = 'https://platform-404.onrender.com/inspection/';
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch inspections: ${response.status}`);
+    }
+
+    return response.json();
+  },
+
+  // Update inspection entry (alias for updateInspection)
+  updateInspectionEntry: async (updateData) => {
+    const token = localStorage.getItem('token');
+    
+    const url = 'https://platform-404.onrender.com/inspection/';
+    
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(updateData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update inspection: ${response.status}`);
+    }
+
+    return response.json();
+  },
+
   // Create new inspection entry
   createInspection: async (inspectionData) => {
     const token = localStorage.getItem('token');
