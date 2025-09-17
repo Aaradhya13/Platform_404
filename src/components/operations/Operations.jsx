@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import OperationsDashboard from '../../Operationdashboard';
+import OperationsDashboard from './Operationdashboard';
 export default function Operations() {
   const navigate = useNavigate();
   

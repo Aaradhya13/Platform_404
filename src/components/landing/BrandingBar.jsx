@@ -29,12 +29,7 @@ const BrandingBar = () => {
           >
             Login
           </a>
-          <a 
-            href="/signup"
-            className="px-3 sm:px-4 md:px-6 py-1 sm:py-1.5 md:py-2 text-xs sm:text-sm md:text-base font-montserrat font-medium text-white bg-[#21B6C2] rounded-md hover:bg-[#1a9ba5] transition-colors duration-200"
-          >
-            Sign Up
-          </a>
+         
         </div>
       </div>
     </div>
