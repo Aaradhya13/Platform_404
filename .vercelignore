@@ -4,10 +4,4 @@ node_modules
 .env.development
 *.log
 .DS_Store
-src
-public
 *.md
-.gitignore
-eslint.config.js
-vite.config.js
-package-lock.json
