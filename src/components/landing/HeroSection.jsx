@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTheme } from '../../context/ThemeProvider';
-import { CreditCard, Download } from 'lucide-react';
+
 
 const HeroSection = () => {
   const { theme } = useTheme();
@@ -45,34 +45,7 @@ const HeroSection = () => {
               Experience fast, reliable, and eco-friendly transportation with our modern metro system
             </motion.p>
             
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-            >
-              <motion.button 
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className={`flex items-center gap-3 px-8 py-4 text-white font-poppins font-semibold rounded-lg shadow-lg transition-all duration-300 ${
-                  theme === 'dark' 
-                    ? 'bg-[#19a3ad] hover:bg-[#1a8f9c]' 
-                    : 'bg-[#21B6C2] hover:bg-[#1a8f9c]'
-                }`}
-              >
-                <CreditCard size={20} />
-                Smart Card Top Up
-              </motion.button>
-              
-              <motion.button 
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center gap-3 px-8 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 text-white font-poppins font-semibold rounded-lg shadow-lg transition-all duration-300"
-              >
-                <Download size={20} />
-                Download App
-              </motion.button>
-            </motion.div>
+
           </div>
         </div>
       </div>
@@ -81,16 +54,16 @@ const HeroSection = () => {
         theme === 'dark' ? 'bg-[#1a8f9c]' : 'bg-[#21B6C2]'
       }`}>
         <div className="ticker-content text-white font-poppins font-bold text-sm">
-          <span className="mr-16">🚇 New metro timings: First train 5:30 AM, Last train 10:00 PM</span>
-          <span className="mr-16">📱 Download our mobile app for real-time updates and digital tickets</span>
-          <span className="mr-16">🎫 Monthly pass discount available - Save up to 20% on travel costs</span>
-          <span className="mr-16">🔧 Weekend maintenance schedule - Check alternate routes on our website</span>
-          <span className="mr-16">🚨 Emergency helpline: 1800-425-1663 available 24/7 for passenger assistance</span>
-          <span className="mr-16">🚇 New metro timings: First train 5:30 AM, Last train 10:00 PM</span>
-          <span className="mr-16">📱 Download our mobile app for real-time updates and digital tickets</span>
-          <span className="mr-16">🎫 Monthly pass discount available - Save up to 20% on travel costs</span>
-          <span className="mr-16">🔧 Weekend maintenance schedule - Check alternate routes on our website</span>
-          <span className="mr-16">🚨 Emergency helpline: 1800-425-1663 available 24/7 for passenger assistance</span>
+          <span className="mr-16">🔧 Operations Dashboard - Monitor real-time system performance and maintenance schedules</span>
+          <span className="mr-16">📊 Analytics & Reporting - Track operational efficiency and generate comprehensive reports</span>
+          <span className="mr-16">🚇 Fleet Management - Oversee train operations, scheduling, and maintenance workflows</span>
+          <span className="mr-16">⚡ System Monitoring - Real-time alerts for technical issues and operational updates</span>
+          <span className="mr-16">👥 Staff Management - Coordinate cleaning, inspection, and maintenance teams efficiently</span>
+          <span className="mr-16">🔧 Operations Dashboard - Monitor real-time system performance and maintenance schedules</span>
+          <span className="mr-16">📊 Analytics & Reporting - Track operational efficiency and generate comprehensive reports</span>
+          <span className="mr-16">🚇 Fleet Management - Oversee train operations, scheduling, and maintenance workflows</span>
+          <span className="mr-16">⚡ System Monitoring - Real-time alerts for technical issues and operational updates</span>
+          <span className="mr-16">👥 Staff Management - Coordinate cleaning, inspection, and maintenance teams efficiently</span>
         </div>
       </div>
     </div>
