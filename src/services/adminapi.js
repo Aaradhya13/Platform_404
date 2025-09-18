@@ -1157,6 +1157,32 @@ export const adminService = {
       throw error;
     }
   },
+
+  // Get all job cards
+  getJobCards: async () => {
+    const token = localStorage.getItem('token');
+    
+    if (!token) {
+      throw new Error('No authentication token found');
+    }
+    
+    const url = 'https://platform-404.onrender.com/inspection/jobcards/';
+    
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': `token ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch job cards: ${response.status}`);
+    }
+
+    return response.json();
+  },
+
   // Get all maintenance entries
   getMaintenanceEntries: async () => {
     const token = localStorage.getItem('token');
