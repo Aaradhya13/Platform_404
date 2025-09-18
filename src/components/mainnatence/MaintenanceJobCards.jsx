@@ -14,9 +14,11 @@ import {
   Clock,
   Train,
   AlertCircle,
+
   RefreshCw,
   FolderOpen,
   Archive
+
 } from 'lucide-react';
 
 const MaintenanceJobCards = () => {
@@ -50,9 +52,10 @@ const MaintenanceJobCards = () => {
     try {
       setLoading(true);
       const data = await jobCardService.getJobCards();
-      
+
       // Sort by created date (newest first) within each category
       const sortedData = data.sort((a, b) => {
+
         return new Date(b.created_at) - new Date(a.created_at);
       });
       
@@ -63,6 +66,7 @@ const MaintenanceJobCards = () => {
       setLoading(false);
     }
   };
+
 
   // Separate open and closed job cards
   const openJobCards = jobCards.filter(jobCard => !jobCard.closed_at);
@@ -190,6 +194,7 @@ const MaintenanceJobCards = () => {
     // If closed_at has any value (timestamp), show as Closed
     return { status: 'Closed', color: 'bg-green-50 text-green-600 border border-green-200' };
   };
+
 
   const renderJobCard = (jobCard, index) => {
     const statusInfo = getCardStatus(jobCard);
@@ -327,6 +332,7 @@ const MaintenanceJobCards = () => {
     );
   };
 
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
@@ -391,6 +397,7 @@ const MaintenanceJobCards = () => {
             </button>
           </div>
 
+
           {/* Statistics */}
           <div className="mt-6 flex items-center space-x-8">
             <div className="flex items-center space-x-2">
@@ -406,6 +413,7 @@ const MaintenanceJobCards = () => {
               </span>
             </div>
           </div>
+
         </div>
       </div>
 
@@ -424,6 +432,7 @@ const MaintenanceJobCards = () => {
             </div>
           </motion.div>
         )}
+
 
         {/* Open Job Cards Section */}
         {openJobCards.length > 0 && (
@@ -457,6 +466,7 @@ const MaintenanceJobCards = () => {
 
         {/* No Job Cards Message */}
         {jobCards.length === 0 && (
+
           <motion.div 
             className="text-center py-16"
             initial={{ opacity: 0, y: 20 }}

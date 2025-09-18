@@ -222,6 +222,7 @@ const JobCards = () => {
   };
 
   const getCardStatus = (jobCard) => {
+
     // If closed_at is null or undefined, show as Open
     if (jobCard.closed_at === null || jobCard.closed_at === undefined) {
       return { status: 'Open', color: 'bg-red-50 text-red-700 border border-red-200' };
@@ -388,6 +389,7 @@ const JobCards = () => {
     </div>
   );
 
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
@@ -458,6 +460,7 @@ const JobCards = () => {
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">Job Cards Management</h1>
               <p className="text-gray-600">Create and manage inspection job cards efficiently</p>
+
               <div className="flex items-center gap-4 mt-4 text-sm text-gray-600">
                 <div className="flex items-center gap-2">
                   <div className="w-3 h-3 bg-red-100 border border-red-200 rounded-full"></div>
@@ -484,6 +487,7 @@ const JobCards = () => {
                 <RefreshCw size={16} /> Refresh
               </button>
             </div>
+
           </div>
         </div>
 
@@ -505,17 +509,20 @@ const JobCards = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">Train ID</label>
+
                 <select
-                  value={createData.train}
+      value={createData.train}
                   onChange={(e) => setCreateData({...createData, train: e.target.value})}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#24B6C9] focus:ring-1 focus:ring-[#24B6C9] transition-colors"
                   required
+
                 >
                   <option value="">Select train ID</option>
                   {Array.from({length: 25}, (_, i) => i + 1).map(id => (
                     <option key={id} value={id}>Train {id}</option>
                   ))}
                 </select>
+
               </div>
               
               <div className="space-y-2">
@@ -538,6 +545,7 @@ const JobCards = () => {
                     </span>
                   </label>
                 </div>
+
               </div>
               
               <div className="space-y-2 md:col-span-2">
@@ -561,6 +569,7 @@ const JobCards = () => {
                       src={imagePreview} 
                       alt="Preview" 
                       className="w-full h-48 object-cover"
+
                     />
                   </div>
                 </div>
@@ -605,10 +614,12 @@ const JobCards = () => {
               <div className="mb-6">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FileText size={32} className="text-gray-400" />
+
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No job cards found</h3>
                 <p className="text-gray-600">Get started by creating your first job card</p>
               </div>
+
               <button
                 onClick={() => setShowCreateForm(true)}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-[#24B6C9] text-white rounded-lg hover:bg-[#1e9db0] transition-colors font-medium"
@@ -618,6 +629,7 @@ const JobCards = () => {
               </button>
             </div>
           </div>
+
         ) : (
           <>
             {/* Open Job Cards Section */}
@@ -636,6 +648,7 @@ const JobCards = () => {
               <Archive size={20} className="text-green-600" />
             )}
           </>
+
         )}
       </div>
     </div>

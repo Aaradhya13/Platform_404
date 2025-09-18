@@ -6,9 +6,8 @@ import {
   Download, Upload, MoreVertical, Archive
 } from 'lucide-react';
 import { adminService } from '../../services/adminapi.js';
+
 import LogoutButton from '../LogoutButton.jsx';
-
-
 
 // Sidebar Component
 const Sidebar = ({ activeTab, onTabChange, isOpen, onClose }) => {
@@ -16,7 +15,7 @@ const Sidebar = ({ activeTab, onTabChange, isOpen, onClose }) => {
     { id: 'users', label: 'Users', icon: User, category: 'Management' },
     { id: 'roles', label: 'Roles', icon: Settings, category: 'Management' },
     { id: 'departments', label: 'Departments', icon: Building, category: 'Management' },
-    
+
     { id: 'operations', label: 'Operations', icon: Train, category: 'Operations' },
     { id: 'operation-lanes', label: 'Operation Lanes', icon: Train, category: 'Operations' },
     { id: 'timetable', label: 'Timetable', icon: Calendar, category: 'Operations' },
@@ -93,7 +92,9 @@ const Sidebar = ({ activeTab, onTabChange, isOpen, onClose }) => {
           </nav>
           
           <div className="p-4 border-t border-gray-200">
+
             <LogoutButton variant="sidebar" />
+
           </div>
         </div>
       </aside>
@@ -841,6 +842,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+
 
       <div className="flex">
         <Sidebar 

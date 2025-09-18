@@ -6,9 +6,11 @@ const TranslationContext = createContext();
 const translations = {
   en: {
     "Fontsize": "Fontsize",
+
     "Home": "Home",
     "Route Map": "Route Map",
     "Logout": "Logout",
+
   },
  
 };
@@ -172,6 +174,7 @@ const handleFontSize = (action) => {
           })}
         </nav>
 
+
         {/* Desktop Sidebar Footer with Logout */}
         <div className="p-4 border-t border-gray-100 bg-white">
           <button
@@ -248,6 +251,7 @@ const handleFontSize = (action) => {
           })}
         </nav>
 
+
         {/* Mobile Sidebar Footer with Logout */}
         <div className="p-4 border-t border-gray-100 bg-white">
           <button
@@ -262,6 +266,7 @@ const handleFontSize = (action) => {
             <span className="text-sm tracking-wide">{translate('Logout')}</span>
           </button>
         </div>
+
       </div>
 
       {/* Main Content */}
