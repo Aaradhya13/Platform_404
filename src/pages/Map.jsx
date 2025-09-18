@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, MapPin, Train, Clock, Users, Activity } from 'lucide-react';
 
 const KochiMetroMap = () => {
   const [selectedStation, setSelectedStation] = useState(null);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [hoveredStation, setHoveredStation] = useState(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
   const mapRef = useRef(null);
   const leafletMapRef = useRef(null);
   const markersRef = useRef([]);
@@ -50,18 +52,63 @@ const KochiMetroMap = () => {
     { "name": "Petta", "lat": 9.9530, "lng": 76.3330, "status": "Operational", "landmark": "Petta Market" }
   ];
 
-  const handleStationClick = (station, index) => {
-    setSelectedStation({ ...station, index });
-    
-    if (markersRef.current.length > 0) {
+  const zoomToStation = (stationIndex) => {
+    if (leafletMapRef.current && stations[stationIndex]) {
+      const station = stations[stationIndex];
+      
+      // Smooth zoom and pan to the station
+      leafletMapRef.current.flyTo([station.lat, station.lng], 16, {
+        animate: true,
+        duration: 1.5,
+        easeLinearity: 0.25
+      });
+
+      // Update marker styles with animation
       markersRef.current.forEach((marker, i) => {
-        const isSelected = i === index;
+        const isSelected = i === stationIndex;
         marker.setStyle({
           fillColor: isSelected ? '#3b82f6' : '#ef4444',
-          radius: isSelected ? 8 : 6
+          radius: isSelected ? 12 : 6,
+          weight: isSelected ? 3 : 2,
+          color: isSelected ? '#1e40af' : 'white'
         });
       });
+
+      // Auto-open popup for selected station
+      setTimeout(() => {
+        if (markersRef.current[stationIndex]) {
+          markersRef.current[stationIndex].openPopup();
+        }
+      }, 1000);
     }
+  };
+
+  const resetMapView = () => {
+    if (leafletMapRef.current) {
+      const bounds = stations.map(station => [station.lat, station.lng]);
+      leafletMapRef.current.flyToBounds(bounds, { 
+        padding: [20, 20],
+        animate: true,
+        duration: 1.5
+      });
+      
+      // Reset all markers
+      markersRef.current.forEach(marker => {
+        marker.setStyle({
+          fillColor: '#ef4444',
+          radius: 6,
+          weight: 2,
+          color: 'white'
+        });
+      });
+      
+      setSelectedStation(null);
+    }
+  };
+
+  const handleStationClick = (station, index) => {
+    setSelectedStation({ ...station, index });
+    zoomToStation(index);
   };
 
   useEffect(() => {
@@ -79,7 +126,8 @@ const KochiMetroMap = () => {
             center: [10.0261, 76.3129],
             zoom: 11,
             zoomControl: true,
-            closePopupOnClick: false
+            closePopupOnClick: false,
+            preferCanvas: true
           });
 
           window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -89,8 +137,16 @@ const KochiMetroMap = () => {
           const routeCoordinates = stations.map(station => [station.lat, station.lng]);
           const polyline = window.L.polyline(routeCoordinates, {
             color: '#ef4444',
-            weight: 4,
-            opacity: 0.8,
+            weight: 5,
+            opacity: 0.9,
+            smoothFactor: 1
+          }).addTo(map);
+
+          // Add a subtle glow effect to the route
+          const glowPolyline = window.L.polyline(routeCoordinates, {
+            color: '#ef4444',
+            weight: 10,
+            opacity: 0.2,
             smoothFactor: 1
           }).addTo(map);
 
@@ -107,65 +163,107 @@ const KochiMetroMap = () => {
             const trains = getTrainsAtStation(station.name, index);
             
             const popup = window.L.popup({
-              maxWidth: 350,
+              maxWidth: 400,
               className: 'custom-popup',
               closeButton: true,
               autoClose: false,
               closeOnClick: false,
               closeOnEscapeKey: false
             }).setContent(`
-              <div style="min-width: 300px; font-family: system-ui, -apple-system, sans-serif;">
-                <div style="border-bottom: 2px solid #ef4444; padding-bottom: 8px; margin-bottom: 12px;">
-                  <div style="font-weight: bold; font-size: 16px; color: #1f2937;">${station.name}</div>
-                  <div style="font-size: 12px; color: #6b7280;">${station.landmark}</div>
+              <div style="min-width: 350px; font-family: system-ui, -apple-system, sans-serif;">
+                <div style="border-bottom: 2px solid #ef4444; padding-bottom: 10px; margin-bottom: 15px;">
+                  <div style="font-weight: bold; font-size: 18px; color: #1f2937;">${station.name}</div>
+                  <div style="font-size: 13px; color: #6b7280; margin-top: 2px;">${station.landmark}</div>
+                  <div style="display: flex; align-items: center; margin-top: 5px;">
+                    <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%; margin-right: 6px; animation: pulse 2s infinite;"></div>
+                    <span style="font-size: 11px; color: #10b981; font-weight: 500;">LIVE</span>
+                  </div>
                 </div>
                 
-                <div style="margin-bottom: 12px;">
-                  <div style="font-size: 14px; font-weight: 600; color: #374151; margin-bottom: 8px;">🚇 Trains at Station</div>
+                <div style="margin-bottom: 15px;">
+                  <div style="font-size: 15px; font-weight: 600; color: #374151; margin-bottom: 10px; display: flex; align-items: center;">
+                    🚇 <span style="margin-left: 6px;">Trains at Station</span>
+                  </div>
                   ${trains.map(train => `
-                    <div style="background: #f8f9fa; padding: 8px; border-radius: 6px; margin-bottom: 6px; border-left: 3px solid ${train.status === 'On Time' ? '#10b981' : '#f59e0b'};">
+                    <div style="background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%); padding: 10px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid ${train.status === 'On Time' ? '#10b981' : '#f59e0b'}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
                       <div style="display: flex; justify-content: space-between; align-items: center;">
                         <div>
-                          <div style="font-weight: 600; color: #1f2937; font-size: 13px;">${train.number}</div>
-                          <div style="font-size: 11px; color: #6b7280;">To: ${train.destination} | Platform ${train.platform}</div>
+                          <div style="font-weight: 600; color: #1f2937; font-size: 14px; display: flex; align-items: center;">
+                            <span style="margin-right: 6px;">🚊</span>${train.number}
+                          </div>
+                          <div style="font-size: 12px; color: #6b7280; margin-top: 2px;">
+                            To: <strong>${train.destination}</strong> | Platform ${train.platform}
+                          </div>
                         </div>
                         <div style="text-align: right;">
-                          <div style="font-size: 12px; font-weight: 500; color: #374151;">${train.arrivalTime}</div>
-                          <div style="font-size: 10px; color: ${train.status === 'On Time' ? '#10b981' : '#f59e0b'}; font-weight: 500;">${train.status}</div>
+                          <div style="font-size: 13px; font-weight: 500; color: #374151;">${train.arrivalTime}</div>
+                          <div style="font-size: 11px; color: ${train.status === 'On Time' ? '#10b981' : '#f59e0b'}; font-weight: 600; margin-top: 2px;">
+                            ${train.status}
+                          </div>
                         </div>
                       </div>
                     </div>
                   `).join('')}
                 </div>
 
-                <div style="text-align: center; padding-top: 8px; border-top: 1px solid #e5e7eb;">
-                  <button onclick="window.showStationAnalytics('${station.name}', ${index})" 
-                          style="background: #3b82f6; color: white; padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: 500;">
-                    📊 Click Here for Analytics
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 15px;">
+                  <button onclick="window.zoomToThisStation(${index})" 
+                          style="background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; padding: 8px 12px; border: none; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 500; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                    <span style="margin-right: 4px;">🎯</span>Focus Here
                   </button>
+                  <button onclick="window.showStationAnalytics('${station.name}', ${index})" 
+                          style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 8px 12px; border: none; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: 500; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
+                    <span style="margin-right: 4px;">📊</span>Analytics
+                  </button>
+                </div>
+
+                <div style="text-align: center; padding-top: 10px; border-top: 1px solid #e5e7eb;">
+                  <div style="font-size: 11px; color: #9ca3af;">
+                    Station ${index + 1} of ${stations.length} • Last updated: ${new Date().toLocaleTimeString()}
+                  </div>
                 </div>
               </div>
             `);
             
             marker.bindPopup(popup);
 
-            // Show popup on hover
-            marker.on('mouseover', () => {
+            // Enhanced hover effects
+            marker.on('mouseover', (e) => {
               clearTimeout(window.popupCloseTimeout);
-              // Close all other popups first
+              setHoveredStation(index);
+              
+              // Close all other popups
               markersRef.current.forEach(m => m.closePopup());
+              
+              // Highlight hovered marker
+              marker.setStyle({
+                radius: 8,
+                weight: 3,
+                fillColor: selectedStation?.index === index ? '#3b82f6' : '#f59e0b'
+              });
+              
               marker.openPopup();
             });
 
-            // Hide popup when mouse leaves marker
-            marker.on('mouseout', () => {
+            marker.on('mouseout', (e) => {
+              setHoveredStation(null);
+              
+              // Reset marker style
+              const isSelected = selectedStation?.index === index;
+              marker.setStyle({
+                radius: isSelected ? 12 : 6,
+                weight: isSelected ? 3 : 2,
+                fillColor: isSelected ? '#3b82f6' : '#ef4444'
+              });
+              
               window.popupCloseTimeout = setTimeout(() => {
                 marker.closePopup();
-              }, 300);
+              }, 500);
             });
 
-            marker.on('click', () => {
+            marker.on('click', (e) => {
               handleStationClick(station, index);
+              e.originalEvent.stopPropagation();
             });
 
             markersRef.current.push(marker);
@@ -175,18 +273,24 @@ const KochiMetroMap = () => {
           map.fitBounds(bounds, { padding: [20, 20] });
 
           leafletMapRef.current = map;
+          setMapLoaded(true);
         }
       };
       document.head.appendChild(script);
 
-      // Global function for analytics button
+      // Global functions for popup buttons
       window.showStationAnalytics = (stationName, index) => {
         const station = stations.find(s => s.name === stationName);
         setSelectedStation({ ...station, index });
         setShowAnalytics(true);
       };
 
-      // Add CSS to handle popup hover behavior
+      window.zoomToThisStation = (index) => {
+        zoomToStation(index);
+        setSelectedStation({ ...stations[index], index });
+      };
+
+      // Enhanced CSS for animations
       const style = document.createElement('style');
       style.textContent = `
         .leaflet-popup {
@@ -194,11 +298,24 @@ const KochiMetroMap = () => {
         }
         .leaflet-popup-content-wrapper {
           pointer-events: auto !important;
+          border-radius: 12px !important;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+        }
+        .leaflet-popup-tip {
+          box-shadow: 0 3px 14px rgba(0,0,0,0.1) !important;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        .custom-popup button:hover {
+          transform: translateY(-1px) !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
         }
       `;
       document.head.appendChild(style);
 
-      // Add global event listener for popup hover
+      // Enhanced popup hover behavior
       document.addEventListener('mouseover', (e) => {
         if (e.target.closest('.leaflet-popup')) {
           clearTimeout(window.popupCloseTimeout);
@@ -211,7 +328,7 @@ const KochiMetroMap = () => {
             if (leafletMapRef.current) {
               leafletMapRef.current.closePopup();
             }
-          }, 300);
+          }, 500);
         }
       });
     }
@@ -220,6 +337,7 @@ const KochiMetroMap = () => {
       if (leafletMapRef.current) {
         leafletMapRef.current.remove();
         leafletMapRef.current = null;
+        markersRef.current = [];
       }
     };
   }, [showAnalytics]);
@@ -251,16 +369,30 @@ const KochiMetroMap = () => {
                     <span className="text-sm text-gray-600">Live Data</span>
                   </div>
                   <div className="text-sm text-gray-500">
+                    Station {selectedStation.index + 1} of {stations.length}
+                  </div>
+                  <div className="text-sm text-gray-500">
                     Last updated: {new Date().toLocaleTimeString()}
                   </div>
                 </div>
               </div>
-              <button
-                onClick={() => setShowAnalytics(false)}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-              >
-                ← Back to Map
-              </button>
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => {
+                    setShowAnalytics(false);
+                    setTimeout(() => zoomToStation(selectedStation.index), 100);
+                  }}
+                  className="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-xl hover:from-purple-700 hover:to-purple-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                >
+                  🎯 Focus on Map
+                </button>
+                <button
+                  onClick={() => setShowAnalytics(false)}
+                  className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                >
+                  ← Back to Map
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -271,9 +403,7 @@ const KochiMetroMap = () => {
               <div className="flex items-center justify-between mb-4">
                 <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Daily Passengers</div>
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
+                  <Users className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div className="text-4xl font-bold text-gray-900 mb-2">{analytics.dailyPassengers.toLocaleString()}</div>
@@ -287,9 +417,7 @@ const KochiMetroMap = () => {
               <div className="flex items-center justify-between mb-4">
                 <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Trains Today</div>
                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                  </svg>
+                  <Train className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div className="text-4xl font-bold text-gray-900 mb-2">{analytics.trainsToday}</div>
@@ -303,9 +431,7 @@ const KochiMetroMap = () => {
               <div className="flex items-center justify-between mb-4">
                 <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Avg Wait Time</div>
                 <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <Clock className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div className="text-4xl font-bold text-gray-900 mb-2">{analytics.avgWaitTime} min</div>
@@ -319,9 +445,7 @@ const KochiMetroMap = () => {
               <div className="flex items-center justify-between mb-4">
                 <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Efficiency</div>
                 <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
+                  <Activity className="w-6 h-6 text-white" />
                 </div>
               </div>
               <div className="text-4xl font-bold text-gray-900 mb-2">{analytics.efficiency}%</div>
@@ -498,19 +622,29 @@ const KochiMetroMap = () => {
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
-              <div className="w-3 h-3 bg-red-500 rounded-full mr-3"></div>
+              <div className="w-3 h-3 bg-red-500 rounded-full mr-3 animate-pulse"></div>
               <h1 className="text-xl font-bold text-gray-900">Kochi Metro Rail</h1>
             </div>
             <button
               onClick={handleBack}
-              className="flex items-center gap-1 px-2 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm"
+              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
             >
               <ArrowLeft size={14} />
               Back
             </button>
           </div>
           <div className="text-sm text-gray-600 mb-6">
-            Aluva ↔ Petta • {stations.length} Stations
+            Aluva ↔ Petta • {stations.length} Stations • 25.6 km
+          </div>
+
+          <div className="mb-4 flex space-x-2">
+            <button
+              onClick={resetMapView}
+              className="flex-1 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium flex items-center justify-center"
+            >
+              <MapPin size={14} className="mr-1" />
+              Reset View
+            </button>
           </div>
           
           <div className="space-y-2">
@@ -520,16 +654,20 @@ const KochiMetroMap = () => {
                 onClick={() => handleStationClick(station, index)}
                 className={`p-3 rounded-lg cursor-pointer transition-all duration-200 hover:bg-gray-200 ${
                   selectedStation && selectedStation.index === index
-                    ? 'bg-blue-100 border border-blue-500'
-                    : 'bg-white hover:bg-gray-200'
+                    ? 'bg-blue-100 border border-blue-500 shadow-md'
+                    : hoveredStation === index
+                    ? 'bg-yellow-50 border border-yellow-300'
+                    : 'bg-white hover:bg-gray-200 hover:shadow-sm'
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <div 
-                      className={`w-3 h-3 rounded-full mr-3 ${
+                      className={`w-3 h-3 rounded-full mr-3 transition-all duration-200 ${
                         selectedStation && selectedStation.index === index
-                          ? 'bg-blue-500'
+                          ? 'bg-blue-500 ring-2 ring-blue-200'
+                          : hoveredStation === index
+                          ? 'bg-yellow-500'
                           : 'bg-red-500'
                       }`}
                     ></div>
@@ -538,10 +676,16 @@ const KochiMetroMap = () => {
                       <div className="text-xs text-gray-600">{station.landmark}</div>
                     </div>
                   </div>
-                  <div className="text-xs">
-                    <span className="bg-green-600 px-2 py-1 rounded text-xs text-white">
+                  <div className="flex flex-col items-end">
+                    <span className="bg-green-600 px-2 py-1 rounded text-xs text-white mb-1">
                       {station.status}
                     </span>
+                    {selectedStation && selectedStation.index === index && (
+                      <div className="text-xs text-blue-600 font-medium flex items-center">
+                        <span className="animate-pulse mr-1">🎯</span>
+                        Focused
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -551,14 +695,70 @@ const KochiMetroMap = () => {
       </div>
 
       <div className="flex-1 relative">
-        <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded-lg shadow-lg border border-gray-300">
-          <h2 className="text-lg font-semibold mb-2 text-gray-900">Kochi Metro Route Map</h2>
-          <div className="text-sm text-gray-700">
-            <div>• Hover over stations to see trains</div>
-            <div>• Click "Click Here" for analytics</div>
-            <div>• Total Distance: ~25.6 km</div>
+        <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded-xl shadow-lg border border-gray-300 max-w-sm">
+          <h2 className="text-lg font-semibold mb-3 text-gray-900 flex items-center">
+            <Train className="mr-2" size={20} />
+            Kochi Metro Route Map
+          </h2>
+          <div className="text-sm text-gray-700 space-y-1">
+            <div>• <strong>Hover</strong> over stations to see live trains</div>
+            <div>• <strong>Click</strong> stations to focus & zoom</div>
+            <div>• <strong>"Focus Here"</strong> for detailed zoom</div>
+            <div>• <strong>"Analytics"</strong> for station insights</div>
+            <div className="pt-2 border-t">
+              <div className="flex items-center text-xs">
+                <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                <span>Metro Route ({stations.length} stations)</span>
+              </div>
+            </div>
           </div>
+          {selectedStation && (
+            <div className="mt-3 p-2 bg-blue-50 rounded-lg">
+              <div className="text-xs text-blue-800 font-medium">
+                🎯 Currently focused: {selectedStation.name}
+              </div>
+            </div>
+          )}
+          {!mapLoaded && (
+            <div className="mt-3 text-xs text-gray-500 flex items-center">
+              <div className="animate-spin w-3 h-3 border border-gray-400 border-t-transparent rounded-full mr-2"></div>
+              Loading interactive map...
+            </div>
+          )}
         </div>
+
+        {selectedStation && (
+          <div className="absolute top-4 right-4 z-10 bg-white p-4 rounded-xl shadow-lg border border-gray-300 max-w-xs">
+            <h3 className="font-semibold text-gray-900 mb-2 flex items-center">
+              <MapPin className="mr-2" size={16} />
+              {selectedStation.name}
+            </h3>
+            <div className="text-sm text-gray-600 space-y-1">
+              <div>{selectedStation.landmark}</div>
+              <div className="flex items-center">
+                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                <span>Station {selectedStation.index + 1} of {stations.length}</span>
+              </div>
+            </div>
+            <div className="mt-3 flex space-x-2">
+              <button
+                onClick={() => setShowAnalytics(true)}
+                className="flex-1 px-3 py-2 bg-green-600 text-white text-xs rounded-lg hover:bg-green-700 transition-colors font-medium"
+              >
+                📊 Analytics
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedStation(null);
+                  resetMapView();
+                }}
+                className="px-3 py-2 bg-gray-600 text-white text-xs rounded-lg hover:bg-gray-700 transition-colors font-medium"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        )}
 
         <div 
           ref={mapRef}
