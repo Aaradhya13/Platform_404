@@ -178,9 +178,10 @@ const handleFontSize = (action) => {
             onClick={handleLogout}
             className={`
               w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 group relative font-medium border
-              text-red-600 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 hover:text-white border-gray-100 hover:border-transparent hover:shadow-lg hover:scale-[1.01]
+              text-white hover:opacity-90 border-transparent shadow-lg hover:scale-[1.01]
               ${!isOpen ? 'justify-center' : ''}
             `}
+            style={{ backgroundColor: '#21B6C2' }}
           >
             <LogOut size={20} />
             {isOpen && <span className="text-sm tracking-wide">{translate('Logout')}</span>}
@@ -254,7 +255,8 @@ const handleFontSize = (action) => {
               handleLogout();
               toggleMobileSidebar();
             }}
-            className="w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 font-medium border text-red-600 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 hover:text-white border-gray-100 hover:border-transparent hover:shadow-lg hover:scale-[1.01]"
+            className="w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 font-medium border text-white hover:opacity-90 border-transparent shadow-lg hover:scale-[1.01]"
+            style={{ backgroundColor: '#21B6C2' }}
           >
             <LogOut size={20} />
             <span className="text-sm tracking-wide">{translate('Logout')}</span>

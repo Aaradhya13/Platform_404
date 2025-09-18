@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { Train, Calendar, MapPin, Clock, Activity, TrendingUp, AlertCircle, CheckCircle, Users, Database, ArrowRight, Settings } from 'lucide-react';
 import { operationsService } from '../../services/operationapi';
+import LogoutButton from '../LogoutButton.jsx';
 // import { operationsService } from './operationapi.js'; // Uncomment this line in your actual implementation
 
 // For demo purposes only - remove this in actual implementation
@@ -149,16 +150,6 @@ const OperationsDashboard = () => {
               <p className="text-gray-600 mt-1">Real-time operational insights and management</p>
             </div>
             <div className="flex space-x-3">
-              <button
-                onClick={() => setActiveSection('dashboard')}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  activeSection === 'dashboard'
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
-              >
-                Dashboard
-              </button>
             </div>
           </div>
         </div>

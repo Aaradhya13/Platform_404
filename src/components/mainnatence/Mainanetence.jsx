@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { maintenanceService } from "../../services/maintenence";
 import { Edit, Trash2, Plus, Calendar, Clock, MapPin, Train } from 'lucide-react';
+import LogoutButton from '../LogoutButton.jsx';
 
 const MaintenanceDashboard = () => {
   const [maintenanceEntries, setMaintenanceEntries] = useState([]);
