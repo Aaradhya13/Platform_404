@@ -1,0 +1,21 @@
+from django.contrib import admin
+from .models import *
+# Register your models here.
+admin.site.register(Department)
+admin.site.register(DesignedUser)
+admin.site.register(BrandingDeal)
+admin.site.register(Trainset)
+admin.site.register(Timetable)
+admin.site.register(TrainScheduled)
+admin.site.register(Depot)
+admin.site.register(ParkingBay)
+admin.site.register(MaintainanceBay)
+admin.site.register(ParkingTrainEntry)
+admin.site.register(MaintainanceTrainEntry)
+admin.site.register(CleaningBay)
+admin.site.register(CleaningTrainEntry)
+admin.site.register(InspectionBay)
+admin.site.register(InspectionBayEntry)
+admin.site.register(Branded)
+admin.site.register(role)
+admin.site.register(jobCards)
