@@ -15,7 +15,9 @@ import {
   Train,
   AlertCircle,
   ImageIcon,
-  RefreshCw
+  RefreshCw,
+  FolderOpen,
+  Archive
 } from 'lucide-react';
 
 const JobCards = () => {
@@ -40,6 +42,9 @@ const JobCards = () => {
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
+
+  // Filter states
+  const [activeTab, setActiveTab] = useState('open'); // 'open', 'closed', or 'all'
 
   useEffect(() => {
     fetchJobCards();
@@ -67,6 +72,10 @@ const JobCards = () => {
       setLoading(false);
     }
   };
+
+  // Separate job cards into open and closed
+  const openJobCards = jobCards.filter(card => !card.closed_at);
+  const closedJobCards = jobCards.filter(card => card.closed_at);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -158,8 +167,6 @@ const JobCards = () => {
     }
   };
 
-  
-
   const handleDelete = async (jobCardId) => {
     if (!window.confirm('Are you sure you want to delete this job card?')) {
       return;
@@ -215,214 +222,35 @@ const JobCards = () => {
   };
 
   const getCardStatus = (jobCard) => {
-  // If closed_at is null or undefined, show as Open
-  if (jobCard.closed_at === null || jobCard.closed_at === undefined) {
-    return { status: 'Open', color: 'bg-red-50 text-red-700 border border-red-200' };
-  }
-  // If closed_at has any value (timestamp), show as Closed
-  return { status: 'Closed', color: 'bg-green-50 text-green-700 border border-green-200' };
-};
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex justify-center items-center">
-        <div className="bg-white rounded-lg shadow-sm p-8 flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-2 border-gray-300 border-t-[#24B6C9]"></div>
-          <p className="mt-4 text-gray-600 font-medium">Loading job cards...</p>
+    // If closed_at is null or undefined, show as Open
+    if (jobCard.closed_at === null || jobCard.closed_at === undefined) {
+      return { status: 'Open', color: 'bg-red-50 text-red-700 border border-red-200' };
+    }
+    // If closed_at has any value (timestamp), show as Closed
+    return { status: 'Closed', color: 'bg-green-50 text-green-700 border border-green-200' };
+  };
+
+  const renderJobCardGrid = (cards, title, emptyMessage, icon) => (
+    <div className="mb-12">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="p-2 bg-white rounded-lg shadow-sm border border-gray-200">
+          {icon}
         </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex justify-center items-center p-6">
-        <div className="bg-white rounded-lg shadow-sm border border-red-200 p-6 max-w-md w-full">
-          <div className="flex items-center gap-3 mb-4">
-            <AlertCircle className="w-5 h-5 text-red-600" />
-            <h3 className="font-semibold text-gray-900">Error</h3>
-          </div>
-          <p className="text-gray-700 mb-4">{error}</p>
-          <button 
-            onClick={() => {
-              setError('');
-              fetchJobCards();
-            }}
-            className="w-full px-4 py-2 bg-[#24B6C9] text-white rounded-lg hover:bg-[#1e9db0] transition-colors font-medium"
-          >
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <button
-            onClick={() => window.location.href = '/inspection'}
-            className="inline-flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-[#24B6C9] font-medium transition-colors"
-          >
-            ← Back to Analytics
-          </button>
+        <div>
+          <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+          <p className="text-gray-600 text-sm">{cards.length} {cards.length === 1 ? 'card' : 'cards'}</p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        {/* Success Message */}
-        {success && (
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6"
-          >
-            <div className="flex items-center gap-3">
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-              <p className="text-green-800 font-medium">{success}</p>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Job Cards Management</h1>
-              <p className="text-gray-600">Create and manage inspection job cards efficiently</p>
-            </div>
-            
-            <div className="flex gap-3">
-              <button 
-                onClick={() => setShowCreateForm(true)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#24B6C9] text-white rounded-lg hover:bg-[#1e9db0] transition-colors font-medium"
-              >
-                <Plus size={16} /> New Job Card
-              </button>
-              <button 
-                onClick={fetchJobCards}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-              >
-                <RefreshCw size={16} /> Refresh
-              </button>
-            </div>
-          </div>
+      {cards.length === 0 ? (
+        <div className="bg-white rounded-lg border border-gray-200 p-8 text-center">
+          <div className="text-gray-400 mb-2">{icon}</div>
+          <p className="text-gray-600">{emptyMessage}</p>
         </div>
-
-        {/* Create Form */}
-        {showCreateForm && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8"
-          >
-            <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-3">
-              <div className="p-2 bg-[#24B6C9] bg-opacity-10 rounded-lg">
-                <Plus className="w-5 h-5 text-[#24B6C9]" />
-              </div>
-              Create New Job Card
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">Train ID</label>
-                <input
-                  type="number"
-                  value={createData.train}
-                  onChange={(e) => setCreateData({...createData, train: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#24B6C9] focus:ring-1 focus:ring-[#24B6C9] transition-colors"
-                  required
-                  placeholder="Enter train ID"
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <label className="block text-sm font-semibold text-gray-700">Photo Upload</label>
-                <div className="relative">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                    id="photo-upload"
-                  />
-                  <label 
-                    htmlFor="photo-upload"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg cursor-pointer flex items-center gap-2 hover:bg-gray-50 transition-colors"
-                  >
-                    <Camera size={16} className="text-gray-500" />
-                    <span className="text-gray-700">
-                      {imageFile ? imageFile.name : 'Choose image file'}
-                    </span>
-                  </label>
-                </div>
-              </div>
-              
-              <div className="space-y-2 md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-700">Description</label>
-                <textarea
-                  value={createData.description}
-                  onChange={(e) => setCreateData({...createData, description: e.target.value})}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#24B6C9] focus:ring-1 focus:ring-[#24B6C9] transition-colors resize-none"
-                  rows="4"
-                  required
-                  placeholder="Describe the issue or inspection finding"
-                />
-              </div>
-
-              {/* Image Preview */}
-              {imagePreview && (
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">Preview</label>
-                  <div className="relative rounded-lg overflow-hidden border border-gray-200 max-w-xs">
-                    <img 
-                      src={imagePreview} 
-                      alt="Preview" 
-                      className="w-full h-48 object-cover"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className="flex gap-3">
-              <button
-                onClick={handleCreate}
-                disabled={uploading}
-                className={`inline-flex items-center gap-2 px-6 py-2.5 bg-[#24B6C9] text-white rounded-lg font-medium transition-colors ${
-                  uploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#1e9db0]'
-                }`}
-              >
-                {uploading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle size={16} />
-                    Create Job Card
-                  </>
-                )}
-              </button>
-              <button
-                onClick={handleCancelCreate}
-                className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
-              >
-                <X size={16} />
-                Cancel
-              </button>
-            </div>
-          </motion.div>
-        )}
-
-        {/* Job Cards Grid */}
+      ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {jobCards.map((jobCard, index) => {
+          {cards.map((jobCard) => {
             const statusInfo = getCardStatus(jobCard);
             return (
               <div 
@@ -498,62 +326,300 @@ const JobCards = () => {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex justify-end gap-2">
-                    {editingId === jobCard.id ? (
-                      <div className="flex gap-2">
-                        <button
-                          onClick={handleSave}
-                          className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                          title="Save changes"
-                        >
-                          <Save size={14} />
-                        </button>
-                        <button
-                          onClick={handleCancel}
-                          className="p-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                          title="Cancel editing"
-                        >
-                          <X size={14} />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleEdit(jobCard)}
-                          className="p-2 bg-[#24B6C9] text-white rounded-lg hover:bg-[#1e9db0] transition-colors"
-                          title="Edit description"
-                        >
-                          <Edit size={14} />
-                        </button>
-                        
-                        {isAdmin && (
-                          <button
-                            onClick={() => handleDelete(jobCard.id)}
-                            className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                            title="Delete job card"
-                          >
-                            <Trash2 size={14} />
-                          </button>
-                        )}
-                      </div>
+                  <div className="flex justify-between items-center">
+                    {/* Mark as Fixed button for open cards */}
+                    {!jobCard.closed_at && (
+                      <button
+                        onClick={() => handleMarkAsFixed(jobCard.id)}
+                        className="px-3 py-1.5 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition-colors font-medium"
+                      >
+                        Mark as Fixed
+                      </button>
                     )}
+                    
+                    <div className="flex gap-2 ml-auto">
+                      {editingId === jobCard.id ? (
+                        <div className="flex gap-2">
+                          <button
+                            onClick={handleSave}
+                            className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                            title="Save changes"
+                          >
+                            <Save size={14} />
+                          </button>
+                          <button
+                            onClick={handleCancel}
+                            className="p-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                            title="Cancel editing"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex gap-2">
+                         <button
+  onClick={() => handleEdit(jobCard)}
+  className="flex items-center gap-2 px-3 py-2 bg-[#24B6C9] text-white rounded-lg 
+             hover:bg-[#1e9db0] transition-colors shadow-md"
+  title="Edit description"
+>
+  <Edit size={16} />
+  <span className="font-medium">Edit</span>
+</button>
+
+                          {isAdmin && (
+                            <button
+                              onClick={() => handleDelete(jobCard.id)}
+                              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                              title="Delete job card"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             );
           })}
         </div>
+      )}
+    </div>
+  );
 
-        {jobCards.length === 0 && (
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex justify-center items-center">
+        <div className="bg-white rounded-lg shadow-sm p-8 flex flex-col items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-2 border-gray-300 border-t-[#24B6C9]"></div>
+          <p className="mt-4 text-gray-600 font-medium">Loading job cards...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex justify-center items-center p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-red-200 p-6 max-w-md w-full">
+          <div className="flex items-center gap-3 mb-4">
+            <AlertCircle className="w-5 h-5 text-red-600" />
+            <h3 className="font-semibold text-gray-900">Error</h3>
+          </div>
+          <p className="text-gray-700 mb-4">{error}</p>
+          <button 
+            onClick={() => {
+              setError('');
+              fetchJobCards();
+            }}
+            className="w-full px-4 py-2 bg-[#24B6C9] text-white rounded-lg hover:bg-[#1e9db0] transition-colors font-medium"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Navigation */}
+      <div className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <button
+            onClick={() => window.location.href = '/inspection'}
+            className="inline-flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-[#24B6C9] font-medium transition-colors"
+          >
+            ← Back to Analytics
+          </button>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Success Message */}
+        {success && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6"
+          >
+            <div className="flex items-center gap-3">
+              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+              <p className="text-green-800 font-medium">{success}</p>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Job Cards Management</h1>
+              <p className="text-gray-600">Create and manage inspection job cards efficiently</p>
+
+              <div className="flex items-center gap-4 mt-4 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-red-100 border border-red-200 rounded-full"></div>
+                  <span>{openJobCards.length} Open Cards</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-100 border border-green-200 rounded-full"></div>
+                  <span>{closedJobCards.length} Closed Cards</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setShowCreateForm(true)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#24B6C9] text-white rounded-lg hover:bg-[#1e9db0] transition-colors font-medium"
+              >
+                <Plus size={16} /> New Job Card
+              </button>
+              <button 
+                onClick={fetchJobCards}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+              >
+                <RefreshCw size={16} /> Refresh
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Create Form */}
+        {showCreateForm && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8"
+          >
+            <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-3">
+              <div className="p-2 bg-[#24B6C9] bg-opacity-10 rounded-lg">
+                <Plus className="w-5 h-5 text-[#24B6C9]" />
+              </div>
+              Create New Job Card
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">Train ID</label>
+
+                <select
+      value={createData.train}
+                  onChange={(e) => setCreateData({...createData, train: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#24B6C9] focus:ring-1 focus:ring-[#24B6C9] transition-colors"
+                  required
+
+                >
+                  <option value="">Select train ID</option>
+                  {Array.from({length: 25}, (_, i) => i + 1).map(id => (
+                    <option key={id} value={id}>Train {id}</option>
+                  ))}
+                </select>
+
+              </div>
+              
+              <div className="space-y-2">
+                <label className="block text-sm font-semibold text-gray-700">Photo Upload</label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                    id="photo-upload"
+                  />
+                  <label 
+                    htmlFor="photo-upload"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg cursor-pointer flex items-center gap-2 hover:bg-gray-50 transition-colors"
+                  >
+                    <Camera size={16} className="text-gray-500" />
+                    <span className="text-gray-700">
+                      {imageFile ? imageFile.name : 'Choose image file'}
+                    </span>
+                  </label>
+                </div>
+
+              </div>
+              
+              <div className="space-y-2 md:col-span-2">
+                <label className="block text-sm font-semibold text-gray-700">Description</label>
+                <textarea
+                  value={createData.description}
+                  onChange={(e) => setCreateData({...createData, description: e.target.value})}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#24B6C9] focus:ring-1 focus:ring-[#24B6C9] transition-colors resize-none"
+                  rows="4"
+                  required
+                  placeholder="Describe the issue or inspection finding"
+                />
+              </div>
+
+              {/* Image Preview */}
+              {imagePreview && (
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Preview</label>
+                  <div className="relative rounded-lg overflow-hidden border border-gray-200 max-w-xs">
+                    <img 
+                      src={imagePreview} 
+                      alt="Preview" 
+                      className="w-full h-48 object-cover"
+
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={handleCreate}
+                disabled={uploading}
+                className={`inline-flex items-center gap-2 px-6 py-2.5 bg-[#24B6C9] text-white rounded-lg font-medium transition-colors ${
+                  uploading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#1e9db0]'
+                }`}
+              >
+                {uploading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle size={16} />
+                    Create Job Card
+                  </>
+                )}
+              </button>
+              <button
+                onClick={handleCancelCreate}
+                className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
+              >
+                <X size={16} />
+                Cancel
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Job Cards Sections */}
+        {jobCards.length === 0 ? (
           <div className="text-center py-16">
             <div className="max-w-md mx-auto">
               <div className="mb-6">
                 <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FileText size={32} className="text-gray-400" />
+
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No job cards found</h3>
                 <p className="text-gray-600">Get started by creating your first job card</p>
               </div>
+
               <button
                 onClick={() => setShowCreateForm(true)}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-[#24B6C9] text-white rounded-lg hover:bg-[#1e9db0] transition-colors font-medium"
@@ -563,6 +629,26 @@ const JobCards = () => {
               </button>
             </div>
           </div>
+
+        ) : (
+          <>
+            {/* Open Job Cards Section */}
+            {renderJobCardGrid(
+              openJobCards,
+              "Open Job Cards",
+              "No open job cards. All issues have been resolved!",
+              <FolderOpen size={20} className="text-red-600" />
+            )}
+
+            {/* Closed Job Cards Section */}
+            {renderJobCardGrid(
+              closedJobCards,
+              "Closed Job Cards",
+              "No closed job cards yet.",
+              <Archive size={20} className="text-green-600" />
+            )}
+          </>
+
         )}
       </div>
     </div>

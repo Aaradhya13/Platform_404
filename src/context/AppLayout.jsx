@@ -6,10 +6,11 @@ const TranslationContext = createContext();
 const translations = {
   en: {
     "Fontsize": "Fontsize",
-    
+
     "Home": "Home",
     "Route Map": "Route Map",
-   
+    "Logout": "Logout",
+
   },
  
 };
@@ -38,7 +39,8 @@ import {
   Train,
   Route,
   Ticket,
-  AlertCircle
+  AlertCircle,
+  LogOut
 } from 'lucide-react';
 
 const AppLayout = ({ children }) => {
@@ -48,6 +50,14 @@ const AppLayout = ({ children }) => {
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const toggleMobileSidebar = () => setIsMobileOpen(!isMobileOpen);
+
+  const handleLogout = () => {
+    // Add any logout logic here (clear tokens, user data, etc.)
+    console.log('Logging out...');
+    
+    // Redirect to home page
+    window.location.href = '/';
+  };
 
   const menuItems = [
     { icon: Home, label: translate('Home'), href: '#', active: true },
@@ -163,6 +173,31 @@ const handleFontSize = (action) => {
             );
           })}
         </nav>
+
+
+        {/* Desktop Sidebar Footer with Logout */}
+        <div className="p-4 border-t border-gray-100 bg-white">
+          <button
+            onClick={handleLogout}
+            className={`
+              w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 group relative font-medium border
+              text-white hover:opacity-90 border-transparent shadow-lg hover:scale-[1.01]
+              ${!isOpen ? 'justify-center' : ''}
+            `}
+            style={{ backgroundColor: '#21B6C2' }}
+          >
+            <LogOut size={20} />
+            {isOpen && <span className="text-sm tracking-wide">{translate('Logout')}</span>}
+            
+            {/* Tooltip for collapsed state */}
+            {!isOpen && (
+              <div className="absolute left-full ml-4 px-4 py-3 bg-gray-800 text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-2xl">
+                {translate('Logout')}
+                <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45"></div>
+              </div>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Sidebar */}
@@ -215,6 +250,23 @@ const handleFontSize = (action) => {
             );
           })}
         </nav>
+
+
+        {/* Mobile Sidebar Footer with Logout */}
+        <div className="p-4 border-t border-gray-100 bg-white">
+          <button
+            onClick={() => {
+              handleLogout();
+              toggleMobileSidebar();
+            }}
+            className="w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 font-medium border text-white hover:opacity-90 border-transparent shadow-lg hover:scale-[1.01]"
+            style={{ backgroundColor: '#21B6C2' }}
+          >
+            <LogOut size={20} />
+            <span className="text-sm tracking-wide">{translate('Logout')}</span>
+          </button>
+        </div>
+
       </div>
 
       {/* Main Content */}

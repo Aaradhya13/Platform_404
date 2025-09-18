@@ -14,7 +14,11 @@ import {
   Clock,
   Train,
   AlertCircle,
-  RefreshCw
+
+  RefreshCw,
+  FolderOpen,
+  Archive
+
 } from 'lucide-react';
 
 const MaintenanceJobCards = () => {
@@ -48,14 +52,10 @@ const MaintenanceJobCards = () => {
     try {
       setLoading(true);
       const data = await jobCardService.getJobCards();
-      
-      // Sort job cards: open cards first, then by created date (newest first)
+
+      // Sort by created date (newest first) within each category
       const sortedData = data.sort((a, b) => {
-        // Prioritize open cards (closed_at is null)
-        if (!a.closed_at && b.closed_at) return -1;
-        if (a.closed_at && !b.closed_at) return 1;
-        
-        // Then sort by created date (newest first)
+
         return new Date(b.created_at) - new Date(a.created_at);
       });
       
@@ -66,6 +66,11 @@ const MaintenanceJobCards = () => {
       setLoading(false);
     }
   };
+
+
+  // Separate open and closed job cards
+  const openJobCards = jobCards.filter(jobCard => !jobCard.closed_at);
+  const closedJobCards = jobCards.filter(jobCard => jobCard.closed_at);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -190,6 +195,144 @@ const MaintenanceJobCards = () => {
     return { status: 'Closed', color: 'bg-green-50 text-green-600 border border-green-200' };
   };
 
+
+  const renderJobCard = (jobCard, index) => {
+    const statusInfo = getCardStatus(jobCard);
+    return (
+      <motion.div 
+        key={jobCard.id}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.1 }}
+        className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+      >
+        {/* Photo Section */}
+        <div className="relative h-48 bg-gray-100">
+          {jobCard.photo && jobCard.photo !== 'http://example.com/photo.png' && jobCard.photo !== null && jobCard.photo.trim() !== '' ? (
+            <img 
+              src={jobCard.photo} 
+              alt="Job card photo" 
+              className="w-full h-full object-cover cursor-pointer"
+              onClick={() => window.open(jobCard.photo, '_blank')}
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <div className="text-center">
+                <Camera size={32} className="text-gray-400 mx-auto mb-2" />
+                <p className="text-gray-500 text-sm">No image</p>
+              </div>
+            </div>
+          )}
+          
+          {/* Status Badge */}
+          <div className="absolute top-3 right-3">
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.color}`}>
+              {statusInfo.status}
+            </span>
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <div className="p-5">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-2">
+              <Train size={16} className="text-[#24B6C9]" />
+              <span className="font-semibold text-gray-900">Train {jobCard.train}</span>
+            </div>
+            <span className="text-sm text-gray-500">#{jobCard.id}</span>
+          </div>
+
+          {/* Description */}
+          <div className="mb-4">
+            {editingId === jobCard.id ? (
+              <textarea
+                value={editData.description}
+                onChange={(e) => setEditData({...editData, description: e.target.value})}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#24B6C9] focus:border-transparent text-sm resize-none"
+                rows="3"
+              />
+            ) : (
+              <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">{jobCard.description}</p>
+            )}
+          </div>
+
+          {/* Timestamps */}
+          <div className="space-y-2 mb-4 text-xs text-gray-500">
+            <div className="flex items-center">
+              <Clock size={12} className="mr-2" />
+              <span>Created: {formatDateTime(jobCard.created_at)}</span>
+            </div>
+            {jobCard.closed_at && (
+              <div className="flex items-center">
+                <CheckCircle size={12} className="mr-2" />
+                <span>Closed: {formatDateTime(jobCard.closed_at)}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Actions */}
+          <div className="flex justify-end space-x-2">
+            {editingId === jobCard.id ? (
+              <>
+                <button
+                  onClick={handleSave}
+                  className="inline-flex items-center p-2 text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors"
+                  title="Save changes"
+                >
+                  <Save size={14} />
+                </button>
+                <button
+                  onClick={handleCancel}
+                  className="inline-flex items-center p-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+                  title="Cancel editing"
+                >
+                  <X size={14} />
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+  onClick={() => {
+    setEditingId(jobCard.id);
+    setEditData(jobCard);
+  }}
+  className="inline-flex items-center gap-2 px-3 py-2 text-gray-700 bg-gray-100 
+             rounded-md hover:bg-gray-200 transition-colors shadow-sm"
+  title="Edit job card"
+>
+  <Edit size={16} />
+  <span className="text-sm font-medium">Edit</span>
+</button>
+
+                {!jobCard.closed_at && (
+                  <button
+                    onClick={() => handleClose(jobCard)}
+                    className="inline-flex items-center p-2 text-white bg-[#24B6C9] rounded-md hover:bg-[#1fa5b8] transition-colors"
+                    title="Close job card"
+                  >
+                    <CheckCircle size={14} />
+                  </button>
+                )}
+                
+                {isAdmin && (
+                  <button
+                    onClick={() => handleDelete(jobCard.id)}
+                    className="inline-flex items-center p-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+                    title="Delete job card"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    );
+  };
+
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex justify-center items-center">
@@ -253,6 +396,24 @@ const MaintenanceJobCards = () => {
               Refresh
             </button>
           </div>
+
+
+          {/* Statistics */}
+          <div className="mt-6 flex items-center space-x-8">
+            <div className="flex items-center space-x-2">
+              <FolderOpen size={20} className="text-red-500" />
+              <span className="text-sm font-medium text-gray-700">
+                Open Cards: <span className="font-bold text-red-600">{openJobCards.length}</span>
+              </span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Archive size={20} className="text-green-500" />
+              <span className="text-sm font-medium text-gray-700">
+                Closed Cards: <span className="font-bold text-green-600">{closedJobCards.length}</span>
+              </span>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -272,144 +433,40 @@ const MaintenanceJobCards = () => {
           </motion.div>
         )}
 
-        {/* Job Cards Grid */}
-        {jobCards.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {jobCards.map((jobCard, index) => {
-              const statusInfo = getCardStatus(jobCard);
-              return (
-                <motion.div 
-                  key={jobCard.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
-                >
-                  {/* Photo Section */}
-                  <div className="relative h-48 bg-gray-100">
-                    {jobCard.photo && jobCard.photo !== 'http://example.com/photo.png' && jobCard.photo !== null && jobCard.photo.trim() !== '' ? (
-                      <img 
-                        src={jobCard.photo} 
-                        alt="Job card photo" 
-                        className="w-full h-full object-cover cursor-pointer"
-                        onClick={() => window.open(jobCard.photo, '_blank')}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <div className="text-center">
-                          <Camera size={32} className="text-gray-400 mx-auto mb-2" />
-                          <p className="text-gray-500 text-sm">No image</p>
-                        </div>
-                      </div>
-                    )}
-                    
-                    {/* Status Badge */}
-                    <div className="absolute top-3 right-3">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.color}`}>
-                        {statusInfo.status}
-                      </span>
-                    </div>
-                  </div>
 
-                  {/* Content Section */}
-                  <div className="p-5">
-                    {/* Header */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-2">
-                        <Train size={16} className="text-[#24B6C9]" />
-                        <span className="font-semibold text-gray-900">Train {jobCard.train}</span>
-                      </div>
-                      <span className="text-sm text-gray-500">#{jobCard.id}</span>
-                    </div>
-
-                    {/* Description */}
-                    <div className="mb-4">
-                      {editingId === jobCard.id ? (
-                        <textarea
-                          value={editData.description}
-                          onChange={(e) => setEditData({...editData, description: e.target.value})}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#24B6C9] focus:border-transparent text-sm resize-none"
-                          rows="3"
-                        />
-                      ) : (
-                        <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">{jobCard.description}</p>
-                      )}
-                    </div>
-
-                    {/* Timestamps */}
-                    <div className="space-y-2 mb-4 text-xs text-gray-500">
-                      <div className="flex items-center">
-                        <Clock size={12} className="mr-2" />
-                        <span>Created: {formatDateTime(jobCard.created_at)}</span>
-                      </div>
-                      {jobCard.closed_at && (
-                        <div className="flex items-center">
-                          <CheckCircle size={12} className="mr-2" />
-                          <span>Closed: {formatDateTime(jobCard.closed_at)}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex justify-end space-x-2">
-                      {editingId === jobCard.id ? (
-                        <>
-                          <button
-                            onClick={handleSave}
-                            className="inline-flex items-center p-2 text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors"
-                            title="Save changes"
-                          >
-                            <Save size={14} />
-                          </button>
-                          <button
-                            onClick={handleCancel}
-                            className="inline-flex items-center p-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
-                            title="Cancel editing"
-                          >
-                            <X size={14} />
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            onClick={() => {
-                              setEditingId(jobCard.id);
-                              setEditData(jobCard);
-                            }}
-                            className="inline-flex items-center p-2 text-gray-600 bg-gray-100 rounded-md hover:bg-gray-200 transition-colors"
-                            title="Edit job card"
-                          >
-                            <Edit size={14} />
-                          </button>
-                          
-                          {!jobCard.closed_at && (
-                            <button
-                              onClick={() => handleClose(jobCard)}
-                              className="inline-flex items-center p-2 text-white bg-[#24B6C9] rounded-md hover:bg-[#1fa5b8] transition-colors"
-                              title="Close job card"
-                            >
-                              <CheckCircle size={14} />
-                            </button>
-                          )}
-                          
-                          {isAdmin && (
-                            <button
-                              onClick={() => handleDelete(jobCard.id)}
-                              className="inline-flex items-center p-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
-                              title="Delete job card"
-                            >
-                              <Trash2 size={14} />
-                            </button>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+        {/* Open Job Cards Section */}
+        {openJobCards.length > 0 && (
+          <div className="mb-12">
+            <div className="flex items-center mb-6">
+              <FolderOpen size={24} className="text-red-500 mr-3" />
+              <h2 className="text-xl font-bold text-gray-900">
+                Open Job Cards ({openJobCards.length})
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {openJobCards.map((jobCard, index) => renderJobCard(jobCard, index))}
+            </div>
           </div>
-        ) : (
+        )}
+
+        {/* Closed Job Cards Section */}
+        {closedJobCards.length > 0 && (
+          <div className="mb-12">
+            <div className="flex items-center mb-6">
+              <Archive size={24} className="text-green-500 mr-3" />
+              <h2 className="text-xl font-bold text-gray-900">
+                Closed Job Cards ({closedJobCards.length})
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {closedJobCards.map((jobCard, index) => renderJobCard(jobCard, index))}
+            </div>
+          </div>
+        )}
+
+        {/* No Job Cards Message */}
+        {jobCards.length === 0 && (
+
           <motion.div 
             className="text-center py-16"
             initial={{ opacity: 0, y: 20 }}

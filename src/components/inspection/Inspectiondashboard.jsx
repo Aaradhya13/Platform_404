@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, Train, MapPin, AlertCircle, CheckCircle, Edit3, Search, Filter } from 'lucide-react';
 
+import LogoutButton from '../LogoutButton.jsx';
+
+
 // Mock inspection service for demo
 const inspectionService = {
   getInspections: () => Promise.resolve([
@@ -216,6 +219,9 @@ const InspectionDashboard = () => {
                 </svg>
                 <span>Refresh Data</span>
               </button>
+
+              <LogoutButton variant="header" />
+
             </div>
           </div>
         </div>
