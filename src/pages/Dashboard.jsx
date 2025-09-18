@@ -7,6 +7,7 @@ import {
   Calendar, MapPin, Zap, Server, Plus, Edit, Loader
 } from 'lucide-react';
 import { adminService } from '../services/adminapi';
+import LogoutButton from '../components/LogoutButton.jsx';
 
 export const Dashboard = () => {
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
@@ -410,6 +411,7 @@ export const Dashboard = () => {
                   <p className="font-medium text-gray-900">{userData.username}</p>
                   <p className="text-gray-500 text-xs">{userData.role}</p>
                 </div>
+                <LogoutButton variant="header" />
               </div>
             </div>
           </div>

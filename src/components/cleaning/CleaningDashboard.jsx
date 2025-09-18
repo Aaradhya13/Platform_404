@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CleaningAnalytics from './CleaningAnalytics';
 import Cleaning from './Cleaning';
+import LogoutButton from '../LogoutButton.jsx';
 
 const CleaningDashboard = () => {
   const [currentView, setCurrentView] = useState('analytics');

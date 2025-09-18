@@ -505,14 +505,17 @@ const JobCards = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">Train ID</label>
-                <input
-                  type="number"
+                <select
                   value={createData.train}
                   onChange={(e) => setCreateData({...createData, train: e.target.value})}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:border-[#24B6C9] focus:ring-1 focus:ring-[#24B6C9] transition-colors"
                   required
-                  placeholder="Enter train ID"
-                />
+                >
+                  <option value="">Select train ID</option>
+                  {Array.from({length: 25}, (_, i) => i + 1).map(id => (
+                    <option key={id} value={id}>Train {id}</option>
+                  ))}
+                </select>
               </div>
               
               <div className="space-y-2">
