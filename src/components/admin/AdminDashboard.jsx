@@ -1489,7 +1489,7 @@ import {
   ChevronDown, Bell, LogOut, Menu, Home, AlertCircle, CheckCircle, MapPin,
   Download, Upload, MoreVertical, Archive, FileText,Camera
 } from 'lucide-react';
-import { adminService } from '../services/adminapi.js';
+import { adminService } from '../../services/adminapi';
 
 // Header Component
 const Header = ({ onMenuToggle, isSidebarOpen }) => {
