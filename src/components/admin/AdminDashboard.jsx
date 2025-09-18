@@ -149,9 +149,9 @@ const Sidebar = ({ activeTab, onTabChange, isOpen, onClose, onNavigate }) => {
             </div>
           </nav>
           
-          <div className="p-4 border-t border-gray-200">
+       <div className="p-4 border-t border-gray-200">
       <button
-        onClick={() => navigate("/")}
+        onClick={() => window.location.href = "/"}
         className="w-full flex items-center space-x-3 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
       >
         <LogOut size={18} />
