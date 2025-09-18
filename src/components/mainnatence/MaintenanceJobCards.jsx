@@ -271,62 +271,67 @@ const MaintenanceJobCards = () => {
             )}
           </div>
 
-          {/* Actions */}
-          <div className="flex justify-end space-x-2">
-            {editingId === jobCard.id ? (
-              <>
-                <button
-                  onClick={handleSave}
-                  className="inline-flex items-center p-2 text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors"
-                  title="Save changes"
-                >
-                  <Save size={14} />
-                </button>
-                <button
-                  onClick={handleCancel}
-                  className="inline-flex items-center p-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
-                  title="Cancel editing"
-                >
-                  <X size={14} />
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-  onClick={() => {
-    setEditingId(jobCard.id);
-    setEditData(jobCard);
-  }}
-  className="inline-flex items-center gap-2 px-3 py-2 text-gray-700 bg-gray-100 
-             rounded-md hover:bg-gray-200 transition-colors shadow-sm"
-  title="Edit job card"
->
-  <Edit size={16} />
-  <span className="text-sm font-medium">Edit</span>
-</button>
+            // For MaintenanceJobCards component, replace the Actions section in renderJobCard function:
 
-                {!jobCard.closed_at && (
-                  <button
-                    onClick={() => handleClose(jobCard)}
-                    className="inline-flex items-center p-2 text-white bg-[#24B6C9] rounded-md hover:bg-[#1fa5b8] transition-colors"
-                    title="Close job card"
-                  >
-                    <CheckCircle size={14} />
-                  </button>
-                )}
-                
-                {isAdmin && (
-                  <button
-                    onClick={() => handleDelete(jobCard.id)}
-                    className="inline-flex items-center p-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
-                    title="Delete job card"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                )}
-              </>
-            )}
-          </div>
+{/* Actions */}
+<div className="flex justify-end space-x-2">
+  {editingId === jobCard.id ? (
+    <>
+      <button
+        onClick={handleSave}
+        className="inline-flex items-center p-2 text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors"
+        title="Save changes"
+      >
+        <Save size={14} />
+      </button>
+      <button
+        onClick={handleCancel}
+        className="inline-flex items-center p-2 text-gray-600 bg-gray-200 rounded-md hover:bg-gray-300 transition-colors"
+        title="Cancel editing"
+      >
+        <X size={14} />
+      </button>
+    </>
+  ) : (
+    <>
+      {/* Only show Edit button if job card is not closed */}
+      {!jobCard.closed_at && (
+        <button
+          onClick={() => {
+            setEditingId(jobCard.id);
+            setEditData(jobCard);
+          }}
+          className="inline-flex items-center gap-2 px-3 py-2 text-gray-700 bg-gray-100 
+                     rounded-md hover:bg-gray-200 transition-colors shadow-sm"
+          title="Edit job card"
+        >
+          <Edit size={16} />
+          <span className="text-sm font-medium">Edit</span>
+        </button>
+      )}
+
+      {!jobCard.closed_at && (
+        <button
+          onClick={() => handleClose(jobCard)}
+          className="inline-flex items-center p-2 text-white bg-[#24B6C9] rounded-md hover:bg-[#1fa5b8] transition-colors"
+          title="Close job card"
+        >
+          <CheckCircle size={14} />
+        </button>
+      )}
+      
+      {isAdmin && (
+        <button
+          onClick={() => handleDelete(jobCard.id)}
+          className="inline-flex items-center p-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors"
+          title="Delete job card"
+        >
+          <Trash2 size={14} />
+        </button>
+      )}
+    </>
+  )}
+</div>
         </div>
       </motion.div>
     );

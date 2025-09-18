@@ -325,61 +325,66 @@ const JobCards = () => {
                     )}
                   </div>
 
-                  {/* Actions */}
-                  <div className="flex justify-between items-center">
-                    {/* Mark as Fixed button for open cards */}
-                    {!jobCard.closed_at && (
-                      <button
-                        onClick={() => handleMarkAsFixed(jobCard.id)}
-                        className="px-3 py-1.5 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition-colors font-medium"
-                      >
-                        Mark as Fixed
-                      </button>
-                    )}
-                    
-                    <div className="flex gap-2 ml-auto">
-                      {editingId === jobCard.id ? (
-                        <div className="flex gap-2">
-                          <button
-                            onClick={handleSave}
-                            className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
-                            title="Save changes"
-                          >
-                            <Save size={14} />
-                          </button>
-                          <button
-                            onClick={handleCancel}
-                            className="p-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                            title="Cancel editing"
-                          >
-                            <X size={14} />
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="flex gap-2">
-                         <button
-  onClick={() => handleEdit(jobCard)}
-  className="flex items-center gap-2 px-3 py-2 bg-[#24B6C9] text-white rounded-lg 
-             hover:bg-[#1e9db0] transition-colors shadow-md"
-  title="Edit description"
->
-  <Edit size={16} />
-  <span className="font-medium">Edit</span>
-</button>
+                  
 
-                          {isAdmin && (
-                            <button
-                              onClick={() => handleDelete(jobCard.id)}
-                              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                              title="Delete job card"
-                            >
-                              <Trash2 size={14} />
-                            </button>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
+{/* Actions */}
+<div className="flex justify-between items-center">
+  {/* Mark as Fixed button for open cards */}
+  {!jobCard.closed_at && (
+    <button
+      onClick={() => handleMarkAsFixed(jobCard.id)}
+      className="px-3 py-1.5 bg-green-500 text-white text-xs rounded-lg hover:bg-green-600 transition-colors font-medium"
+    >
+      Mark as Fixed
+    </button>
+  )}
+  
+  <div className="flex gap-2 ml-auto">
+    {editingId === jobCard.id ? (
+      <div className="flex gap-2">
+        <button
+          onClick={handleSave}
+          className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+          title="Save changes"
+        >
+          <Save size={14} />
+        </button>
+        <button
+          onClick={handleCancel}
+          className="p-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
+          title="Cancel editing"
+        >
+          <X size={14} />
+        </button>
+      </div>
+    ) : (
+      <div className="flex gap-2">
+        {/* Only show Edit button if job card is not closed */}
+        {!jobCard.closed_at && (
+          <button
+            onClick={() => handleEdit(jobCard)}
+            className="flex items-center gap-2 px-3 py-2 bg-[#24B6C9] text-white rounded-lg 
+                       hover:bg-[#1e9db0] transition-colors shadow-md"
+            title="Edit description"
+          >
+            <Edit size={16} />
+            <span className="font-medium">Edit</span>
+          </button>
+        )}
+
+        {isAdmin && (
+          <button
+            onClick={() => handleDelete(jobCard.id)}
+            className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+            title="Delete job card"
+          >
+            <Trash2 size={14} />
+          </button>
+        )}
+      </div>
+    )}
+  </div>
+</div>
                 </div>
               </div>
             );

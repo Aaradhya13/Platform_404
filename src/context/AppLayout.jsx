@@ -6,9 +6,7 @@ const TranslationContext = createContext();
 const translations = {
   en: {
     "Fontsize": "Fontsize",
-
     "Home": "Home",
-    "Route Map": "Route Map",
     "Logout": "Logout",
 
   },
@@ -37,7 +35,6 @@ import {
   MapPin, 
   Clock, 
   Train,
-  Route,
   Ticket,
   AlertCircle,
   LogOut
@@ -60,9 +57,7 @@ const AppLayout = ({ children }) => {
   };
 
   const menuItems = [
-    { icon: Home, label: translate('Home'), href: '#', active: true },
-    { icon: Route, label: translate('Route Map'), href: '/map' },
-   
+    { icon: Home, label: translate('Home'), href: '#', active: true }
   ];
 
   const [fontSize, setFontSize] = useState("text-base");
@@ -86,55 +81,48 @@ const handleFontSize = (action) => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+    <div className="flex min-h-screen bg-gray-50">
       
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMobileSidebar}
-        className="fixed top-10 left-6 z-50 md:hidden p-3 rounded-xl bg-white shadow-2xl border border-gray-100 hover:shadow-xl transition-all duration-200 hover:scale-105"
-        style={{ boxShadow: '0 8px 32px rgba(36, 182, 201, 0.15)' }}
+        className="fixed top-4 left-4 z-50 md:hidden p-2 rounded-lg bg-white shadow-md border border-gray-200 hover:shadow-lg transition-shadow"
       >
         {isMobileOpen ? 
-          <X size={22} className="text-gray-700" /> : 
-          <Menu size={22} className="text-gray-700" />
+          <X size={20} className="text-gray-600" /> : 
+          <Menu size={20} className="text-gray-600" />
         }
       </button>
 
       {/* Mobile Overlay */}
       {isMobileOpen && (
         <div 
-          className="fixed inset-0 z-40 bg-black bg-opacity-50 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-black bg-opacity-50 md:hidden"
           onClick={toggleMobileSidebar}
         />
       )}
 
       {/* Desktop Sidebar */}
       <div className={`
-        hidden md:flex flex-col bg-white shadow-2xl transition-all duration-300 relative
-        ${isOpen ? 'w-80' : 'w-20'}
-      `}
-      style={{ boxShadow: '8px 0 32px rgba(36, 182, 201, 0.08)' }}
-      >
-        {/* Accent Strip */}
-        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-[#24B6C9] to-[#1ea8bb]"></div>
+        hidden md:flex flex-col bg-white border-r border-gray-200 transition-all duration-300 fixed h-full z-30
+        ${isOpen ? 'w-64' : 'w-16'}
+      `}>
 
         {/* Sidebar Header */}
-        <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-[#24B6C9] to-[#1ea8bb] text-white">
+        <div className="p-4 border-b border-gray-200 bg-white">
           <div className="flex items-center justify-between">
             {isOpen && (
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
-                  <Train size={24} className="text-white" />
-                </div>
+              <div className="flex items-center gap-3">
+                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded" />
                 <div>
-                  <span className="text-xl font-bold text-white tracking-tight">Metro Transit</span>
-                  <p className="text-sm text-white text-opacity-80 font-medium">City Transport</p>
+                  <span className="text-lg font-semibold text-gray-800">Metro Transit</span>
+                  <p className="text-xs text-gray-500">Management System</p>
                 </div>
               </div>
             )}
             {!isOpen && (
-              <div className="w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto shadow-lg">
-                <Train size={24} className="text-white" />
+              <div className="flex items-center justify-center mx-auto">
+                <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded" />
               </div>
             )}
            
@@ -142,7 +130,7 @@ const handleFontSize = (action) => {
         </div>
 
         {/* Navigation Menu */}
-        <nav className="flex-1 p-4 space-y-2 bg-white">
+        <nav className="flex-1 p-3 space-y-1 bg-white">
           {menuItems.map((item, index) => {
             const IconComponent = item.icon;
             return (
@@ -150,23 +138,21 @@ const handleFontSize = (action) => {
                 key={index}
                 href={item.href}
                 className={`
-                  flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 group relative font-medium border
+                  flex items-center gap-3 p-3 rounded-lg transition-colors duration-150 font-medium text-sm
                   ${item.active 
-                    ? 'bg-gradient-to-r from-[#24B6C9] to-[#1ea8bb] text-white shadow-xl border-transparent transform scale-[1.02]' 
-                    : 'text-gray-600 hover:bg-gradient-to-r hover:from-[#24B6C9] hover:from-10% hover:to-[#1ea8bb] hover:text-white border-gray-100 hover:border-transparent hover:shadow-lg hover:scale-[1.01]'
+                    ? 'bg-cyan-50 text-cyan-700 border-l-4 border-cyan-700' 
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }
                   ${!isOpen ? 'justify-center' : ''}
                 `}
-                style={item.active ? { boxShadow: '0 8px 32px rgba(36, 182, 201, 0.3)' } : {}}
               >
-                <IconComponent size={20} className={item.active ? 'text-white' : ''} />
-                {isOpen && <span className="text-sm tracking-wide">{item.label}</span>}
+                <IconComponent size={18} />
+                {isOpen && <span>{item.label}</span>}
                 
                 {/* Tooltip for collapsed state */}
                 {!isOpen && (
-                  <div className="absolute left-full ml-4 px-4 py-3 bg-gray-800 text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-2xl">
+                  <div className="absolute left-full ml-2 px-3 py-2 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
                     {item.label}
-                    <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45"></div>
                   </div>
                 )}
               </a>
@@ -176,24 +162,22 @@ const handleFontSize = (action) => {
 
 
         {/* Desktop Sidebar Footer with Logout */}
-        <div className="p-4 border-t border-gray-100 bg-white">
+        <div className="p-3 border-t border-gray-200 bg-white">
           <button
             onClick={handleLogout}
             className={`
-              w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 group relative font-medium border
-              text-white hover:opacity-90 border-transparent shadow-lg hover:scale-[1.01]
+              w-full flex items-center gap-3 p-3 rounded-lg transition-colors duration-150 font-medium text-sm
+              text-red-600 hover:bg-red-50
               ${!isOpen ? 'justify-center' : ''}
             `}
-            style={{ backgroundColor: '#21B6C2' }}
           >
-            <LogOut size={20} />
-            {isOpen && <span className="text-sm tracking-wide">{translate('Logout')}</span>}
+            <LogOut size={18} />
+            {isOpen && <span>{translate('Logout')}</span>}
             
             {/* Tooltip for collapsed state */}
             {!isOpen && (
-              <div className="absolute left-full ml-4 px-4 py-3 bg-gray-800 text-white text-sm rounded-xl opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50 shadow-2xl">
+              <div className="absolute left-full ml-2 px-3 py-2 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
                 {translate('Logout')}
-                <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-1 w-2 h-2 bg-gray-800 rotate-45"></div>
               </div>
             )}
           </button>
@@ -202,32 +186,30 @@ const handleFontSize = (action) => {
 
       {/* Mobile Sidebar */}
       <div className={`
-        fixed top-0 left-0 z-50 w-80 h-full bg-white transform transition-transform duration-300 ease-in-out md:hidden shadow-2xl
+        fixed top-0 left-0 z-50 w-64 h-full bg-white transform transition-transform duration-300 ease-in-out md:hidden border-r border-gray-200
         ${isMobileOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         {/* Mobile Header */}
-        <div className="p-6 bg-gradient-to-r from-[#24B6C9] to-[#1ea8bb] text-white">
+        <div className="p-4 border-b border-gray-200 bg-white">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
-                <Train size={24} className="text-white" />
-              </div>
+            <div className="flex items-center gap-3">
+              <img src="/logo.png" alt="Logo" className="w-8 h-8 rounded" />
               <div>
-                <span className="text-xl font-bold text-white tracking-tight">Metro Transit</span>
-                <p className="text-sm text-white text-opacity-80 font-medium">City Transport</p>
+                <span className="text-lg font-semibold text-gray-800">Metro Transit</span>
+                <p className="text-xs text-gray-500">Management System</p>
               </div>
             </div>
             <button
               onClick={toggleMobileSidebar}
-              className="p-2 rounded-xl text-white hover:bg-white hover:bg-opacity-20 transition-all duration-200"
+              className="p-1 rounded text-gray-500 hover:text-gray-700"
             >
-              <X size={20} />
+              <X size={18} />
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
-        <nav className="flex-1 p-4 space-y-2 bg-white">
+        <nav className="flex-1 p-3 space-y-1 bg-white">
           {menuItems.map((item, index) => {
             const IconComponent = item.icon;
             return (
@@ -235,17 +217,16 @@ const handleFontSize = (action) => {
                 key={index}
                 href={item.href}
                 className={`
-                  flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 font-medium border
+                  flex items-center gap-3 p-3 rounded-lg transition-colors duration-150 font-medium text-sm
                   ${item.active 
-                    ? 'bg-gradient-to-r from-[#24B6C9] to-[#1ea8bb] text-white shadow-xl border-transparent transform scale-[1.02]' 
-                    : 'text-gray-600 hover:bg-gradient-to-r hover:from-[#24B6C9] hover:from-10% hover:to-[#1ea8bb] hover:text-white border-gray-100 hover:border-transparent hover:shadow-lg hover:scale-[1.01]'
+                    ? 'bg-cyan-50 text-cyan-700 border-l-4 border-cyan-700' 
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                   }
                 `}
-                style={item.active ? { boxShadow: '0 8px 32px rgba(36, 182, 201, 0.3)' } : {}}
                 onClick={toggleMobileSidebar}
               >
-                <IconComponent size={20} />
-                <span className="text-sm tracking-wide">{item.label}</span>
+                <IconComponent size={18} />
+                <span>{item.label}</span>
               </a>
             );
           })}
@@ -253,102 +234,107 @@ const handleFontSize = (action) => {
 
 
         {/* Mobile Sidebar Footer with Logout */}
-        <div className="p-4 border-t border-gray-100 bg-white">
+        <div className="p-3 border-t border-gray-200 bg-white">
           <button
             onClick={() => {
               handleLogout();
               toggleMobileSidebar();
             }}
-            className="w-full flex items-center gap-4 p-4 rounded-2xl transition-all duration-200 font-medium border text-white hover:opacity-90 border-transparent shadow-lg hover:scale-[1.01]"
-            style={{ backgroundColor: '#21B6C2' }}
+            className="w-full flex items-center gap-3 p-3 rounded-lg transition-colors duration-150 font-medium text-sm text-red-600 hover:bg-red-50"
           >
-            <LogOut size={20} />
-            <span className="text-sm tracking-wide">{translate('Logout')}</span>
+            <LogOut size={18} />
+            <span>{translate('Logout')}</span>
           </button>
         </div>
 
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div className={`flex-1 flex flex-col transition-all duration-300 ${isOpen ? 'md:ml-64' : 'md:ml-16'}`}>
     
 
         {/* Main Content Area */}
-        <main className="flex-1 p-0 overflow-auto">
+        <main className="flex-1 p-6 overflow-auto">
           {children || (
-            <div className="max-w-7xl mx-auto space-y-8">
+            <div className="max-w-6xl mx-auto space-y-6">
               {/* Welcome Card */}
-              <div className="bg-gradient-to-r from-[#24B6C9] to-[#1ea8bb] rounded-3xl p-8 text-white shadow-2xl" 
-                   style={{ boxShadow: '0 16px 48px rgba(36, 182, 201, 0.25)' }}>
+              <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-2xl font-bold mb-2">Welcome to Metro Transit</h2>
-                    <p className="text-white text-opacity-90">Your journey starts here. Plan, book, and travel with confidence.</p>
+                    <h2 className="text-xl font-semibold text-gray-800 mb-1">Metro Transit Dashboard</h2>
+                    <p className="text-gray-600 text-sm">Monitor and manage your transit operations efficiently</p>
                   </div>
-                  <div className="w-20 h-20 bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
-                    <Train size={32} className="text-white" />
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center" style={{backgroundColor: '#E0F8FB'}}>
+                    <Train size={24} style={{color: '#24B6C9'}} />
                   </div>
                 </div>
               </div>
 
               {/* Quick Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100" 
-                     style={{ boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)' }}>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center">
-                      <AlertCircle size={24} className="text-white" />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
+                      <AlertCircle size={20} className="text-green-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-800">Service Status</h3>
-                      <p className="text-emerald-600 font-medium">All Lines Operational</p>
+                      <h3 className="font-medium text-gray-800 text-sm">Service Status</h3>
+                      <p className="text-green-600 font-semibold text-sm">Operational</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100" 
-                     style={{ boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)' }}>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#24B6C9] to-[#1ea8bb] rounded-2xl flex items-center justify-center">
-                      <Clock size={24} className="text-white" />
+                <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{backgroundColor: '#E0F8FB'}}>
+                      <Clock size={20} style={{color: '#24B6C9'}} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-800">Next Train</h3>
-                      <p className="text-[#24B6C9] font-medium">Downtown - 3 min</p>
+                      <h3 className="font-medium text-gray-800 text-sm">Next Departure</h3>
+                      <p className="font-semibold text-sm" style={{color: '#24B6C9'}}>Downtown - 3 min</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100" 
-                     style={{ boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)' }}>
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center">
-                      <Ticket size={24} className="text-white" />
+                <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center">
+                      <Ticket size={20} className="text-purple-600" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-800">Quick Buy</h3>
-                      <p className="text-purple-600 font-medium">Single Journey</p>
+                      <h3 className="font-medium text-gray-800 text-sm">Active Tickets</h3>
+                      <p className="text-purple-600 font-semibold text-sm">1,247</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
-                  { icon: MapPin, label: 'Plan Journey', color: 'from-blue-500 to-blue-600' },
-                  { icon: Clock, label: 'Live Times', color: 'from-green-500 to-green-600' },
-                  { icon: Ticket, label: 'Buy Tickets', color: 'from-[#24B6C9] to-[#1ea8bb]' },
-                  { icon: MapPin, label: 'Find Stations', color: 'from-purple-500 to-purple-600' }
+                  { icon: MapPin, label: 'Plan Journey', color: '#24B6C9' },
+                  { icon: Clock, label: 'Live Times', color: 'green' },
+                  { icon: Ticket, label: 'Manage Tickets', color: 'purple' },
+                  { icon: MapPin, label: 'Station Finder', color: 'orange' }
                 ].map((action, index) => {
                   const IconComponent = action.icon;
+                  const colorClasses = {
+                    '#24B6C9': 'text-white',
+                    green: 'bg-green-600 hover:bg-green-700',
+                    purple: 'bg-purple-600 hover:bg-purple-700',
+                    orange: 'bg-orange-600 hover:bg-orange-700'
+                  };
+                  const buttonStyle = action.color === '#24B6C9' ? {
+                    backgroundColor: '#24B6C9'
+                  } : {};
                   return (
                     <button
                       key={index}
-                      className={`bg-gradient-to-r ${action.color} text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-200 hover:scale-105 border-0`}
+                      className={`${action.color === '#24B6C9' ? 'text-white hover:opacity-90' : colorClasses[action.color]} p-4 rounded-lg transition-all duration-150 hover:shadow-md`}
+                      style={buttonStyle}
                     >
-                      <IconComponent size={28} className="mx-auto mb-3" />
-                      <p className="font-semibold text-sm">{action.label}</p>
+                      <IconComponent size={20} className="mx-auto mb-2" />
+                      <p className="font-medium text-xs">{action.label}</p>
                     </button>
                   );
                 })}
