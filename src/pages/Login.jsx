@@ -741,7 +741,7 @@ const Login = () => {
               textShadow: { duration: 3, repeat: Infinity }
             }}
           >
-            Platform 404
+            Sancharam
           </motion.h1>
           <motion.p 
             className="text-xl mb-6 text-white" 
