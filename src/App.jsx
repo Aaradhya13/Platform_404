@@ -225,6 +225,7 @@ function App() {
 
   return (
     <Router>
+      <div className="min-h-screen flex flex-col">
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
@@ -360,7 +361,8 @@ function App() {
         {/* Redirect any unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
            </Routes>
-
+           <ChatBot/>
+</div>
     </Router>
   );
 }

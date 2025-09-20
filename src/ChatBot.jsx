@@ -453,12 +453,22 @@ const ChatBot = () => {
   const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const messagesEndRef = useRef(null);
-
+  const currentUrl = window.location.href; // Full URL
+  const pathname = window.location.pathname; // Path after the domain
+  const searchParams = window.location.search; // Query string
+  const hashFragment = window.location.hash;
+  console.log("Current URL:", currentUrl);
+  console.log("Pathname:", pathname);
+  console.log("Search Params:", searchParams);
+  console.log("Hash Fragment:", hashFragment);
   const role = localStorage.getItem("role") || "guest";
   const department = localStorage.getItem("department") || "general";
   const username = localStorage.getItem("username") || "User";
   const token = localStorage.getItem("token");
-
+if(pathname=="/"){
+  console.log("Chatbot hidden on landing page");
+  return null; // Do not render the chatbot
+}
   // Initialize API tools
   const [tools, setTools] = useState(null);
 
@@ -706,7 +716,7 @@ const ChatBot = () => {
   const quickCommands = getQuickCommands();
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-35 right-4 z-50">
       {/* Toggle Button */}
       <button
         className={`${
