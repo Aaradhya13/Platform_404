@@ -481,14 +481,14 @@ if(pathname=="/"){
       // Add welcome message
       setMessages([{
         sender: "bot",
-        text: `👋 Hello ${username}! I'm your Platform-404 assistant.\n\n🔑 Logged in as: **${role}** in **${department}** department.\n\nI can help you with:\n• Checking schedules and entries\n• Train status updates\n• Job cards and maintenance info\n• Operations data\n\nType "help" to see all available commands!`,
+        text: `👋 Hello ${username}! I'm your Sancharam assistant.\n\n🔑 Logged in as: **${role}** in **${department}** department.\n\nI can help you with:\n• Checking schedules and entries\n• Train status updates\n• Job cards and maintenance info\n• Operations data\n\nType "help" to see all available commands!`,
         timestamp: new Date().toLocaleTimeString()
       }]);
     } else {
       setIsAuthenticated(false);
       setMessages([{
         sender: "bot",
-        text: "🔒 Please log in to access Platform-404 data.\n\nI'll still be here to help with general questions!",
+        text: "🔒 Please log in to access Sancharam data.\n\nI'll still be here to help with general questions!",
         timestamp: new Date().toLocaleTimeString()
       }]);
     }
@@ -555,7 +555,7 @@ if(pathname=="/"){
 
   const getGroqResponse = async (query, hasApiAccess) => {
     const systemPrompt = hasApiAccess 
-      ? `You are a helpful assistant for Platform-404 railway management system. 
+      ? `You are a helpful assistant for Sancharam railway management system. 
          The user is ${role} in ${department} department.
          
          If the user asks about:
@@ -564,7 +564,7 @@ if(pathname=="/"){
          - Technical questions - provide helpful information
          
          Keep responses concise and professional. Always suggest specific commands when appropriate.`
-      : `You are a helpful general assistant. The user is not currently logged into Platform-404 system.
+      : `You are a helpful general assistant. The user is not currently logged into Sancharam system.
          Provide general help and information, but remind them to log in for specific railway data.`;
 
     try {
@@ -596,11 +596,11 @@ if(pathname=="/"){
   const clearChat = () => {
     setMessages(isAuthenticated ? [{
       sender: "bot",
-      text: `Chat cleared! 🧹\n\nI'm still here to help with Platform-404 data.\nType "help" for available commands.`,
+      text: `Chat cleared! 🧹\n\nI'm still here to help with Sancharam data.\nType "help" for available commands.`,
       timestamp: new Date().toLocaleTimeString()
     }] : [{
       sender: "bot",
-      text: "Chat cleared! Please log in to access Platform-404 features.",
+      text: "Chat cleared! Please log in to access Sancharam features.",
       timestamp: new Date().toLocaleTimeString()
     }]);
   };
@@ -723,7 +723,7 @@ if(pathname=="/"){
           open ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'
         } text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105`}
         onClick={() => setOpen(!open)}
-        title={open ? "Close Chat" : "Open Platform-404 Assistant"}
+        title={open ? "Close Chat" : "Open Sancharam Assistant"}
       >
         {open ? "✕" : "🤖"}
       </button>
@@ -734,7 +734,7 @@ if(pathname=="/"){
           {/* Header */}
           <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-t-lg flex justify-between items-center">
             <div>
-              <h3 className="font-bold text-lg">Platform-404 Assistant</h3>
+              <h3 className="font-bold text-lg">Sancharam Assistant</h3>
               <p className="text-sm text-blue-100">
                 {isAuthenticated ? `${role} • ${department}` : "Not authenticated"}
               </p>
@@ -829,7 +829,7 @@ if(pathname=="/"){
                 className="flex-1 border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={isAuthenticated ? "Ask me about Platform-404..." : "Ask me anything..."}
+                placeholder={isAuthenticated ? "Ask me about Sancharam..." : "Ask me anything..."}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -860,7 +860,7 @@ if(pathname=="/"){
             <div className="flex justify-between items-center mt-2 text-xs text-gray-500">
               <span>
                 {isAuthenticated ? 
-                  `✅ Connected to Platform-404` : 
+                  `✅ Connected to Sancharam` : 
                   `⚠️ Limited access - please log in`
                 }
               </span>
