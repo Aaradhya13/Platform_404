@@ -3,7 +3,7 @@ import {
   User, Settings, Train, Calendar, Wrench, Eye, Trash2, Plus, Edit, 
   Building, Save, X, Users, Briefcase, Search, Filter, RefreshCw,
   ChevronDown, Bell, LogOut, Menu, Home, AlertCircle, CheckCircle, MapPin,
-  Download, Upload, MoreVertical, Archive, FileText, Camera, Map
+  Download, Upload, MoreVertical, Archive, FileText, Camera, Map, Clock, Lightbulb, FolderOpen
 } from 'lucide-react';
 import { adminService } from '../../services/adminapi';
 
@@ -192,13 +192,193 @@ const Alert = ({ type, message, onClose }) => {
 };
 
 // Job Cards Component
-const JobCardsGrid = ({ data, onEdit, onDelete, canDelete, loading }) => {
+// const JobCardsGrid = ({ data, onEdit, onDelete, canDelete, loading }) => {
+//   if (loading) {
+//     return (
+//       <div className="bg-white rounded-lg shadow overflow-hidden">
+//         <div className="flex items-center justify-center py-12">
+//           <div className="text-center">
+//             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+//             <p className="mt-4 text-gray-600">Loading job cards...</p>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   if (!data || data.length === 0) {
+//     return (
+//       <div className="bg-white rounded-lg shadow overflow-hidden">
+//         <div className="text-center py-12">
+//           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+//             <FileText size={24} className="text-gray-400" />
+//           </div>
+//           <p className="text-gray-500 text-lg mb-2">No job cards available</p>
+//           <p className="text-gray-400 text-sm">Job cards will appear here when created</p>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   const formatDateTime = (dateString) => {
+//     if (!dateString) return 'Not set';
+//     return new Date(dateString).toLocaleDateString('en-IN', {
+//       year: 'numeric',
+//       month: 'short',
+//       day: 'numeric',
+//       hour: '2-digit',
+//       minute: '2-digit'
+//     });
+//   };
+
+//   return (
+//     <div className="space-y-4">
+//       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+//         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+//           <FileText className="mr-2" size={20} />
+//           Job Cards ({data.length})
+//         </h2>
+//       </div>
+      
+//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//         {data.map((jobCard, index) => {
+//           // Clean the photo URL by removing angle brackets if present
+//           const cleanPhotoUrl = jobCard.photo ? jobCard.photo.replace(/[<>]/g, '') : null;
+          
+//           return (
+//             <div key={jobCard.id || index} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
+//               {/* Card Header with Photo */}
+//               <div className="relative h-48 bg-gray-100">
+//                 {cleanPhotoUrl && cleanPhotoUrl !== 'http://example.com/photo.png' ? (
+//                   <img 
+//                     src={cleanPhotoUrl} 
+//                     alt="Job Card Photo"
+//                     className="w-full h-full object-cover"
+//                     onError={(e) => {
+//                       e.target.style.display = 'none';
+//                       e.target.nextSibling.style.display = 'flex';
+//                     }}
+//                   />
+//                 ) : null}
+//                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200" style={{display: (cleanPhotoUrl && cleanPhotoUrl !== 'http://example.com/photo.png') ? 'none' : 'flex'}}>
+//                   <div className="text-center">
+//                     <Camera size={32} className="text-gray-400 mx-auto mb-2" />
+//                     <p className="text-sm text-gray-500">No Photo Available</p>
+//                   </div>
+//                 </div>
+                
+//                 {/* Status Badge based on closed_at */}
+//                 <div className="absolute top-3 right-3">
+//                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
+//                     jobCard.closed_at ? 'text-green-600 bg-green-100' : 'text-orange-600 bg-orange-100'
+//                   }`}>
+//                     {jobCard.closed_at ? 'Closed' : 'Open'}
+//                   </span>
+//                 </div>
+                
+//                 {/* Job Card ID Badge */}
+//                 <div className="absolute top-3 left-3">
+//                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-600 text-white">
+//                     #{jobCard.id}
+//                   </span>
+//                 </div>
+//               </div>
+
+//               {/* Card Content */}
+//               <div className="p-5">
+//                 <div className="space-y-4">
+//                   {/* Title/Description */}
+//                   {jobCard.description && (
+//                     <div>
+//                       <h3 className="text-lg font-semibold text-gray-900 mb-1">
+//                         {jobCard.description}
+//                       </h3>
+//                     </div>
+//                   )}
+
+//                   {/* Key Information Grid */}
+//                   <div className="grid grid-cols-2 gap-4 text-sm">
+//                     {/* Train Info */}
+//                     {jobCard.train && (
+//                       <div className="flex items-center space-x-2">
+//                         <Train size={16} className="text-gray-400" />
+//                         <div>
+//                           <p className="text-gray-500 text-xs">Train</p>
+//                           <p className="font-medium text-gray-900">
+//                             Train {jobCard.train}
+//                           </p>
+//                         </div>
+//                       </div>
+//                     )}
+
+//                     {/* Status Info */}
+//                     <div className="flex items-center space-x-2">
+//                       <AlertCircle size={16} className="text-gray-400" />
+//                       <div>
+//                         <p className="text-gray-500 text-xs">Status</p>
+//                         <p className={`font-medium capitalize ${
+//                           jobCard.closed_at ? 'text-green-600' : 'text-orange-600'
+//                         }`}>
+//                           {jobCard.closed_at ? 'Closed' : 'Open'}
+//                         </p>
+//                       </div>
+//                     </div>
+//                   </div>
+
+//                   {/* Dates */}
+//                   <div className="space-y-2 text-sm">
+//                     {jobCard.created_at && (
+//                       <div className="flex justify-between">
+//                         <span className="text-gray-500">Created:</span>
+//                         <span className="font-medium text-gray-900">
+//                           {formatDateTime(jobCard.created_at)}
+//                         </span>
+//                       </div>
+//                     )}
+//                     {jobCard.closed_at && (
+//                       <div className="flex justify-between">
+//                         <span className="text-gray-500">Closed:</span>
+//                         <span className="font-medium text-gray-900">
+//                           {formatDateTime(jobCard.closed_at)}
+//                         </span>
+//                       </div>
+//                     )}
+//                   </div>
+
+//                   {/* Job Card ID */}
+//                   <div className="text-sm">
+//                     <div className="flex justify-between">
+//                       <span className="text-gray-500">Job Card ID:</span>
+//                       <span className="font-medium text-gray-900">#{jobCard.id}</span>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* Action Buttons */}
+//                 <div className="flex justify-end space-x-2 mt-4 pt-4 border-t border-gray-100">
+//                   <button
+//                     className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 p-2 rounded-lg transition-colors"
+//                     title="More options"
+//                   >
+//                     <MoreVertical className="h-4 w-4" />
+//                   </button>
+//                 </div>
+//               </div>
+//             </div>
+//           );
+//         })}
+//       </div>
+//     </div>
+//   );
+// };
+
+const JobCardsGrid = ({ data, loading, onAiSuggestion, onClose, showActions = true }) => {
   if (loading) {
     return (
       <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-[#24B6C9] mx-auto"></div>
             <p className="mt-4 text-gray-600">Loading job cards...</p>
           </div>
         </div>
@@ -222,156 +402,204 @@ const JobCardsGrid = ({ data, onEdit, onDelete, canDelete, loading }) => {
 
   const formatDateTime = (dateString) => {
     if (!dateString) return 'Not set';
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    return new Date(dateString).toLocaleString();
   };
 
-  return (
-    <div className="space-y-4">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-          <FileText className="mr-2" size={20} />
-          Job Cards ({data.length})
-        </h2>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {data.map((jobCard, index) => {
-          // Clean the photo URL by removing angle brackets if present
-          const cleanPhotoUrl = jobCard.photo ? jobCard.photo.replace(/[<>]/g, '') : null;
+  const getCardStatus = (jobCard) => {
+    if (jobCard.closed_at === null || jobCard.closed_at === undefined) {
+      return { status: 'Open', color: 'bg-red-50 text-red-600 border border-red-200' };
+    }
+    return { status: 'Closed', color: 'bg-green-50 text-green-600 border border-green-200' };
+  };
+
+  // Separate open and closed job cards
+  const openJobCards = data.filter(jobCard => !jobCard.closed_at);
+  const closedJobCards = data.filter(jobCard => jobCard.closed_at);
+
+  const renderJobCard = (jobCard, index) => {
+    const statusInfo = getCardStatus(jobCard);
+    const cleanPhotoUrl = jobCard.photo ? jobCard.photo.replace(/[<>]/g, '') : null;
+    
+    return (
+      <div 
+        key={jobCard.id || index}
+        className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+      >
+        {/* Photo Section */}
+        <div className="relative h-48 bg-gray-100">
+          {cleanPhotoUrl && cleanPhotoUrl !== 'http://example.com/photo.png' && cleanPhotoUrl !== null && cleanPhotoUrl.trim() !== '' ? (
+            <img 
+              src={cleanPhotoUrl} 
+              alt="Job card photo" 
+              className="w-full h-full object-cover cursor-pointer"
+              onClick={() => window.open(cleanPhotoUrl, '_blank')}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+          ) : null}
           
-          return (
-            <div key={jobCard.id || index} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
-              {/* Card Header with Photo */}
-              <div className="relative h-48 bg-gray-100">
-                {cleanPhotoUrl && cleanPhotoUrl !== 'http://example.com/photo.png' ? (
-                  <img 
-                    src={cleanPhotoUrl} 
-                    alt="Job Card Photo"
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                      e.target.nextSibling.style.display = 'flex';
-                    }}
-                  />
-                ) : null}
-                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200" style={{display: (cleanPhotoUrl && cleanPhotoUrl !== 'http://example.com/photo.png') ? 'none' : 'flex'}}>
-                  <div className="text-center">
-                    <Camera size={32} className="text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-500">No Photo Available</p>
-                  </div>
-                </div>
-                
-                {/* Status Badge based on closed_at */}
-                <div className="absolute top-3 right-3">
-                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
-                    jobCard.closed_at ? 'text-green-600 bg-green-100' : 'text-orange-600 bg-orange-100'
-                  }`}>
-                    {jobCard.closed_at ? 'Closed' : 'Open'}
-                  </span>
-                </div>
-                
-                {/* Job Card ID Badge */}
-                <div className="absolute top-3 left-3">
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-600 text-white">
-                    #{jobCard.id}
-                  </span>
-                </div>
-              </div>
+          <div 
+            className="w-full h-full flex items-center justify-center" 
+            style={{display: (cleanPhotoUrl && cleanPhotoUrl !== 'http://example.com/photo.png' && cleanPhotoUrl !== null && cleanPhotoUrl.trim() !== '') ? 'none' : 'flex'}}
+          >
+            <div className="text-center">
+              <Camera size={32} className="text-gray-400 mx-auto mb-2" />
+              <p className="text-gray-500 text-sm">No image</p>
+            </div>
+          </div>
+          
+          {/* Status Badge */}
+          <div className="absolute top-3 right-3">
+            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusInfo.color}`}>
+              {statusInfo.status}
+            </span>
+          </div>
 
-              {/* Card Content */}
-              <div className="p-5">
-                <div className="space-y-4">
-                  {/* Title/Description */}
-                  {jobCard.description && (
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                        {jobCard.description}
-                      </h3>
-                    </div>
-                  )}
+          {/* Job Card ID Badge */}
+          <div className="absolute top-3 left-3">
+            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-600 text-white">
+              #{jobCard.id}
+            </span>
+          </div>
+        </div>
 
-                  {/* Key Information Grid */}
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    {/* Train Info */}
-                    {jobCard.train && (
-                      <div className="flex items-center space-x-2">
-                        <Train size={16} className="text-gray-400" />
-                        <div>
-                          <p className="text-gray-500 text-xs">Train</p>
-                          <p className="font-medium text-gray-900">
-                            Train {jobCard.train}
-                          </p>
-                        </div>
-                      </div>
-                    )}
+        {/* Content Section */}
+        <div className="p-5">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-2">
+              <Train size={16} className="text-[#24B6C9]" />
+              <span className="font-semibold text-gray-900">Train {jobCard.train}</span>
+            </div>
+            <span className="text-sm text-gray-500">#{jobCard.id}</span>
+          </div>
 
-                    {/* Status Info */}
-                    <div className="flex items-center space-x-2">
-                      <AlertCircle size={16} className="text-gray-400" />
-                      <div>
-                        <p className="text-gray-500 text-xs">Status</p>
-                        <p className={`font-medium capitalize ${
-                          jobCard.closed_at ? 'text-green-600' : 'text-orange-600'
-                        }`}>
-                          {jobCard.closed_at ? 'Closed' : 'Open'}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+          {/* Description */}
+          <div className="mb-4">
+            <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">{jobCard.description}</p>
+          </div>
 
-                  {/* Dates */}
-                  <div className="space-y-2 text-sm">
-                    {jobCard.created_at && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">Created:</span>
-                        <span className="font-medium text-gray-900">
-                          {formatDateTime(jobCard.created_at)}
-                        </span>
-                      </div>
-                    )}
-                    {jobCard.closed_at && (
-                      <div className="flex justify-between">
-                        <span className="text-gray-500">Closed:</span>
-                        <span className="font-medium text-gray-900">
-                          {formatDateTime(jobCard.closed_at)}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Job Card ID */}
-                  <div className="text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">Job Card ID:</span>
-                      <span className="font-medium text-gray-900">#{jobCard.id}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex justify-end space-x-2 mt-4 pt-4 border-t border-gray-100">
-                  <button
-                    className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 p-2 rounded-lg transition-colors"
-                    title="More options"
-                  >
-                    <MoreVertical className="h-4 w-4" />
-                  </button>
+          {/* How Closed Info (only show for closed job cards) */}
+          {jobCard.closed_at && jobCard.how_closed && (
+            <div className="mb-4 p-3 bg-gray-50 rounded-lg border">
+              <div className="flex items-start space-x-2">
+                <CheckCircle size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-xs font-medium text-gray-700 mb-1">Resolution:</p>
+                  <p className="text-sm text-gray-600">{jobCard.how_closed}</p>
                 </div>
               </div>
             </div>
-          );
-        })}
+          )}
+
+          {/* Timestamps */}
+          <div className="space-y-2 mb-4 text-xs text-gray-500">
+            <div className="flex items-center">
+              <Clock size={12} className="mr-2" />
+              <span>Created: {formatDateTime(jobCard.created_at)}</span>
+            </div>
+            {jobCard.closed_at && (
+              <div className="flex items-center">
+                <CheckCircle size={12} className="mr-2" />
+                <span>Closed: {formatDateTime(jobCard.closed_at)}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Actions - Only show for open job cards if showActions is true */}
+          {showActions && !jobCard.closed_at && (
+            <div className="flex justify-end space-x-2">
+              {onAiSuggestion && (
+                <button
+                  onClick={() => onAiSuggestion(jobCard)}
+                  className="inline-flex items-center gap-1 px-2 py-1.5 text-purple-700 bg-purple-100 
+                             rounded-md hover:bg-purple-200 transition-colors shadow-sm text-xs"
+                  title="Get AI suggestion"
+                >
+                  <Lightbulb size={14} />
+                  <span className="font-medium">AI Help</span>
+                </button>
+              )}
+
+              {onClose && (
+                <button
+                  onClick={() => onClose(jobCard)}
+                  className="inline-flex items-center gap-1 px-2 py-1.5 text-white bg-[#24B6C9] 
+                             rounded-md hover:bg-[#1fa5b8] transition-colors shadow-sm text-xs"
+                  title="Close job card"
+                >
+                  <CheckCircle size={14} />
+                  <span className="font-medium">Close</span>
+                </button>
+              )}
+
+              {/* More options button (placeholder) */}
+              <button
+                className="inline-flex items-center p-1.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 
+                           rounded-md transition-colors"
+                title="More options"
+              >
+                <MoreVertical size={14} />
+              </button>
+            </div>
+          )}
+        </div>
       </div>
+    );
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Statistics Header */}
+      <div className="flex items-center space-x-8">
+        <div className="flex items-center space-x-2">
+          <FolderOpen size={20} className="text-red-500" />
+          <span className="text-sm font-medium text-gray-700">
+            Open Cards: <span className="font-bold text-red-600">{openJobCards.length}</span>
+          </span>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Archive size={20} className="text-green-500" />
+          <span className="text-sm font-medium text-gray-700">
+            Closed Cards: <span className="font-bold text-green-600">{closedJobCards.length}</span>
+          </span>
+        </div>
+      </div>
+
+      {/* Open Job Cards Section */}
+      {openJobCards.length > 0 && (
+        <div className="mb-12">
+          <div className="flex items-center mb-6">
+            <FolderOpen size={24} className="text-red-500 mr-3" />
+            <h2 className="text-xl font-bold text-gray-900">
+              Open Job Cards ({openJobCards.length})
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {openJobCards.map((jobCard, index) => renderJobCard(jobCard, index))}
+          </div>
+        </div>
+      )}
+
+      {/* Closed Job Cards Section */}
+      {closedJobCards.length > 0 && (
+        <div className="mb-12">
+          <div className="flex items-center mb-6">
+            <Archive size={24} className="text-green-500 mr-3" />
+            <h2 className="text-xl font-bold text-gray-900">
+              Closed Job Cards ({closedJobCards.length})
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {closedJobCards.map((jobCard, index) => renderJobCard(jobCard, index))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
-
 // Data Table Component
 const DataTable = ({ data, onEdit, onDelete, canDelete, loading, activeTab }) => {
   // Use Job Cards Grid for job-cards tab
