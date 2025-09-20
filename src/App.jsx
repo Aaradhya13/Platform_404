@@ -203,6 +203,7 @@ import JobCard from "./components/inspection/JobCard"
 import InspectionLanes from "./components/inspection/InspectionLanes"
 import InspectionSchedules from "./components/inspection/InspectionSchedules"
 import MaintenanceJobCards from "./components/mainnatence/MaintenanceJobCards"
+import ChatBot from "./ChatBot";
 const LandingPage = () => {
   return (
     <div>
@@ -343,6 +344,15 @@ function App() {
             <TranslationProvider>
               <AppLayout>
                 <MaintenanceJobCards />
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        } />
+        <Route path="/chatbot" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <ChatBot/>
               </AppLayout>
             </TranslationProvider>
           </ProtectedRoute>

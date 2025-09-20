@@ -1,0 +1,891 @@
+// // import React, { useState } from "react";
+
+// // const ChatBot = () => {
+// //   const [open, setOpen] = useState(false);
+// //   const [messages, setMessages] = useState([]);
+// //   const [input, setInput] = useState("");
+// //   const [loading, setLoading] = useState(false);
+
+// //   const role = localStorage.getItem("role") || "guest";
+// //   const department = localStorage.getItem("department") || "general";
+
+// //   const sendMessage = async () => {
+// //     if (!input.trim()) return;
+
+// //     // Add user message
+// //     const userMsg = { sender: "user", text: input };
+// //     setMessages((prev) => [...prev, userMsg]);
+// //     setInput("");
+// //     setLoading(true);
+
+// //     try {
+// //       // Call Groq API
+// //       const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+// //         method: "POST",
+// //         headers: {
+// //           "Content-Type": "application/json",
+// //           Authorization: `Bearer ${import.meta.env.VITE_GROQ_API}`, // <-- Your Groq API Key
+// //         },
+// //         body: JSON.stringify({
+// //           model: "llama-3.1-8b-instant", // fast + cheap model
+// //           messages: [
+// //             {
+// //               role: "system",
+// //               content: `You are an assistant for ${role} in ${department}. 
+// //               Always give practical and short step-by-step guidance.`,
+// //             },
+// //             { role: "user", content: input },
+// //           ],
+// //         }),
+// //       });
+
+// //       const data = await res.json();
+// //       const botReply =
+// //         data.choices?.[0]?.message?.content || "⚠️ Sorry, no reply.";
+
+// //       setMessages((prev) => [...prev, { sender: "bot", text: botReply }]);
+// //     } catch (err) {
+// //       console.error("Chatbot error:", err);
+// //       setMessages((prev) => [
+// //         ...prev,
+// //         { sender: "bot", text: "❌ Error: Could not connect to Groq API." },
+// //       ]);
+// //     }
+
+// //     setLoading(false);
+// //   };
+
+// //   return (
+// //     <div className="fixed bottom-4 right-4">
+// //       {/* Toggle Button */}
+// //       <button
+// //         className="bg-blue-600 text-white p-3 rounded-full shadow-lg"
+// //         onClick={() => setOpen(!open)}
+// //       >
+// //         💬
+// //       </button>
+
+// //       {/* Chat Window */}
+// //       {open && (
+// //         <div className="w-80 h-96 bg-white border shadow-lg rounded-lg flex flex-col">
+// //           {/* Messages */}
+// //           <div className="flex-1 overflow-y-auto p-2">
+// //             {messages.map((msg, i) => (
+// //               <div
+// //                 key={i}
+// //                 className={`p-2 my-1 rounded ${
+// //                   msg.sender === "user"
+// //                     ? "bg-blue-100 text-right"
+// //                     : "bg-gray-200 text-left"
+// //                 }`}
+// //               >
+// //                 {msg.text}
+// //               </div>
+// //             ))}
+// //             {loading && (
+// //               <div className="p-2 my-1 rounded bg-gray-100 italic">...</div>
+// //             )}
+// //           </div>
+
+// //           {/* Input */}
+// //           <div className="p-2 border-t flex">
+// //             <input
+// //               className="flex-1 border rounded p-2"
+// //               value={input}
+// //               onChange={(e) => setInput(e.target.value)}
+// //               placeholder="Ask me..."
+// //               onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+// //             />
+// //             <button
+// //               onClick={sendMessage}
+// //               className="ml-2 bg-blue-600 text-white px-4 rounded"
+// //               disabled={loading}
+// //             >
+// //               Send
+// //             </button>
+// //           </div>
+// //         </div>
+// //       )}
+// //     </div>
+// //   );
+// // };
+
+// // export default ChatBot;
+// import React, { useState, useEffect, useRef } from "react";
+// import { ChatBotTools } from './services/apichat'; // Import the API tools
+
+// const ChatBot = () => {
+//   const [open, setOpen] = useState(false);
+//   const [messages, setMessages] = useState([]);
+//   const [input, setInput] = useState("");
+//   const [loading, setLoading] = useState(false);
+//   const [isAuthenticated, setIsAuthenticated] = useState(false);
+//   const messagesEndRef = useRef(null);
+
+//   const role = localStorage.getItem("role") || "guest";
+//   const department = localStorage.getItem("department") || "general";
+//   const username = localStorage.getItem("username") || "User";
+//   const token = localStorage.getItem("token");
+
+//   // Initialize API tools
+//   const [tools, setTools] = useState(null);
+
+//   useEffect(() => {
+//     // Check authentication
+//     if (token && role !== "guest") {
+//       setIsAuthenticated(true);
+//       setTools(new ChatBotTools());
+      
+//       // Add welcome message
+//       setMessages([{
+//         sender: "bot",
+//         text: `👋 Hello ${username}! I'm your Platform-404 assistant.\n\n🔑 Logged in as: **${role}** in **${department}** department.\n\nI can help you with:\n• Checking schedules and entries\n• Train status updates\n• Job cards and maintenance info\n• Operations data\n\nType "help" to see all available commands!`,
+//         timestamp: new Date().toLocaleTimeString()
+//       }]);
+//     } else {
+//       setIsAuthenticated(false);
+//       setMessages([{
+//         sender: "bot",
+//         text: "🔒 Please log in to access Platform-404 data.\n\nI'll still be here to help with general questions!",
+//         timestamp: new Date().toLocaleTimeString()
+//       }]);
+//     }
+//   }, [token, role, department, username]);
+
+//   // Auto-scroll to bottom of messages
+//   useEffect(() => {
+//     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+//   }, [messages]);
+
+//   const sendMessage = async () => {
+//     if (!input.trim()) return;
+
+//     // Add user message
+//     const userMsg = { 
+//       sender: "user", 
+//       text: input, 
+//       timestamp: new Date().toLocaleTimeString() 
+//     };
+//     setMessages((prev) => [...prev, userMsg]);
+    
+//     const currentInput = input;
+//     setInput("");
+//     setLoading(true);
+
+//     try {
+//       let botReply = "";
+      
+//       if (isAuthenticated && tools) {
+//         // Try to handle query with API tools first
+//         try {
+//           const apiResponse = await tools.handleUserQuery(currentInput);
+//           botReply = apiResponse;
+//         } catch (apiError) {
+//           console.log("API tools failed, falling back to Groq:", apiError);
+//           // If API tools fail, fall back to Groq with context
+//           botReply = await getGroqResponse(currentInput, true);
+//         }
+//       } else {
+//         // For unauthenticated users or general queries, use Groq
+//         botReply = await getGroqResponse(currentInput, false);
+//       }
+
+//       setMessages((prev) => [...prev, { 
+//         sender: "bot", 
+//         text: botReply,
+//         timestamp: new Date().toLocaleTimeString()
+//       }]);
+      
+//     } catch (err) {
+//       console.error("Chatbot error:", err);
+//       setMessages((prev) => [
+//         ...prev,
+//         { 
+//           sender: "bot", 
+//           text: "❌ Sorry, I encountered an error. Please try again or contact support.",
+//           timestamp: new Date().toLocaleTimeString()
+//         },
+//       ]);
+//     }
+
+//     setLoading(false);
+//   };
+
+//   const getGroqResponse = async (query, hasApiAccess) => {
+//     const systemPrompt = hasApiAccess 
+//       ? `You are a helpful assistant for Platform-404 railway management system. 
+//          The user is ${role} in ${department} department.
+         
+//          If the user asks about:
+//          - Data, schedules, entries, status - suggest they use specific commands like "show cleaning data" or "status of train [number]"
+//          - General help - provide guidance on available features
+//          - Technical questions - provide helpful information
+         
+//          Keep responses concise and professional. Always suggest specific commands when appropriate.`
+//       : `You are a helpful general assistant. The user is not currently logged into Platform-404 system.
+//          Provide general help and information, but remind them to log in for specific railway data.`;
+
+//     try {
+//       const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${import.meta.env.VITE_GROQ_API}`,
+//         },
+//         body: JSON.stringify({
+//           model: "llama-3.1-8b-instant",
+//           messages: [
+//             { role: "system", content: systemPrompt },
+//             { role: "user", content: query },
+//           ],
+//           max_tokens: 512,
+//           temperature: 0.7,
+//         }),
+//       });
+
+//       const data = await res.json();
+//       return data.choices?.[0]?.message?.content || "⚠️ Sorry, I couldn't process that request.";
+      
+//     } catch (error) {
+//       throw new Error("Failed to get response from AI service");
+//     }
+//   };
+
+//   const clearChat = () => {
+//     setMessages(isAuthenticated ? [{
+//       sender: "bot",
+//       text: `Chat cleared! 🧹\n\nI'm still here to help with Platform-404 data.\nType "help" for available commands.`,
+//       timestamp: new Date().toLocaleTimeString()
+//     }] : [{
+//       sender: "bot",
+//       text: "Chat cleared! Please log in to access Platform-404 features.",
+//       timestamp: new Date().toLocaleTimeString()
+//     }]);
+//   };
+
+//   const quickCommands = [
+//     { label: "Help", command: "help" },
+//     { label: "Show Cleaning", command: "show cleaning data" },
+//     { label: "Show Timetable", command: "show timetable" },
+//     { label: "Job Cards", command: "show job cards" },
+//   ];
+
+//   return (
+//     <div className="fixed bottom-4 right-4 z-50">
+//       {/* Toggle Button */}
+//       <button
+//         className={`${
+//           open ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'
+//         } text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105`}
+//         onClick={() => setOpen(!open)}
+//         title={open ? "Close Chat" : "Open Platform-404 Assistant"}
+//       >
+//         {open ? "✕" : "🤖"}
+//       </button>
+
+//       {/* Chat Window */}
+//       {open && (
+//         <div className="w-96 h-[32rem] bg-white border border-gray-300 shadow-2xl rounded-lg flex flex-col mb-4 animate-fade-in">
+//           {/* Header */}
+//           <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-t-lg flex justify-between items-center">
+//             <div>
+//               <h3 className="font-bold text-lg">Platform-404 Assistant</h3>
+//               <p className="text-sm text-blue-100">
+//                 {isAuthenticated ? `${role} • ${department}` : "Not authenticated"}
+//               </p>
+//             </div>
+//             <div className="flex gap-2">
+//               <button
+//                 onClick={clearChat}
+//                 className="text-blue-100 hover:text-white p-1"
+//                 title="Clear chat"
+//               >
+//                 🧹
+//               </button>
+//             </div>
+//           </div>
+
+//           {/* Messages */}
+//           <div className="flex-1 overflow-y-auto p-3 bg-gray-50">
+//             {messages.map((msg, i) => (
+//               <div
+//                 key={i}
+//                 className={`mb-3 ${
+//                   msg.sender === "user" ? "text-right" : "text-left"
+//                 }`}
+//               >
+//                 <div
+//                   className={`inline-block max-w-[85%] p-3 rounded-lg ${
+//                     msg.sender === "user"
+//                       ? "bg-blue-600 text-white rounded-br-sm"
+//                       : "bg-white text-gray-800 border border-gray-200 rounded-bl-sm shadow-sm"
+//                   }`}
+//                 >
+//                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
+//                     {msg.text}
+//                   </div>
+//                   {msg.timestamp && (
+//                     <div className={`text-xs mt-1 ${
+//                       msg.sender === "user" ? "text-blue-100" : "text-gray-500"
+//                     }`}>
+//                       {msg.timestamp}
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             ))}
+            
+//             {loading && (
+//               <div className="text-left mb-3">
+//                 <div className="inline-block bg-gray-200 text-gray-600 p-3 rounded-lg rounded-bl-sm">
+//                   <div className="flex items-center gap-2">
+//                     <div className="animate-spin w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full"></div>
+//                     <span>Thinking...</span>
+//                   </div>
+//                 </div>
+//               </div>
+//             )}
+//             <div ref={messagesEndRef} />
+//           </div>
+
+//           {/* Quick Commands */}
+//           {isAuthenticated && (
+//             <div className="p-2 border-t border-gray-200 bg-gray-50">
+//               <div className="flex flex-wrap gap-1">
+//                 {quickCommands.map((cmd, i) => (
+//                   <button
+//                     key={i}
+//                     onClick={() => setInput(cmd.command)}
+//                     className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200 transition-colors"
+//                     title={`Click to use: ${cmd.command}`}
+//                   >
+//                     {cmd.label}
+//                   </button>
+//                 ))}
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Input Area */}
+//           <div className="p-3 border-t border-gray-200 bg-white rounded-b-lg">
+//             <div className="flex gap-2">
+//               <input
+//                 className="flex-1 border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+//                 value={input}
+//                 onChange={(e) => setInput(e.target.value)}
+//                 placeholder={isAuthenticated ? "Ask me about Platform-404..." : "Ask me anything..."}
+//                 onKeyDown={(e) => {
+//                   if (e.key === "Enter" && !e.shiftKey) {
+//                     e.preventDefault();
+//                     sendMessage();
+//                   }
+//                 }}
+//                 disabled={loading}
+//                 maxLength={500}
+//               />
+//               <button
+//                 onClick={sendMessage}
+//                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+//                 disabled={loading || !input.trim()}
+//                 title="Send message (Enter)"
+//               >
+//                 {loading ? "..." : "Send"}
+//               </button>
+//             </div>
+            
+//             {/* Character counter */}
+//             {input.length > 400 && (
+//               <div className="text-xs text-gray-500 mt-1 text-right">
+//                 {input.length}/500
+//               </div>
+//             )}
+            
+//             {/* Status indicator */}
+//             <div className="flex justify-between items-center mt-2 text-xs text-gray-500">
+//               <span>
+//                 {isAuthenticated ? 
+//                   `✅ Connected to Platform-404` : 
+//                   `⚠️ Limited access - please log in`
+//                 }
+//               </span>
+//               <span className={`w-2 h-2 rounded-full ${
+//                 isAuthenticated ? 'bg-green-500' : 'bg-yellow-500'
+//               }`}></span>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+
+//       {/* Notification badge for new features */}
+//       {!open && isAuthenticated && (
+//         <div className="absolute -top-2 -left-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
+//           AI
+//         </div>
+//       )}
+      
+//       <style jsx>{`
+//         @keyframes fade-in {
+//           from {
+//             opacity: 0;
+//             transform: translateY(10px);
+//           }
+//           to {
+//             opacity: 1;
+//             transform: translateY(0);
+//           }
+//         }
+//         .animate-fade-in {
+//           animation: fade-in 0.3s ease-out;
+//         }
+//       `}</style>
+//     </div>
+//   );
+// };
+
+// export default ChatBot;
+import React, { useState, useEffect, useRef } from "react";
+import { ChatBotTools } from './services/apichat'; // Import the API tools
+
+const ChatBot = () => {
+  const [open, setOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  const role = localStorage.getItem("role") || "guest";
+  const department = localStorage.getItem("department") || "general";
+  const username = localStorage.getItem("username") || "User";
+  const token = localStorage.getItem("token");
+
+  // Initialize API tools
+  const [tools, setTools] = useState(null);
+
+  useEffect(() => {
+    // Check authentication
+    if (token && role !== "guest") {
+      setIsAuthenticated(true);
+      setTools(new ChatBotTools());
+      
+      // Add welcome message
+      setMessages([{
+        sender: "bot",
+        text: `👋 Hello ${username}! I'm your Platform-404 assistant.\n\n🔑 Logged in as: **${role}** in **${department}** department.\n\nI can help you with:\n• Checking schedules and entries\n• Train status updates\n• Job cards and maintenance info\n• Operations data\n\nType "help" to see all available commands!`,
+        timestamp: new Date().toLocaleTimeString()
+      }]);
+    } else {
+      setIsAuthenticated(false);
+      setMessages([{
+        sender: "bot",
+        text: "🔒 Please log in to access Platform-404 data.\n\nI'll still be here to help with general questions!",
+        timestamp: new Date().toLocaleTimeString()
+      }]);
+    }
+  }, [token, role, department, username]);
+
+  // Auto-scroll to bottom of messages
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const sendMessage = async () => {
+    if (!input.trim()) return;
+
+    // Add user message
+    const userMsg = { 
+      sender: "user", 
+      text: input, 
+      timestamp: new Date().toLocaleTimeString() 
+    };
+    setMessages((prev) => [...prev, userMsg]);
+    
+    const currentInput = input;
+    setInput("");
+    setLoading(true);
+
+    try {
+      let botReply = "";
+      
+      if (isAuthenticated && tools) {
+        // Try to handle query with API tools first
+        try {
+          const apiResponse = await tools.handleUserQuery(currentInput);
+          botReply = apiResponse;
+        } catch (apiError) {
+          console.log("API tools failed, falling back to Groq:", apiError);
+          // If API tools fail, fall back to Groq with context
+          botReply = await getGroqResponse(currentInput, true);
+        }
+      } else {
+        // For unauthenticated users or general queries, use Groq
+        botReply = await getGroqResponse(currentInput, false);
+      }
+
+      setMessages((prev) => [...prev, { 
+        sender: "bot", 
+        text: botReply,
+        timestamp: new Date().toLocaleTimeString()
+      }]);
+      
+    } catch (err) {
+      console.error("Chatbot error:", err);
+      setMessages((prev) => [
+        ...prev,
+        { 
+          sender: "bot", 
+          text: "❌ Sorry, I encountered an error. Please try again or contact support.",
+          timestamp: new Date().toLocaleTimeString()
+        },
+      ]);
+    }
+
+    setLoading(false);
+  };
+
+  const getGroqResponse = async (query, hasApiAccess) => {
+    const systemPrompt = hasApiAccess 
+      ? `You are a helpful assistant for Platform-404 railway management system. 
+         The user is ${role} in ${department} department.
+         
+         If the user asks about:
+         - Data, schedules, entries, status - suggest they use specific commands like "show cleaning data" or "status of train [number]"
+         - General help - provide guidance on available features
+         - Technical questions - provide helpful information
+         
+         Keep responses concise and professional. Always suggest specific commands when appropriate.`
+      : `You are a helpful general assistant. The user is not currently logged into Platform-404 system.
+         Provide general help and information, but remind them to log in for specific railway data.`;
+
+    try {
+      const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_GROQ_API}`,
+        },
+        body: JSON.stringify({
+          model: "llama-3.1-8b-instant",
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: query },
+          ],
+          max_tokens: 512,
+          temperature: 0.7,
+        }),
+      });
+
+      const data = await res.json();
+      return data.choices?.[0]?.message?.content || "⚠️ Sorry, I couldn't process that request.";
+      
+    } catch (error) {
+      throw new Error("Failed to get response from AI service");
+    }
+  };
+
+  const clearChat = () => {
+    setMessages(isAuthenticated ? [{
+      sender: "bot",
+      text: `Chat cleared! 🧹\n\nI'm still here to help with Platform-404 data.\nType "help" for available commands.`,
+      timestamp: new Date().toLocaleTimeString()
+    }] : [{
+      sender: "bot",
+      text: "Chat cleared! Please log in to access Platform-404 features.",
+      timestamp: new Date().toLocaleTimeString()
+    }]);
+  };
+
+  // Dynamic quick commands based on role and department
+  const getQuickCommands = () => {
+    const commands = [];
+    
+    // Always available commands
+    commands.push({ label: "Help", command: "help", icon: "❓" });
+    commands.push({ label: "Status", command: "system status", icon: "📊" });
+
+    // Role-based commands
+    if (role === "admin") {
+      // Admin gets access to everything
+      commands.push(
+        { label: "All Cleaning", command: "show cleaning data", icon: "🧽" },
+        { label: "All Inspections", command: "show inspection entries", icon: "🔍" },
+        { label: "All Maintenance", command: "show maintenance data", icon: "🔧" },
+        { label: "Operations", command: "show operations data", icon: "🚉" },
+        { label: "Timetable", command: "show timetable", icon: "📅" },
+        { label: "Job Cards", command: "show job cards", icon: "🎫" },
+        { label: "Users", command: "show users", icon: "👥" },
+        { label: "System Logs", command: "show logs", icon: "📋" }
+      );
+    } else if (role === "supervisor") {
+      // Supervisor gets department-specific + some cross-department read access
+      const dept = department.toLowerCase();
+      
+      if (dept === "cleaning") {
+        commands.push(
+          { label: "My Cleaning", command: "show cleaning data", icon: "🧽" },
+          { label: "Cleaning Lanes", command: "show cleaning lanes", icon: "🛤️" },
+          { label: "Create Entry", command: "create cleaning entry", icon: "➕" }
+        );
+      }
+      
+      if (dept === "inspection") {
+        commands.push(
+          { label: "Inspections", command: "show inspection entries", icon: "🔍" },
+          { label: "Job Cards", command: "show job cards", icon: "🎫" },
+          { label: "Create Issue", command: "create job card", icon: "⚠️" },
+          { label: "Inspection Lanes", command: "show inspection lanes", icon: "🛤️" }
+        );
+      }
+      
+      if (dept === "maintenance" || dept === "rollingstock") {
+        commands.push(
+          { label: "Maintenance", command: "show maintenance data", icon: "🔧" },
+          { label: "Maintenance Lanes", command: "show maintenance lanes", icon: "🛤️" },
+          { label: "Schedule Work", command: "create maintenance entry", icon: "📝" }
+        );
+      }
+      
+      if (dept === "operations") {
+        commands.push(
+          { label: "Operations", command: "show operations data", icon: "🚉" },
+          { label: "Timetable", command: "show timetable", icon: "📅" },
+          { label: "Edit Schedule", command: "update timetable", icon: "✏️" },
+          { label: "Parking Lanes", command: "show operations lanes", icon: "🅿️" }
+        );
+      }
+      
+      // All supervisors can check train status and basic timetable
+      commands.push(
+        { label: "Train Status", command: "check train status", icon: "🚂" },
+        { label: "Today's Schedule", command: "show today timetable", icon: "📋" }
+      );
+      
+    } else {
+      // Regular users get read-only access to their department
+      const dept = department.toLowerCase();
+      
+      if (dept === "cleaning") {
+        commands.push(
+          { label: "Cleaning Schedule", command: "show cleaning data", icon: "🧽" },
+          { label: "My Tasks", command: "show my cleaning tasks", icon: "📝" }
+        );
+      }
+      
+      if (dept === "inspection") {
+        commands.push(
+          { label: "Inspections", command: "show inspection entries", icon: "🔍" },
+          { label: "Job Cards", command: "show job cards", icon: "🎫" }
+        );
+      }
+      
+      if (dept === "maintenance" || dept === "rollingstock") {
+        commands.push(
+          { label: "Maintenance", command: "show maintenance data", icon: "🔧" },
+          { label: "Work Orders", command: "show my maintenance tasks", icon: "📋" }
+        );
+      }
+      
+      if (dept === "operations") {
+        commands.push(
+          { label: "Today's Timetable", command: "show timetable", icon: "📅" },
+          { label: "Train Locations", command: "show train locations", icon: "📍" }
+        );
+      }
+      
+      // All users can check basic status
+      commands.push(
+        { label: "Check Train", command: "status of train", icon: "🚂" },
+        { label: "Lane Status", command: "check lane status", icon: "🛤️" }
+      );
+    }
+
+    // Limit to most relevant 8 commands to avoid UI clutter
+    return commands.slice(0, 8);
+  };
+
+  const quickCommands = getQuickCommands();
+
+  return (
+    <div className="fixed bottom-4 right-4 z-50">
+      {/* Toggle Button */}
+      <button
+        className={`${
+          open ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'
+        } text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105`}
+        onClick={() => setOpen(!open)}
+        title={open ? "Close Chat" : "Open Platform-404 Assistant"}
+      >
+        {open ? "✕" : "🤖"}
+      </button>
+
+      {/* Chat Window */}
+      {open && (
+        <div className="w-96 h-[32rem] bg-white border border-gray-300 shadow-2xl rounded-lg flex flex-col mb-4 animate-fade-in">
+          {/* Header */}
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-t-lg flex justify-between items-center">
+            <div>
+              <h3 className="font-bold text-lg">Platform-404 Assistant</h3>
+              <p className="text-sm text-blue-100">
+                {isAuthenticated ? `${role} • ${department}` : "Not authenticated"}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={clearChat}
+                className="text-blue-100 hover:text-white p-1"
+                title="Clear chat"
+              >
+                🧹
+              </button>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-3 bg-gray-50">
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`mb-3 ${
+                  msg.sender === "user" ? "text-right" : "text-left"
+                }`}
+              >
+                <div
+                  className={`inline-block max-w-[85%] p-3 rounded-lg ${
+                    msg.sender === "user"
+                      ? "bg-blue-600 text-white rounded-br-sm"
+                      : "bg-white text-gray-800 border border-gray-200 rounded-bl-sm shadow-sm"
+                  }`}
+                >
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                    {msg.text}
+                  </div>
+                  {msg.timestamp && (
+                    <div className={`text-xs mt-1 ${
+                      msg.sender === "user" ? "text-blue-100" : "text-gray-500"
+                    }`}>
+                      {msg.timestamp}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+            
+            {loading && (
+              <div className="text-left mb-3">
+                <div className="inline-block bg-gray-200 text-gray-600 p-3 rounded-lg rounded-bl-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="animate-spin w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full"></div>
+                    <span>Thinking...</span>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Quick Commands - Dynamic based on role */}
+          {isAuthenticated && quickCommands.length > 0 && (
+            <div className="p-3 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
+              <div className="text-xs text-gray-600 mb-2 font-medium">
+                Quick Commands ({role} - {department}):
+              </div>
+              <div className="grid grid-cols-2 gap-1">
+                {quickCommands.map((cmd, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setInput(cmd.command)}
+                    className="text-xs bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 text-gray-700 hover:text-blue-700 px-2 py-2 rounded-lg transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md"
+                    title={`Click to use: ${cmd.command}`}
+                  >
+                    <span className="text-sm">{cmd.icon}</span>
+                    <span className="font-medium">{cmd.label}</span>
+                  </button>
+                ))}
+              </div>
+              
+              {/* Role indicator */}
+              <div className="mt-2 text-xs text-gray-500 text-center">
+                {role === "admin" && "👑 Full System Access"} 
+                {role === "supervisor" && "🔑 Department Management"}
+                {role !== "admin" && role !== "supervisor" && "👀 Department View Access"}
+              </div>
+            </div>
+          )}
+
+          {/* Input Area */}
+          <div className="p-3 border-t border-gray-200 bg-white rounded-b-lg">
+            <div className="flex gap-2">
+              <input
+                className="flex-1 border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={isAuthenticated ? "Ask me about Platform-404..." : "Ask me anything..."}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                  }
+                }}
+                disabled={loading}
+                maxLength={500}
+              />
+              <button
+                onClick={sendMessage}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                disabled={loading || !input.trim()}
+                title="Send message (Enter)"
+              >
+                {loading ? "..." : "Send"}
+              </button>
+            </div>
+            
+            {/* Character counter */}
+            {input.length > 400 && (
+              <div className="text-xs text-gray-500 mt-1 text-right">
+                {input.length}/500
+              </div>
+            )}
+            
+            {/* Status indicator */}
+            <div className="flex justify-between items-center mt-2 text-xs text-gray-500">
+              <span>
+                {isAuthenticated ? 
+                  `✅ Connected to Platform-404` : 
+                  `⚠️ Limited access - please log in`
+                }
+              </span>
+              <span className={`w-2 h-2 rounded-full ${
+                isAuthenticated ? 'bg-green-500' : 'bg-yellow-500'
+              }`}></span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Notification badge for new features */}
+      {!open && isAuthenticated && (
+        <div className="absolute -top-2 -left-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
+          AI
+        </div>
+      )}
+      
+      <style jsx>{`
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default ChatBot;
