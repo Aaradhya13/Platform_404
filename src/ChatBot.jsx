@@ -139,14 +139,14 @@
 //       // Add welcome message
 //       setMessages([{
 //         sender: "bot",
-//         text: `👋 Hello ${username}! I'm your Platform-404 assistant.\n\n🔑 Logged in as: **${role}** in **${department}** department.\n\nI can help you with:\n• Checking schedules and entries\n• Train status updates\n• Job cards and maintenance info\n• Operations data\n\nType "help" to see all available commands!`,
+//         text: `👋 Hello ${username}! I'm your Sancharam assistant.\n\n🔑 Logged in as: **${role}** in **${department}** department.\n\nI can help you with:\n• Checking schedules and entries\n• Train status updates\n• Job cards and maintenance info\n• Operations data\n\nType "help" to see all available commands!`,
 //         timestamp: new Date().toLocaleTimeString()
 //       }]);
 //     } else {
 //       setIsAuthenticated(false);
 //       setMessages([{
 //         sender: "bot",
-//         text: "🔒 Please log in to access Platform-404 data.\n\nI'll still be here to help with general questions!",
+//         text: "🔒 Please log in to access Sancharam data.\n\nI'll still be here to help with general questions!",
 //         timestamp: new Date().toLocaleTimeString()
 //       }]);
 //     }
@@ -213,7 +213,7 @@
 
 //   const getGroqResponse = async (query, hasApiAccess) => {
 //     const systemPrompt = hasApiAccess 
-//       ? `You are a helpful assistant for Platform-404 railway management system. 
+//       ? `You are a helpful assistant for Sancharam railway management system. 
 //          The user is ${role} in ${department} department.
          
 //          If the user asks about:
@@ -222,7 +222,7 @@
 //          - Technical questions - provide helpful information
          
 //          Keep responses concise and professional. Always suggest specific commands when appropriate.`
-//       : `You are a helpful general assistant. The user is not currently logged into Platform-404 system.
+//       : `You are a helpful general assistant. The user is not currently logged into Sancharam system.
 //          Provide general help and information, but remind them to log in for specific railway data.`;
 
 //     try {
@@ -254,11 +254,11 @@
 //   const clearChat = () => {
 //     setMessages(isAuthenticated ? [{
 //       sender: "bot",
-//       text: `Chat cleared! 🧹\n\nI'm still here to help with Platform-404 data.\nType "help" for available commands.`,
+//       text: `Chat cleared! 🧹\n\nI'm still here to help with Sancharam data.\nType "help" for available commands.`,
 //       timestamp: new Date().toLocaleTimeString()
 //     }] : [{
 //       sender: "bot",
-//       text: "Chat cleared! Please log in to access Platform-404 features.",
+//       text: "Chat cleared! Please log in to access Sancharam features.",
 //       timestamp: new Date().toLocaleTimeString()
 //     }]);
 //   };
@@ -278,7 +278,7 @@
 //           open ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'
 //         } text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105`}
 //         onClick={() => setOpen(!open)}
-//         title={open ? "Close Chat" : "Open Platform-404 Assistant"}
+//         title={open ? "Close Chat" : "Open Sancharam Assistant"}
 //       >
 //         {open ? "✕" : "🤖"}
 //       </button>
@@ -289,7 +289,7 @@
 //           {/* Header */}
 //           <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-t-lg flex justify-between items-center">
 //             <div>
-//               <h3 className="font-bold text-lg">Platform-404 Assistant</h3>
+//               <h3 className="font-bold text-lg">Sancharam Assistant</h3>
 //               <p className="text-sm text-blue-100">
 //                 {isAuthenticated ? `${role} • ${department}` : "Not authenticated"}
 //               </p>
@@ -373,7 +373,7 @@
 //                 className="flex-1 border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
 //                 value={input}
 //                 onChange={(e) => setInput(e.target.value)}
-//                 placeholder={isAuthenticated ? "Ask me about Platform-404..." : "Ask me anything..."}
+//                 placeholder={isAuthenticated ? "Ask me about Sancharam..." : "Ask me anything..."}
 //                 onKeyDown={(e) => {
 //                   if (e.key === "Enter" && !e.shiftKey) {
 //                     e.preventDefault();
@@ -404,7 +404,7 @@
 //             <div className="flex justify-between items-center mt-2 text-xs text-gray-500">
 //               <span>
 //                 {isAuthenticated ? 
-//                   `✅ Connected to Platform-404` : 
+//                   `✅ Connected to Sancharam` : 
 //                   `⚠️ Limited access - please log in`
 //                 }
 //               </span>
@@ -446,6 +446,102 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ChatBotTools } from './services/apichat'; // Import the API tools
 
+// Quick Commands Dropdown Component
+const QuickCommandsDropdown = ({ quickCommands, role, department, setInput }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <div className="p-4 border-t-2 bg-gradient-to-r from-gray-50 to-gray-100 relative"
+         style={{ borderColor: '#24B6C9' }}>
+      
+      {/* Dropdown Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full bg-white border-2 px-4 py-3 rounded-xl transition-all duration-200 flex items-center justify-between shadow-md hover:shadow-lg transform hover:scale-105 font-bold"
+        style={{ 
+          borderColor: '#24B6C9',
+          color: '#24B6C9'
+        }}
+        onMouseEnter={(e) => {
+          e.target.style.background = '#24B6C9';
+          e.target.style.color = 'white';
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.background = 'white';
+          e.target.style.color = '#24B6C9';
+        }}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-lg">⚡</span>
+          <span className="text-sm">Quick Commands ({role})</span>
+        </div>
+        <span className={`text-lg transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
+          ▼
+        </span>
+      </button>
+
+      {/* Dropdown Content */}
+      {isOpen && (
+        <div className="absolute right-0 top-16 w-80 bg-white border-2 rounded-xl shadow-xl z-50 max-h-64 overflow-y-auto animate-dropdown"
+             style={{ borderColor: '#24B6C9' }}>
+          
+          {/* Header */}
+          <div className="p-3 border-b-2 text-center font-bold text-sm"
+               style={{ 
+                 background: '#24B6C9',
+                 color: 'white',
+                 borderColor: '#24B6C9'
+               }}>
+            {department} Department Commands
+          </div>
+
+          {/* Commands List */}
+          <div className="p-2">
+            {quickCommands.map((cmd, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  setInput(cmd.command);
+                  setIsOpen(false);
+                }}
+                className="w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center gap-3 hover:shadow-md font-medium mb-1"
+                style={{ color: '#24B6C9' }}
+                title={`Click to use: ${cmd.command}`}
+                onMouseEnter={(e) => {
+                  e.target.style.background = '#24B6C9';
+                  e.target.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'transparent';
+                  e.target.style.color = '#24B6C9';
+                }}
+              >
+                <span className="text-lg w-6 text-center">{cmd.icon}</span>
+                <div className="flex-1">
+                  <div className="font-bold text-sm">{cmd.label}</div>
+                  <div className="text-xs opacity-70 font-normal">{cmd.command}</div>
+                </div>
+              </button>
+            ))}
+          </div>
+
+          {/* Role indicator */}
+          <div className="p-3 border-t-2 text-center text-xs font-bold"
+               style={{ 
+                 color: '#24B6C9',
+                 borderColor: '#24B6C9',
+                 background: 'rgba(36, 182, 201, 0.1)'
+               }}>
+            {role === "admin" && "👑 Full System Access"} 
+            {role === "supervisor" && "🔑 Department Management"}
+            {role !== "admin" && role !== "supervisor" && "👀 Department View Access"}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ChatBot = () => {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -453,22 +549,12 @@ const ChatBot = () => {
   const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const messagesEndRef = useRef(null);
-  const currentUrl = window.location.href; // Full URL
-  const pathname = window.location.pathname; // Path after the domain
-  const searchParams = window.location.search; // Query string
-  const hashFragment = window.location.hash;
-  console.log("Current URL:", currentUrl);
-  console.log("Pathname:", pathname);
-  console.log("Search Params:", searchParams);
-  console.log("Hash Fragment:", hashFragment);
+
   const role = localStorage.getItem("role") || "guest";
   const department = localStorage.getItem("department") || "general";
   const username = localStorage.getItem("username") || "User";
   const token = localStorage.getItem("token");
-if(pathname=="/"){
-  console.log("Chatbot hidden on landing page");
-  return null; // Do not render the chatbot
-}
+
   // Initialize API tools
   const [tools, setTools] = useState(null);
 
@@ -481,14 +567,14 @@ if(pathname=="/"){
       // Add welcome message
       setMessages([{
         sender: "bot",
-        text: `👋 Hello ${username}! I'm your Platform-404 assistant.\n\n🔑 Logged in as: **${role}** in **${department}** department.\n\nI can help you with:\n• Checking schedules and entries\n• Train status updates\n• Job cards and maintenance info\n• Operations data\n\nType "help" to see all available commands!`,
+        text: `👋 Hello ${username}! I'm your Sancharam assistant.\n\n🔑 Logged in as: **${role}** in **${department}** department.\n\nI can help you with:\n• Checking schedules and entries\n• Train status updates\n• Job cards and maintenance info\n• Operations data\n\nType "help" to see all available commands!`,
         timestamp: new Date().toLocaleTimeString()
       }]);
     } else {
       setIsAuthenticated(false);
       setMessages([{
         sender: "bot",
-        text: "🔒 Please log in to access Platform-404 data.\n\nI'll still be here to help with general questions!",
+        text: "🔒 Please log in to access Sancharam data.\n\nI'll still be here to help with general questions!",
         timestamp: new Date().toLocaleTimeString()
       }]);
     }
@@ -555,7 +641,7 @@ if(pathname=="/"){
 
   const getGroqResponse = async (query, hasApiAccess) => {
     const systemPrompt = hasApiAccess 
-      ? `You are a helpful assistant for Platform-404 railway management system. 
+      ? `You are a helpful assistant for Sancharam railway management system. 
          The user is ${role} in ${department} department.
          
          If the user asks about:
@@ -564,7 +650,7 @@ if(pathname=="/"){
          - Technical questions - provide helpful information
          
          Keep responses concise and professional. Always suggest specific commands when appropriate.`
-      : `You are a helpful general assistant. The user is not currently logged into Platform-404 system.
+      : `You are a helpful general assistant. The user is not currently logged into Sancharam system.
          Provide general help and information, but remind them to log in for specific railway data.`;
 
     try {
@@ -596,11 +682,11 @@ if(pathname=="/"){
   const clearChat = () => {
     setMessages(isAuthenticated ? [{
       sender: "bot",
-      text: `Chat cleared! 🧹\n\nI'm still here to help with Platform-404 data.\nType "help" for available commands.`,
+      text: `Chat cleared! 🧹\n\nI'm still here to help with Sancharam data.\nType "help" for available commands.`,
       timestamp: new Date().toLocaleTimeString()
     }] : [{
       sender: "bot",
-      text: "Chat cleared! Please log in to access Platform-404 features.",
+      text: "Chat cleared! Please log in to access Sancharam features.",
       timestamp: new Date().toLocaleTimeString()
     }]);
   };
@@ -716,63 +802,86 @@ if(pathname=="/"){
   const quickCommands = getQuickCommands();
 
   return (
-    <div className="fixed bottom-35 right-4 z-50">
-      {/* Toggle Button */}
+    <div className="fixed bottom-40 right-6 z-50">
+      {/* Toggle Button - Made bigger */}
       <button
-        className={`${
-          open ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-600 hover:bg-blue-700'
-        } text-white p-4 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105`}
+        className={`group relative ${
+          open ? 'bg-white border-2 border-[#24B6C9]' : 'bg-[#24B6C9]'
+        } text-${open ? '[#24B6C9]' : 'white'} p-5 rounded-full shadow-xl transition-all duration-300 transform hover:scale-110 hover:shadow-2xl`}
         onClick={() => setOpen(!open)}
-        title={open ? "Close Chat" : "Open Platform-404 Assistant"}
+        title={open ? "Close Chat" : "Open Sancharam Assistant"}
+        style={{
+          background: open ? 'white' : '#24B6C9',
+          color: open ? '#24B6C9' : 'white',
+          borderColor: '#24B6C9',
+          width: '70px',
+          height: '70px'
+        }}
       >
-        {open ? "✕" : "🤖"}
+        <div className="text-2xl font-bold">
+          {open ? "✕" : "🤖"}
+        </div>
       </button>
 
-      {/* Chat Window */}
+      {/* Chat Window - Made bigger and positioned higher */}
       {open && (
-        <div className="w-96 h-[32rem] bg-white border border-gray-300 shadow-2xl rounded-lg flex flex-col mb-4 animate-fade-in">
+        <div className="w-[32rem] h-[42rem] bg-white border-2 rounded-2xl flex flex-col mb-6 animate-fade-in shadow-2xl overflow-hidden" 
+             style={{ borderColor: '#24B6C9' }}>
           {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 rounded-t-lg flex justify-between items-center">
-            <div>
-              <h3 className="font-bold text-lg">Platform-404 Assistant</h3>
-              <p className="text-sm text-blue-100">
+          <div className="text-white p-5 flex justify-between items-center relative overflow-hidden"
+               style={{ background: '#24B6C9' }}>
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-0 left-0 w-32 h-32 rounded-full bg-white transform -translate-x-16 -translate-y-16"></div>
+              <div className="absolute bottom-0 right-0 w-24 h-24 rounded-full bg-white transform translate-x-12 translate-y-12"></div>
+            </div>
+            
+            <div className="relative z-10">
+              <h3 className="font-bold text-xl tracking-wide">Sancharam Assistant</h3>
+              <p className="text-sm opacity-90 mt-1">
                 {isAuthenticated ? `${role} • ${department}` : "Not authenticated"}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-3 relative z-10">
               <button
                 onClick={clearChat}
-                className="text-blue-100 hover:text-white p-1"
+                className="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-all duration-200 transform hover:scale-105"
                 title="Clear chat"
               >
-                🧹
+                <span className="text-lg">🧹</span>
               </button>
             </div>
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 bg-gray-50">
+          <div className="flex-1 overflow-y-auto p-5 bg-gradient-to-b from-gray-50 to-white">
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`mb-3 ${
+                className={`mb-4 ${
                   msg.sender === "user" ? "text-right" : "text-left"
                 }`}
               >
                 <div
-                  className={`inline-block max-w-[85%] p-3 rounded-lg ${
+                  className={`inline-block max-w-[85%] p-4 rounded-2xl transition-all duration-200 hover:shadow-md ${
                     msg.sender === "user"
-                      ? "bg-blue-600 text-white rounded-br-sm"
-                      : "bg-white text-gray-800 border border-gray-200 rounded-bl-sm shadow-sm"
+                      ? "text-white rounded-br-md shadow-lg"
+                      : "bg-white border-2 rounded-bl-md shadow-md hover:shadow-lg"
                   }`}
+                  style={{
+                    background: msg.sender === "user" ? '#24B6C9' : 'white',
+                    borderColor: msg.sender === "bot" ? '#24B6C9' : 'transparent',
+                    color: msg.sender === "user" ? 'white' : '#333'
+                  }}
                 >
-                  <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed font-medium">
                     {msg.text}
                   </div>
                   {msg.timestamp && (
-                    <div className={`text-xs mt-1 ${
-                      msg.sender === "user" ? "text-blue-100" : "text-gray-500"
-                    }`}>
+                    <div className={`text-xs mt-2 font-normal ${
+                      msg.sender === "user" ? "text-white opacity-80" : "opacity-60"
+                    }`}
+                         style={{ color: msg.sender === "user" ? 'rgba(255,255,255,0.8)' : '#666' }}>
                       {msg.timestamp}
                     </div>
                   )}
@@ -781,11 +890,16 @@ if(pathname=="/"){
             ))}
             
             {loading && (
-              <div className="text-left mb-3">
-                <div className="inline-block bg-gray-200 text-gray-600 p-3 rounded-lg rounded-bl-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="animate-spin w-4 h-4 border-2 border-gray-400 border-t-transparent rounded-full"></div>
-                    <span>Thinking...</span>
+              <div className="text-left mb-4">
+                <div className="inline-block bg-white border-2 p-4 rounded-2xl rounded-bl-md shadow-md"
+                     style={{ borderColor: '#24B6C9' }}>
+                  <div className="flex items-center gap-3">
+                    <div className="animate-spin w-5 h-5 border-2 rounded-full"
+                         style={{ 
+                           borderColor: '#24B6C9', 
+                           borderTopColor: 'transparent' 
+                         }}></div>
+                    <span style={{ color: '#24B6C9' }} className="font-medium">Thinking...</span>
                   </div>
                 </div>
               </div>
@@ -793,43 +907,29 @@ if(pathname=="/"){
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Quick Commands - Dynamic based on role */}
+          {/* Quick Commands Dropdown - Dynamic based on role */}
           {isAuthenticated && quickCommands.length > 0 && (
-            <div className="p-3 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
-              <div className="text-xs text-gray-600 mb-2 font-medium">
-                Quick Commands ({role} - {department}):
-              </div>
-              <div className="grid grid-cols-2 gap-1">
-                {quickCommands.map((cmd, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setInput(cmd.command)}
-                    className="text-xs bg-white hover:bg-blue-50 border border-gray-200 hover:border-blue-300 text-gray-700 hover:text-blue-700 px-2 py-2 rounded-lg transition-all duration-200 flex items-center gap-1 shadow-sm hover:shadow-md"
-                    title={`Click to use: ${cmd.command}`}
-                  >
-                    <span className="text-sm">{cmd.icon}</span>
-                    <span className="font-medium">{cmd.label}</span>
-                  </button>
-                ))}
-              </div>
-              
-              {/* Role indicator */}
-              <div className="mt-2 text-xs text-gray-500 text-center">
-                {role === "admin" && "👑 Full System Access"} 
-                {role === "supervisor" && "🔑 Department Management"}
-                {role !== "admin" && role !== "supervisor" && "👀 Department View Access"}
-              </div>
-            </div>
+            <QuickCommandsDropdown 
+              quickCommands={quickCommands}
+              role={role}
+              department={department}
+              setInput={setInput}
+            />
           )}
 
           {/* Input Area */}
-          <div className="p-3 border-t border-gray-200 bg-white rounded-b-lg">
-            <div className="flex gap-2">
+          <div className="p-5 border-t-2 bg-white"
+               style={{ borderColor: '#24B6C9' }}>
+            <div className="flex gap-3">
               <input
-                className="flex-1 border border-gray-300 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="flex-1 border-2 rounded-xl p-4 text-sm focus:outline-none focus:ring-4 focus:ring-opacity-30 transition-all duration-200 font-medium"
+                style={{ 
+                  borderColor: '#24B6C9',
+                  focusRingColor: '#24B6C9'
+                }}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder={isAuthenticated ? "Ask me about Platform-404..." : "Ask me anything..."}
+                placeholder={isAuthenticated ? "Ask me about Sancharam..." : "Ask me anything..."}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault();
@@ -838,10 +938,19 @@ if(pathname=="/"){
                 }}
                 disabled={loading}
                 maxLength={500}
+                onFocus={(e) => {
+                  e.target.style.boxShadow = `0 0 0 4px rgba(36, 182, 201, 0.3)`;
+                }}
+                onBlur={(e) => {
+                  e.target.style.boxShadow = 'none';
+                }}
               />
               <button
                 onClick={sendMessage}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-medium"
+                className="text-white px-6 py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm font-bold transform hover:scale-105 hover:shadow-lg"
+                style={{ 
+                  background: loading || !input.trim() ? '#ccc' : '#24B6C9'
+                }}
                 disabled={loading || !input.trim()}
                 title="Send message (Enter)"
               >
@@ -851,22 +960,27 @@ if(pathname=="/"){
             
             {/* Character counter */}
             {input.length > 400 && (
-              <div className="text-xs text-gray-500 mt-1 text-right">
+              <div className="text-xs mt-2 text-right font-medium"
+                   style={{ color: '#24B6C9' }}>
                 {input.length}/500
               </div>
             )}
             
             {/* Status indicator */}
-            <div className="flex justify-between items-center mt-2 text-xs text-gray-500">
-              <span>
+            <div className="flex justify-between items-center mt-3 text-xs">
+              <span className="font-medium"
+                    style={{ color: '#24B6C9' }}>
                 {isAuthenticated ? 
-                  `✅ Connected to Platform-404` : 
+                  `✅ Connected to Sancharam` : 
                   `⚠️ Limited access - please log in`
                 }
               </span>
-              <span className={`w-2 h-2 rounded-full ${
-                isAuthenticated ? 'bg-green-500' : 'bg-yellow-500'
-              }`}></span>
+              <span className={`w-3 h-3 rounded-full animate-pulse ${
+                isAuthenticated ? '' : ''
+              }`}
+                    style={{ 
+                      background: isAuthenticated ? '#24B6C9' : '#ffa500'
+                    }}></span>
             </div>
           </div>
         </div>
@@ -874,7 +988,8 @@ if(pathname=="/"){
 
       {/* Notification badge for new features */}
       {!open && isAuthenticated && (
-        <div className="absolute -top-2 -left-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center animate-pulse">
+        <div className="absolute -top-2 -left-2 text-white text-xs rounded-full w-8 h-8 flex items-center justify-center animate-bounce font-bold shadow-lg"
+             style={{ background: '#24B6C9' }}>
           AI
         </div>
       )}
@@ -883,15 +998,31 @@ if(pathname=="/"){
         @keyframes fade-in {
           from {
             opacity: 0;
-            transform: translateY(10px);
+            transform: translateY(20px) scale(0.95);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+        
+        @keyframes dropdown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
           }
           to {
             opacity: 1;
             transform: translateY(0);
           }
         }
+        
         .animate-fade-in {
-          animation: fade-in 0.3s ease-out;
+          animation: fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .animate-dropdown {
+          animation: dropdown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
       `}</style>
     </div>
