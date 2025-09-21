@@ -1,3 +1,4 @@
+import {useNavigate} from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import { 
   Users, Settings, BarChart3, Train, Eye, Wrench, Shield, 
@@ -10,6 +11,7 @@ import { adminService } from '../services/adminapi';
 
 import LogoutButton from '../components/LogoutButton.jsx';
 export const Dashboard = () => {
+  const nav=useNavigate();
   const [showAdminDashboard, setShowAdminDashboard] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [activeTab, setActiveTab] = useState('overview');
@@ -166,7 +168,6 @@ export const Dashboard = () => {
   // Generate modules with real data counts
   const generateModules = (data) => {
     const now = new Date();
-    
     return [
       {
         id: 'user-management',
@@ -677,12 +678,21 @@ export const Dashboard = () => {
       {/* Professional Floating Action Button */}
       <button
         onClick={() => navigateToAdmin('usesr-management')}
-        className="fixed bottom-6 right-6 text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center px-4 py-3 font-medium"
+        className="fixed bottom-6 right-20 text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center px-4 py-3 font-medium"
         style={{ backgroundColor: '#24B6C9' }}
         title="Admin Management"
       >
         <Users className="w-5 h-5 mr-2" />
         <span>Admin Panel</span>
+      </button>
+       <button
+        onClick={() => nav("/shunting")}
+        className="fixed bottom-20 right-19 text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center px-4 py-3 font-medium"
+        style={{ backgroundColor: '#24B6C9' }}
+        title="Admin Management"
+      >
+        <Users className="w-5 h-5 mr-2" />
+        <span>shunting simulation</span>
       </button>
     </div>
   );

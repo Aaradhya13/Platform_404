@@ -204,6 +204,7 @@ import InspectionLanes from "./components/inspection/InspectionLanes"
 import InspectionSchedules from "./components/inspection/InspectionSchedules"
 import MaintenanceJobCards from "./components/mainnatence/MaintenanceJobCards"
 import ChatBot from "./ChatBot";
+import Shunting from "../src/Shunting";
 const LandingPage = () => {
   return (
     <div>
@@ -358,6 +359,16 @@ function App() {
             </TranslationProvider>
           </ProtectedRoute>
         } />
+        <Route path="/shunting" element={
+          <ProtectedRoute>
+            <TranslationProvider>
+              <AppLayout>
+                <Shunting/>
+              </AppLayout>
+            </TranslationProvider>
+          </ProtectedRoute>
+        }
+        />
         {/* Redirect any unknown routes to home */}
         <Route path="*" element={<Navigate to="/" replace />} />
            </Routes>
