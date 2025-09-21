@@ -336,7 +336,7 @@ const InspectionAnalytics = ({ onNavigateToJobCards }) => {
         </motion.div>
 
         {/* Enhanced Action Buttons */}
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+        <div className="fixed bottom-5 right-20 z-50 flex flex-col gap-3">
           <motion.button
             onClick={() => window.location.href = '/inspection/lanes'}
             whileHover={{ scale: 1.02, y: -2 }}

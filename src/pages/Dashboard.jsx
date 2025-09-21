@@ -678,7 +678,7 @@ export const Dashboard = () => {
       {/* Professional Floating Action Button */}
       <button
         onClick={() => navigateToAdmin('usesr-management')}
-        className="fixed bottom-6 right-6 text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center px-4 py-3 font-medium"
+        className="fixed bottom-6 right-20 text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center px-4 py-3 font-medium"
         style={{ backgroundColor: '#24B6C9' }}
         title="Admin Management"
       >
@@ -687,7 +687,7 @@ export const Dashboard = () => {
       </button>
        <button
         onClick={() => nav("/shunting")}
-        className="fixed bottom-20 right-6 text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center px-4 py-3 font-medium"
+        className="fixed bottom-20 right-19 text-white rounded-lg shadow-lg hover:shadow-xl transition-all flex items-center px-4 py-3 font-medium"
         style={{ backgroundColor: '#24B6C9' }}
         title="Admin Management"
       >

@@ -470,7 +470,7 @@ const CleaningAnalytics = ({ onNavigateToList }) => {
         </motion.div>
 
         {/* Manage Schedules Button */}
-        <div className="fixed bottom-8 right-8 z-50">
+        <div className="fixed bottom-4 right-20 z-50">
           <motion.button
             onClick={onNavigateToList}
             whileHover={{ scale: 1.05, y: -2 }}
