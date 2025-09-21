@@ -66,6 +66,7 @@ const Sidebar = ({ activeTab, onTabChange, isOpen, onClose, onNavigate }) => {
     { id: 'inspections', label: 'Inspections', icon: Eye, category: 'Quality' },
     { id: 'inspection-lanes', label: 'Inspection Lanes', icon: Eye, category: 'Quality' },
     { id: 'job-cards', label: 'Job Cards', icon: FileText, category: 'Quality' },
+    { id: 'logs', label: 'Activity Logs', icon: FileText, category: 'Important Documents' },
     { id: 'maintenance', label: 'Maintenance', icon: Settings, category: 'Maintenance' },
     { id: 'maintenance-lanes', label: 'Maintenance Lanes', icon: Settings, category: 'Maintenance' },
     // Add this to your navItems array in the Sidebar component
@@ -422,8 +423,96 @@ const JobCardsGrid = ({ data, loading, onAiSuggestion, onClose, showActions = tr
     </div>
   );
 };
+
+const LogsGrid = ({ data, loading }) => {
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading activity logs...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <div className="bg-white rounded-lg shadow overflow-hidden">
+        <div className="text-center py-12">
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <FileText size={24} className="text-gray-400" />
+          </div>
+          <p className="text-gray-500 text-lg mb-2">No activity logs found</p>
+          <p className="text-gray-400 text-sm">System activity will appear here</p>
+        </div>
+      </div>
+    );
+  }
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return 'Unknown';
+    return new Date(dateString).toLocaleString();
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+          <FileText className="mr-2" size={20} />
+          Activity Logs ({data.length})
+        </h2>
+      </div>
+      
+      <div className="space-y-4">
+        {data.map((log, index) => (
+          <div key={log.id || index} className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                    <User size={16} className="text-blue-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {log.user?.username || 'Unknown User'}
+                    </p>
+                    {log.user?.email && (
+                      <p className="text-xs text-gray-500">{log.user.email}</p>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="ml-11">
+                  <p className="text-gray-800 font-medium mb-2">{log.action}</p>
+                  <div className="flex items-center text-xs text-gray-500">
+                    <Clock size={12} className="mr-1" />
+                    <span>{formatDateTime(log.timestamp)}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-right">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  #{log.id}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 // Data Table Component
 const DataTable = ({ data, onEdit, onDelete, canDelete, loading, activeTab }) => {
+  // In DataTable component, add this condition at the beginning:
+if (activeTab === 'logs') {
+  return <LogsGrid data={data} loading={loading} />;
+}
   // Use Job Cards Grid for job-cards tab
   if (activeTab === 'job-cards') {
     return <JobCardsGrid data={data} onEdit={onEdit} onDelete={onDelete} canDelete={canDelete} loading={loading} />;
@@ -751,6 +840,7 @@ const AdminDashboard = () => {
   const [maintenance, setMaintenance] = useState([]);
   const [maintenanceLanes, setMaintenanceLanes] = useState([]);
   const [jobCards, setJobCards] = useState([]);
+  const [logs, setLogs] = useState([]);
   // Form states
   const [showForm, setShowForm] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -833,6 +923,10 @@ const AdminDashboard = () => {
         case 'job-cards':
           const jobCardsData = await adminService.getJobCards();
           setJobCards(Array.isArray(jobCardsData) ? jobCardsData : []);
+          break;
+        case 'logs':
+          const logsData = await adminService.getLogs();
+          setLogs(Array.isArray(logsData) ? logsData : []);
           break;
         case 'maintenance':
           const maintData = await adminService.getMaintenanceEntries();
@@ -1014,6 +1108,7 @@ const AdminDashboard = () => {
       case 'inspections': return inspections;
       case 'inspection-lanes': return inspectionLanes;
       case 'job-cards': return jobCards;
+      case 'logs': return logs;
       case 'maintenance': return maintenance;
       case 'maintenance-lanes': return maintenanceLanes;
       default: return [];

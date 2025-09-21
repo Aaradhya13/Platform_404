@@ -1425,6 +1425,31 @@ export const adminService = {
       throw error;
     }
   },
+
+  // Get activity logs
+getLogs: async () => {
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
+  
+  const url = 'https://platform-404.onrender.com/rail-admin/logs/';
+  
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Authorization': `token ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch activity logs: ${response.status}`);
+  }
+
+  return response.json();
+},
   // Logout function
   logout: () => {
     localStorage.removeItem('token');
@@ -1507,4 +1532,5 @@ const BASE_URL = "https://platform-404.onrender.com/rail-admin";
       throw error;
     }
   },
+  
 };
