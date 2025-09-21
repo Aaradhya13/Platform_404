@@ -741,6 +741,20 @@ if (activeTab === 'logs') {
 
   const renderCellContent = (item, column) => {
     const value = item[column];
+
+    // Handle train_schedule specially - extract train_id
+    if (column === 'train_schedule') {
+      if (value && value.train && value.train.train_id) {
+        return (
+          <div className="flex items-center">
+            <Train className="h-4 w-4 text-gray-400 mr-1" />
+            <span className="text-sm font-bold text-gray-900">Train {value.train.train_id}</span>
+          </div>
+        );
+      } else {
+        return <span className="text-sm font-bold text-gray-900">-</span>;
+      }
+    }
     
     // Handle datetime fields
     if (column.includes('time') || column.includes('date') || column.includes('Start') || column.includes('End') || column.includes('created') || column.includes('updated') || column === 'scheduledStart' || column === 'scheduledEnd' || column === 'enterd' || column === 'exited') {
