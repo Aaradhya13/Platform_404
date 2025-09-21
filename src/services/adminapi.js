@@ -1441,6 +1441,29 @@ export const adminService = {
     return !!token;
   },
 
+fetchBrandingDeals : async () => {
+  const token = localStorage.getItem("token");
+  console.log("Fetching branding deals with token:", token);
+const BASE_URL = "https://platform-404.onrender.com/rail-admin";
+  try {
+    const response = await fetch(`${BASE_URL}/branding-deals/`, {
+      method: "GET",
+      headers: {
+        Authorization: `token ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch branding deals");
+    }
+
+    return await response.json(); // returns the array of deals
+  } catch (error) {
+    console.error("Error fetching branding deals:", error);
+    throw error;
+  }
+},
   // Generic API call wrapper for future extensions
   makeApiCall: async (endpoint, method = 'GET', data = null) => {
     const token = localStorage.getItem('token');

@@ -6,9 +6,11 @@ import {
   Download, Upload, MoreVertical, Archive, FileText, Camera, Map, Clock, Lightbulb, FolderOpen
 } from 'lucide-react';
 import { adminService } from '../../services/adminapi';
-
+import BrandingDealsComponent from './BrandingDealsComponent';
+import { Award } from 'lucide-react'; // Add Award icon
 // Header Component
 const Header = ({ onMenuToggle, isSidebarOpen }) => {
+console.log("Sidebar isOpen:", isSidebarOpen);
   return (
     <header className="bg-white border-b border-gray-200 shadow-sm">
       <div className="px-6 py-4">
@@ -66,6 +68,8 @@ const Sidebar = ({ activeTab, onTabChange, isOpen, onClose, onNavigate }) => {
     { id: 'job-cards', label: 'Job Cards', icon: FileText, category: 'Quality' },
     { id: 'maintenance', label: 'Maintenance', icon: Settings, category: 'Maintenance' },
     { id: 'maintenance-lanes', label: 'Maintenance Lanes', icon: Settings, category: 'Maintenance' },
+    // Add this to your navItems array in the Sidebar component
+{ id: 'branding-deals', label: 'Branding Deals', icon: Award, category: 'Operations' }
   ];
 
   const categories = [...new Set(navItems.map(item => item.category))];
@@ -190,188 +194,6 @@ const Alert = ({ type, message, onClose }) => {
     </div>
   );
 };
-
-// Job Cards Component
-// const JobCardsGrid = ({ data, onEdit, onDelete, canDelete, loading }) => {
-//   if (loading) {
-//     return (
-//       <div className="bg-white rounded-lg shadow overflow-hidden">
-//         <div className="flex items-center justify-center py-12">
-//           <div className="text-center">
-//             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
-//             <p className="mt-4 text-gray-600">Loading job cards...</p>
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   if (!data || data.length === 0) {
-//     return (
-//       <div className="bg-white rounded-lg shadow overflow-hidden">
-//         <div className="text-center py-12">
-//           <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-//             <FileText size={24} className="text-gray-400" />
-//           </div>
-//           <p className="text-gray-500 text-lg mb-2">No job cards available</p>
-//           <p className="text-gray-400 text-sm">Job cards will appear here when created</p>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   const formatDateTime = (dateString) => {
-//     if (!dateString) return 'Not set';
-//     return new Date(dateString).toLocaleDateString('en-IN', {
-//       year: 'numeric',
-//       month: 'short',
-//       day: 'numeric',
-//       hour: '2-digit',
-//       minute: '2-digit'
-//     });
-//   };
-
-//   return (
-//     <div className="space-y-4">
-//       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-//         <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-//           <FileText className="mr-2" size={20} />
-//           Job Cards ({data.length})
-//         </h2>
-//       </div>
-      
-//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-//         {data.map((jobCard, index) => {
-//           // Clean the photo URL by removing angle brackets if present
-//           const cleanPhotoUrl = jobCard.photo ? jobCard.photo.replace(/[<>]/g, '') : null;
-          
-//           return (
-//             <div key={jobCard.id || index} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200">
-//               {/* Card Header with Photo */}
-//               <div className="relative h-48 bg-gray-100">
-//                 {cleanPhotoUrl && cleanPhotoUrl !== 'http://example.com/photo.png' ? (
-//                   <img 
-//                     src={cleanPhotoUrl} 
-//                     alt="Job Card Photo"
-//                     className="w-full h-full object-cover"
-//                     onError={(e) => {
-//                       e.target.style.display = 'none';
-//                       e.target.nextSibling.style.display = 'flex';
-//                     }}
-//                   />
-//                 ) : null}
-//                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200" style={{display: (cleanPhotoUrl && cleanPhotoUrl !== 'http://example.com/photo.png') ? 'none' : 'flex'}}>
-//                   <div className="text-center">
-//                     <Camera size={32} className="text-gray-400 mx-auto mb-2" />
-//                     <p className="text-sm text-gray-500">No Photo Available</p>
-//                   </div>
-//                 </div>
-                
-//                 {/* Status Badge based on closed_at */}
-//                 <div className="absolute top-3 right-3">
-//                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize ${
-//                     jobCard.closed_at ? 'text-green-600 bg-green-100' : 'text-orange-600 bg-orange-100'
-//                   }`}>
-//                     {jobCard.closed_at ? 'Closed' : 'Open'}
-//                   </span>
-//                 </div>
-                
-//                 {/* Job Card ID Badge */}
-//                 <div className="absolute top-3 left-3">
-//                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-600 text-white">
-//                     #{jobCard.id}
-//                   </span>
-//                 </div>
-//               </div>
-
-//               {/* Card Content */}
-//               <div className="p-5">
-//                 <div className="space-y-4">
-//                   {/* Title/Description */}
-//                   {jobCard.description && (
-//                     <div>
-//                       <h3 className="text-lg font-semibold text-gray-900 mb-1">
-//                         {jobCard.description}
-//                       </h3>
-//                     </div>
-//                   )}
-
-//                   {/* Key Information Grid */}
-//                   <div className="grid grid-cols-2 gap-4 text-sm">
-//                     {/* Train Info */}
-//                     {jobCard.train && (
-//                       <div className="flex items-center space-x-2">
-//                         <Train size={16} className="text-gray-400" />
-//                         <div>
-//                           <p className="text-gray-500 text-xs">Train</p>
-//                           <p className="font-medium text-gray-900">
-//                             Train {jobCard.train}
-//                           </p>
-//                         </div>
-//                       </div>
-//                     )}
-
-//                     {/* Status Info */}
-//                     <div className="flex items-center space-x-2">
-//                       <AlertCircle size={16} className="text-gray-400" />
-//                       <div>
-//                         <p className="text-gray-500 text-xs">Status</p>
-//                         <p className={`font-medium capitalize ${
-//                           jobCard.closed_at ? 'text-green-600' : 'text-orange-600'
-//                         }`}>
-//                           {jobCard.closed_at ? 'Closed' : 'Open'}
-//                         </p>
-//                       </div>
-//                     </div>
-//                   </div>
-
-//                   {/* Dates */}
-//                   <div className="space-y-2 text-sm">
-//                     {jobCard.created_at && (
-//                       <div className="flex justify-between">
-//                         <span className="text-gray-500">Created:</span>
-//                         <span className="font-medium text-gray-900">
-//                           {formatDateTime(jobCard.created_at)}
-//                         </span>
-//                       </div>
-//                     )}
-//                     {jobCard.closed_at && (
-//                       <div className="flex justify-between">
-//                         <span className="text-gray-500">Closed:</span>
-//                         <span className="font-medium text-gray-900">
-//                           {formatDateTime(jobCard.closed_at)}
-//                         </span>
-//                       </div>
-//                     )}
-//                   </div>
-
-//                   {/* Job Card ID */}
-//                   <div className="text-sm">
-//                     <div className="flex justify-between">
-//                       <span className="text-gray-500">Job Card ID:</span>
-//                       <span className="font-medium text-gray-900">#{jobCard.id}</span>
-//                     </div>
-//                   </div>
-//                 </div>
-
-//                 {/* Action Buttons */}
-//                 <div className="flex justify-end space-x-2 mt-4 pt-4 border-t border-gray-100">
-//                   <button
-//                     className="text-gray-600 hover:text-gray-900 hover:bg-gray-50 p-2 rounded-lg transition-colors"
-//                     title="More options"
-//                   >
-//                     <MoreVertical className="h-4 w-4" />
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-//           );
-//         })}
-//       </div>
-//     </div>
-//   );
-// };
-
 const JobCardsGrid = ({ data, loading, onAiSuggestion, onClose, showActions = true }) => {
   if (loading) {
     return (
@@ -1020,6 +842,7 @@ const AdminDashboard = () => {
           const maintLanesData = await adminService.getMaintenanceLanes();
           setMaintenanceLanes(Array.isArray(maintLanesData) ? maintLanesData : []);
           break;
+          // In your AdminDashboard component, add this case
       }
     } catch (error) {
       handleError(error);
@@ -1297,13 +1120,13 @@ const AdminDashboard = () => {
   const canCreate = () => {
     // Job cards are read-only, cannot be created from this interface
     // Route map is navigation-only, no data to create
-    return !['job-cards', 'route-map'].includes(activeTab);
+    return !['job-cards', 'route-map','branding-deals'].includes(activeTab);
   };
 
   const canEdit = () => {
     // Job cards are read-only, cannot be edited from this interface
     // Route map is navigation-only, no data to edit
-    return !['job-cards', 'route-map'].includes(activeTab);
+    return !['job-cards', 'route-map','branding-deals'].includes(activeTab);
   };
 
   const handleFormSubmit = (e) => {
@@ -1407,7 +1230,7 @@ const AdminDashboard = () => {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
               <div className="flex items-center justify-between">
                 <div>
@@ -1455,18 +1278,84 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           {/* Data Table */}
-          <DataTable 
+          {/* <DataTable 
             data={getCurrentData()}
             onEdit={openForm}
             onDelete={handleDelete}
             canDelete={canDelete()}
             loading={loading}
             activeTab={activeTab}
-          />
+          /> */}
+{/* Content Area - Conditional Rendering */}
+          {activeTab === 'branding-deals' ? (
+            <BrandingDealsComponent />
+          ) : (
+            <>
+              {/* Stats Cards - Only show for non-branding deals tabs */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Total Records</p>
+                      <p className="text-2xl font-bold text-gray-900">{getCurrentData().length}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                      <Briefcase size={24} className="text-blue-600" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Active Items</p>
+                      <p className="text-2xl font-bold text-gray-900">{getActiveCount(getCurrentData())}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                      <CheckCircle size={24} className="text-green-600" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Last Updated</p>
+                      <p className="text-sm font-bold text-gray-900">{getLastUpdated()}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                      <RefreshCw size={24} className="text-yellow-600" />
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Status</p>
+                      <p className="text-2xl font-bold text-green-600">Online</p>
+                    </div>
+                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                      <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
+              {/* Data Table */}
+              <DataTable 
+                data={getCurrentData()}
+                onEdit={openForm}
+                onDelete={handleDelete}
+                canDelete={canDelete()}
+                loading={loading}
+                activeTab={activeTab}
+              />
+            </>
+          )}
           {/* Form Modal */}
           {canCreate() && (
             <FormModal

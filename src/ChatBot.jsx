@@ -555,7 +555,7 @@ if(pathname=="/"){
 
   const getGroqResponse = async (query, hasApiAccess) => {
     const systemPrompt = hasApiAccess 
-      ? `You are a helpful assistant for Platform-404 railway management system. 
+      ? `You are a helpful assistant for  Sanchram railway management system. 
          The user is ${role} in ${department} department.
          
          If the user asks about:
