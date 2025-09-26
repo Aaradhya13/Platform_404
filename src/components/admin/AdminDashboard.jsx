@@ -563,8 +563,6 @@ if (activeTab === 'logs') {
 
   const renderCellContent = (item, column) => {
     const value = item[column];
-
-    // Handle train_schedule specially - extract train_id
     if (column === 'train_schedule') {
       if (value && value.train && value.train.train_id) {
         return (
@@ -577,8 +575,6 @@ if (activeTab === 'logs') {
         return <span className="text-sm font-bold text-gray-900">-</span>;
       }
     }
-    
-    // Handle datetime fields
     if (column.includes('time') || column.includes('date') || column.includes('Start') || column.includes('End') || column.includes('created') || column.includes('updated') || column === 'scheduledStart' || column === 'scheduledEnd' || column === 'enterd' || column === 'exited') {
       return (
         <span className="text-sm font-bold text-gray-900">
@@ -586,8 +582,6 @@ if (activeTab === 'logs') {
         </span>
       );
     }
-    
-    // Handle status fields
     if (column.toLowerCase().includes('status') || column === 'active' || column === 'enabled') {
       const statusText = value ? (typeof value === 'boolean' ? (value ? 'Active' : 'Inactive') : String(value)) : 'Unknown';
       return (
@@ -596,8 +590,6 @@ if (activeTab === 'logs') {
         </span>
       );
     }
-    
-    // Handle ID fields with icons
     if (column.includes('id') || column.includes('Id') || column === 'train' || column === 'lane' || column === 'lane_number' || column === 'bay_number' || column === 'depot') {
       const icon = column.includes('train') ? <Train className="h-4 w-4 text-gray-400 mr-1" /> : 
                    (column.includes('lane') || column === 'lane_number' || column === 'bay_number') ? null :
@@ -610,8 +602,6 @@ if (activeTab === 'logs') {
         </div>
       );
     }
-    
-    // Handle email fields
     if (column === 'email' && value) {
       return (
         <a href={`mailto:${value}`} className="text-blue-600 hover:text-blue-800 text-sm">
@@ -619,8 +609,6 @@ if (activeTab === 'logs') {
         </a>
       );
     }
-    
-    // Handle depot name specifically
     if (column === 'depot_name') {
       return (
         <div className="flex items-center">
@@ -629,8 +617,6 @@ if (activeTab === 'logs') {
         </div>
       );
     }
-    
-    // Handle other name fields (but not depot_name)
     if ((column.includes('name') || column === 'username' || column === 'first_name' || column === 'last_name') && column !== 'depot_name') {
       return (
         <div className="flex items-center">
@@ -639,10 +625,7 @@ if (activeTab === 'logs') {
         </div>
       );
     }
-    
-    // Handle object data professionally
     if (typeof value === 'object' && value !== null) {
-      // If it's an array, show count
       if (Array.isArray(value)) {
         return (
           <div className="text-sm text-gray-900">
@@ -650,7 +633,6 @@ if (activeTab === 'logs') {
           </div>
         );
       }
-      // If it's an object with a name property, show the name
       if (value.name) {
         return (
           <span className="text-sm font-bold text-gray-900">
@@ -658,7 +640,6 @@ if (activeTab === 'logs') {
           </span>
         );
       }
-      // If it's an object with username property, show username
       if (value.username) {
         return (
           <span className="text-sm font-bold text-gray-900">
@@ -666,7 +647,6 @@ if (activeTab === 'logs') {
           </span>
         );
       }
-      // If it's an object with id and name, show formatted
       if (value.id && value.name) {
         return (
           <span className="text-sm font-bold text-gray-900">
@@ -674,7 +654,6 @@ if (activeTab === 'logs') {
           </span>
         );
       }
-      // For other objects, show a generic representation
       return (
         <span className="text-sm font-bold text-gray-900">
           Object data
@@ -1337,68 +1316,6 @@ const AdminDashboard = () => {
               </div>
             </div>
           </div>
-
-          {/* Stats Cards */}
-          {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Total Records</p>
-                  <p className="text-2xl font-bold text-gray-900">{getCurrentData().length}</p>
-                </div>
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Briefcase size={24} className="text-blue-600" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Active Items</p>
-                  <p className="text-2xl font-bold text-gray-900">{getActiveCount(getCurrentData())}</p>
-                </div>
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <CheckCircle size={24} className="text-green-600" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Last Updated</p>
-                  <p className="text-sm font-bold text-gray-900">{getLastUpdated()}</p>
-                </div>
-                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                  <RefreshCw size={24} className="text-yellow-600" />
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Status</p>
-                  <p className="text-2xl font-bold text-green-600">Online</p>
-                </div>
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
-          {/* Data Table */}
-          {/* <DataTable 
-            data={getCurrentData()}
-            onEdit={openForm}
-            onDelete={handleDelete}
-            canDelete={canDelete()}
-            loading={loading}
-            activeTab={activeTab}
-          /> */}
-{/* Content Area - Conditional Rendering */}
           {activeTab === 'branding-deals' ? (
             <BrandingDealsComponent />
           ) : (
